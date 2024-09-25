@@ -8,36 +8,13 @@ import { CadViewer } from "@tscircuit/3d-viewer"
 import { SoupTableViewer } from "@tscircuit/table-viewer"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import "react-data-grid/lib/styles.css"
-
-const defaultCode = `
-export default () => (
-  <board width="10mm" height="10mm">
-    <resistor
-      resistance="1k"
-      cadModel={{
-        objUrl:
-          "https://modelcdn.tscircuit.com/easyeda_models/download?pn=C2889342",
-      }}
-      footprint="0402"
-      name="R1"
-      pcbX={3}
-    />
-    <capacitor
-      capacitance="1000pF"
-      cadModel={{
-        objUrl:
-          "https://modelcdn.tscircuit.com/easyeda_models/download?pn=C2889342",
-      }}
-      footprint="0402"
-      name="C1"
-      pcbX={-3}
-    />
-    <trace from=".R1 > .pin1" to=".C1 > .pin1" />
-  </board>
-)
-`.trim()
+import { defaultCodeForBlankPage } from "./defaultCodeForBlankCode"
+import { decodeUrlHashToText } from "./decodeUrlHashToText"
+import { encodeTextToUrlHash } from "./encodeTextToUrlHash"
 
 function App() {
+  const defaultCode =
+    decodeUrlHashToText(window.location.toString()) ?? defaultCodeForBlankPage
   const [selectedTab, setSelectedTab] = useState<"pcb" | "cad" | "table">("pcb")
   const [code, setCode] = useState(defaultCode)
 
@@ -64,6 +41,12 @@ function App() {
       try {
         const circuit = new Circuit()
 
+        if (Object.keys(module.exports).length > 1) {
+          throw new Error(
+            `Too many exports, only export one thing. You exported: ${JSON.stringify(Object.keys(module.exports))}`,
+          )
+        }
+
         const primaryKey = Object.keys(module.exports)[0]
 
         circuit.add(React.createElement(module.exports[primaryKey]))
@@ -74,7 +57,7 @@ function App() {
 
         return {
           compiledModule: module,
-          message: `Primary key: ${primaryKey}`,
+          message: "",
           circuitJson,
         }
       } catch (error: any) {
