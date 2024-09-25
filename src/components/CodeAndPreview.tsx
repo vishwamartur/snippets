@@ -30,7 +30,7 @@ export function CodeAndPreview() {
             <TabsList>
               <TabsTrigger value="pcb">PCB</TabsTrigger>
               <TabsTrigger value="cad">3D</TabsTrigger>
-              <TabsTrigger value="table">Table</TabsTrigger>
+              <TabsTrigger value="table">JSON</TabsTrigger>
             </TabsList>
             <TabsContent value="pcb">
               <div className="mt-4 h-[500px]">

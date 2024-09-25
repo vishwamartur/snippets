@@ -52,9 +52,23 @@ export default function EditorNav({ code }: { code: string }) {
             </DropdownMenuItem>
             <DropdownMenuItem className="text-xs">
               <Download className="mr-1 h-3 w-3" />
+              <span className="flex-grow mr-6">Download Circuit JSON</span>
+              <span className="text-[0.6rem] opacity-80 bg-blue-500 text-white font-mono rounded-md px-1 text-center py-0.5 mr-1">
+                json
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-xs">
+              <Download className="mr-1 h-3 w-3" />
               <span className="flex-grow  mr-6">Download 3D Model</span>
               <span className="text-[0.6rem] bg-green-500 opacity-80 text-white font-mono rounded-md px-1 text-center py-0.5 mr-1">
                 stl
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-xs">
+              <Download className="mr-1 h-3 w-3" />
+              <span className="flex-grow  mr-6">Fabrication Files</span>
+              <span className="text-[0.6rem] bg-purple-500 opacity-80 text-white font-mono rounded-md px-1 text-center py-0.5 mr-1">
+                gerber/pnp/bom/csv
               </span>
             </DropdownMenuItem>
             <DropdownMenuItem className="text-xs">
