@@ -16,7 +16,6 @@ import { Button } from "./components/ui/button"
 function App() {
   const defaultCode =
     decodeUrlHashToText(window.location.toString()) ?? defaultCodeForBlankPage
-  const [selectedTab, setSelectedTab] = useState<"pcb" | "cad" | "table">("pcb")
   const [code, setCode] = useState(defaultCode)
 
   const compiledCode = useMemo(() => {
@@ -97,10 +96,7 @@ function App() {
         </Button>
       </div>
       <div className="w-1/2 p-8">
-        <Tabs
-          defaultValue="pcb"
-          onValueChange={(value) => setSelectedTab(value as "pcb" | "cad")}
-        >
+        <Tabs defaultValue="pcb">
           <TabsList>
             <TabsTrigger value="pcb">PCB</TabsTrigger>
             <TabsTrigger value="cad">3D</TabsTrigger>
