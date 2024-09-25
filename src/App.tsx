@@ -11,6 +11,7 @@ import "react-data-grid/lib/styles.css"
 import { defaultCodeForBlankPage } from "./defaultCodeForBlankCode"
 import { decodeUrlHashToText } from "./decodeUrlHashToText"
 import { encodeTextToUrlHash } from "./encodeTextToUrlHash"
+import { Button } from "./components/ui/button"
 
 function App() {
   const defaultCode =
@@ -84,6 +85,16 @@ function App() {
     <div className="flex">
       <div className="w-1/2 p-8">
         <CodeEditor defaultCode={defaultCode} onCodeChange={setCode} />
+        <Button
+          className="mt-4 px-4 py-2"
+          onClick={() => {
+            const url = encodeTextToUrlHash(code)
+            navigator.clipboard.writeText(url)
+            alert("URL copied to clipboard!")
+          }}
+        >
+          Create URL for Code Snippet
+        </Button>
       </div>
       <div className="w-1/2 p-8">
         <Tabs
