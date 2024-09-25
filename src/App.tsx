@@ -5,19 +5,20 @@ import * as React from "react"
 import { Circuit } from "@tscircuit/core"
 import { PCBViewer } from "@tscircuit/pcb-viewer"
 import { CadViewer } from "@tscircuit/3d-viewer"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const defaultCode = `
 export default () => (
 	<board width="10mm" height="10mm">
-		<resistor resistance="1k" footprint="0402" name="R1" pcbX={3} />
-		<capacitor capacitance="1000pF" footprint="0402" name="C1" pcbX={-3} />
+		<resistor resistance="1k" cadModel={{objUrl: "https://modelcdn.tscircuit.com/easyeda_models/download?pn=C2889342"}} footprint="0402" name="R1" pcbX={3} />
+		<capacitor capacitance="1000pF" cadModel={{objUrl: "https://modelcdn.tscircuit.com/easyeda_models/download?pn=C2889342"}} footprint="0402" name="C1" pcbX={-3} />
 		<trace from=".R1 > .pin1" to=".C1 > .pin1" />
 	</board>
 )
 `.trim()
 
 function App() {
-  const [selectedTab, setSelectedTab] = useState<"pcb" | "cad">("pcb")
+  const [selectedTab, setSelectedTab] = useState<"pcb" | "cad" | "table">("pcb")
   const [code, setCode] = useState(defaultCode)
 
   const compiledCode = useMemo(() => {
@@ -82,18 +83,31 @@ function App() {
         <CodeEditor defaultCode={defaultCode} onCodeChange={setCode} />
       </div>
       <div className="w-1/2 p-8">
-        <div>
-          <button className="" onClick={() => setSelectedTab("pcb")}>
-            pcb
-          </button>
-          <button className="" onClick={() => setSelectedTab("cad")}>
-            3d
-          </button>
-        </div>
-        <div className="mt-4 h-[500px]">
-          {selectedTab === "pcb" && <PCBViewer soup={circuitJson} />}
-          {selectedTab === "cad" && <CadViewer soup={circuitJson as any} />}
-        </div>
+        <Tabs
+          defaultValue="pcb"
+          onValueChange={(value) => setSelectedTab(value as "pcb" | "cad")}
+        >
+          <TabsList>
+            <TabsTrigger value="pcb">PCB</TabsTrigger>
+            <TabsTrigger value="cad">3D</TabsTrigger>
+            <TabsTrigger value="table">Table</TabsTrigger>
+          </TabsList>
+          <TabsContent value="pcb">
+            <div className="mt-4 h-[500px]">
+              <PCBViewer soup={circuitJson} />
+            </div>
+          </TabsContent>
+          <TabsContent value="cad">
+            <div className="mt-4 h-[500px]">
+              <CadViewer soup={circuitJson as any} />
+            </div>
+          </TabsContent>
+          <TabsContent value="table">
+            <div className="mt-4 h-[500px]">
+              <CadViewer soup={circuitJson as any} />
+            </div>
+          </TabsContent>
+        </Tabs>
         <textarea className="w-full h-64" value={compiledCode} />
         <hr />
         <textarea className="w-full h-8 bg-red-100" value={message} />
