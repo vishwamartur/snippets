@@ -5,15 +5,35 @@ import * as React from "react"
 import { Circuit } from "@tscircuit/core"
 import { PCBViewer } from "@tscircuit/pcb-viewer"
 import { CadViewer } from "@tscircuit/3d-viewer"
+import { SoupTableViewer } from "@tscircuit/table-viewer"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import "react-data-grid/lib/styles.css"
 
 const defaultCode = `
 export default () => (
-	<board width="10mm" height="10mm">
-		<resistor resistance="1k" cadModel={{objUrl: "https://modelcdn.tscircuit.com/easyeda_models/download?pn=C2889342"}} footprint="0402" name="R1" pcbX={3} />
-		<capacitor capacitance="1000pF" cadModel={{objUrl: "https://modelcdn.tscircuit.com/easyeda_models/download?pn=C2889342"}} footprint="0402" name="C1" pcbX={-3} />
-		<trace from=".R1 > .pin1" to=".C1 > .pin1" />
-	</board>
+  <board width="10mm" height="10mm">
+    <resistor
+      resistance="1k"
+      cadModel={{
+        objUrl:
+          "https://modelcdn.tscircuit.com/easyeda_models/download?pn=C2889342",
+      }}
+      footprint="0402"
+      name="R1"
+      pcbX={3}
+    />
+    <capacitor
+      capacitance="1000pF"
+      cadModel={{
+        objUrl:
+          "https://modelcdn.tscircuit.com/easyeda_models/download?pn=C2889342",
+      }}
+      footprint="0402"
+      name="C1"
+      pcbX={-3}
+    />
+    <trace from=".R1 > .pin1" to=".C1 > .pin1" />
+  </board>
 )
 `.trim()
 
@@ -104,7 +124,7 @@ function App() {
           </TabsContent>
           <TabsContent value="table">
             <div className="mt-4 h-[500px]">
-              <CadViewer soup={circuitJson as any} />
+              <SoupTableViewer elements={circuitJson as any} />
             </div>
           </TabsContent>
         </Tabs>
