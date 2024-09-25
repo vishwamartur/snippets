@@ -8,6 +8,13 @@ export default defineConfig({
   define: {
     global: {},
   },
+  build: {
+    minify: false,
+    terserOptions: {
+      compress: false,
+      mangle: false,
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

@@ -34,9 +34,11 @@ function App() {
 
   const { message, circuitJson } = useMemo(() => {
     try {
-      const exports: any = {}
-      const module = { exports }
-      eval(compiledCode)
+      globalThis.React = React
+
+      // eval(compiledCode)
+      const functionBody = `var exports = {}; var module = { exports }; ${compiledCode}; return module;`
+      const module = Function(functionBody).call(globalThis)
 
       try {
         const circuit = new Circuit()
@@ -120,7 +122,7 @@ function App() {
         </Tabs>
         <textarea className="w-full h-64" value={compiledCode} />
         <hr />
-        <textarea className="w-full h-8 bg-red-100" value={message} />
+        <textarea className="w-full h-32 bg-red-100" value={message} />
       </div>
     </div>
   )
