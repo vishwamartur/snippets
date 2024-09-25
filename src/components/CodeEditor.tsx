@@ -8,8 +8,9 @@ import { useState } from "react"
 
 export const CodeEditor = ({
   onCodeChange,
-}: { onCodeChange: (code: string) => void }) => {
-  const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`)
+  defaultCode = "",
+}: { onCodeChange: (code: string) => void; defaultCode?: string }) => {
+  const [code, setCode] = useState(defaultCode)
   return (
     <Editor
       value={code}
