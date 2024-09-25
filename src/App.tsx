@@ -32,7 +32,7 @@ function App() {
     }
   }, [code])
 
-  const { compiledModule, message, circuitJson } = useMemo(() => {
+  const { message, circuitJson } = useMemo(() => {
     try {
       const exports: any = {}
       const module = { exports }
