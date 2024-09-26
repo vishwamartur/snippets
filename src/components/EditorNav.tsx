@@ -10,6 +10,7 @@ import {
   Share2,
   Sidebar,
   SidebarClose,
+  Save,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,7 +26,14 @@ import { Snippet } from "fake-snippets-api/lib/db/schema"
 export default function EditorNav({
   snippet,
   code,
-}: { snippet: Snippet; code: string }) {
+  hasUnsavedChanges,
+  onSave,
+}: {
+  snippet: Snippet
+  code: string
+  hasUnsavedChanges: boolean
+  onSave: () => void
+}) {
   return (
     <nav className="flex items-center justify-between px-2 py-3 border-b border-gray-200 bg-white text-sm border-t">
       <div className="flex items-center space-x-1">
@@ -39,6 +47,15 @@ export default function EditorNav({
       </div>
       <div className="flex items-center space-x-2">
         <DropdownMenu>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-6 px-2 text-xs"
+            onClick={onSave}
+          >
+            <Save className="mr-1 h-3 w-3" />
+            Save
+          </Button>
           <DropdownMenuTrigger>
             <Button variant="outline" size="sm" className="h-6 px-2 text-xs">
               <Download className="mr-1 h-3 w-3" />

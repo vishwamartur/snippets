@@ -44,4 +44,24 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
     }
     return state.snippets
   },
+  updateSnippet: (snippet_id: string, content: string) => {
+    set((state) => {
+      const snippetIndex = state.snippets.findIndex(
+        (snippet) => snippet.snippet_id === snippet_id,
+      )
+      if (snippetIndex === -1) {
+        return state
+      }
+      const updatedSnippets = [...state.snippets]
+      updatedSnippets[snippetIndex] = {
+        ...updatedSnippets[snippetIndex],
+        content: content,
+      }
+      return { ...state, snippets: updatedSnippets }
+    })
+  },
+  getSnippetById: (snippet_id: string): Snippet | undefined => {
+    const state = get()
+    return state.snippets.find((snippet) => snippet.snippet_id === snippet_id)
+  },
 }))

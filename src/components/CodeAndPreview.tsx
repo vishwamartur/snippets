@@ -11,6 +11,8 @@ import { useRunTsx } from "@/hooks/use-run-tsx"
 import EditorNav from "./EditorNav"
 import { CircuitJsonTableViewer } from "./TableViewer/CircuitJsonTableViewer"
 import { Snippet } from "fake-snippets-api/lib/db/schema"
+import axios from "redaxios"
+import { useToast } from "@/hooks/use-toast"
 
 interface Props {
   snippet?: Snippet | null
@@ -20,8 +22,36 @@ export function CodeAndPreview({ snippet }: Props) {
   const defaultCode =
     decodeUrlHashToText(window.location.toString()) ?? defaultCodeForBlankPage
   const [code, setCode] = useState(defaultCode)
+  const { toast } = useToast()
 
   const { message, circuitJson } = useRunTsx(code)
+
+  const handleSave = async () => {
+    if (!snippet) return
+
+    try {
+      const response = await axios.post("/api/snippets/update", {
+        snippet_id: snippet.snippet_id,
+        content: code,
+      })
+
+      if (response.status === 200) {
+        toast({
+          title: "Snippet saved",
+          description: "Your changes have been saved successfully.",
+        })
+      } else {
+        throw new Error("Failed to save snippet")
+      }
+    } catch (error) {
+      console.error("Error saving snippet:", error)
+      toast({
+        title: "Error",
+        description: "Failed to save the snippet. Please try again.",
+        variant: "destructive",
+      })
+    }
+  }
 
   if (!snippet) {
     return <div>Loading...</div>
@@ -29,7 +59,7 @@ export function CodeAndPreview({ snippet }: Props) {
 
   return (
     <div className="flex flex-col">
-      <EditorNav snippet={snippet} code={code} />
+      <EditorNav snippet={snippet} code={code} onSave={handleSave} />
       <div className="flex">
         <div className="w-1/2 p-2 border-r border-gray-200 bg-gray-50">
           <CodeEditor defaultCode={defaultCode} onCodeChange={setCode} />
