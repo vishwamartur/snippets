@@ -22,6 +22,7 @@ import {
 import { OpenInNewWindowIcon } from "@radix-ui/react-icons"
 import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash"
 import { Snippet } from "fake-snippets-api/lib/db/schema"
+import { useState, useEffect } from "react"
 
 export default function EditorNav({
   snippet,
@@ -34,6 +35,16 @@ export default function EditorNav({
   hasUnsavedChanges: boolean
   onSave: () => void
 }) {
+  const [showUnsavedBadge, setShowUnsavedBadge] = useState(false)
+
+  useEffect(() => {
+    if (hasUnsavedChanges) {
+      setShowUnsavedBadge(true)
+    } else {
+      setShowUnsavedBadge(false)
+    }
+  }, [hasUnsavedChanges])
+
   return (
     <nav className="flex items-center justify-between px-2 py-3 border-b border-gray-200 bg-white text-sm border-t">
       <div className="flex items-center space-x-1">
@@ -46,6 +57,11 @@ export default function EditorNav({
         </Button>
       </div>
       <div className="flex items-center space-x-2">
+        {showUnsavedBadge && (
+          <div className="animate-fadeIn bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">
+            Unsaved changes
+          </div>
+        )}
         <DropdownMenu>
           <Button
             variant="outline"

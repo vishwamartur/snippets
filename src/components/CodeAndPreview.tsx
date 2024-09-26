@@ -57,12 +57,29 @@ export function CodeAndPreview({ snippet }: Props) {
     return <div>Loading...</div>
   }
 
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+
+  const handleCodeChange = (newCode: string) => {
+    setCode(newCode)
+    setHasUnsavedChanges(true)
+  }
+
+  const handleSaveWithChanges = async () => {
+    await handleSave()
+    setHasUnsavedChanges(false)
+  }
+
   return (
     <div className="flex flex-col">
-      <EditorNav snippet={snippet} code={code} onSave={handleSave} />
+      <EditorNav
+        snippet={snippet}
+        code={code}
+        hasUnsavedChanges={hasUnsavedChanges}
+        onSave={handleSaveWithChanges}
+      />
       <div className="flex">
         <div className="w-1/2 p-2 border-r border-gray-200 bg-gray-50">
-          <CodeEditor defaultCode={defaultCode} onCodeChange={setCode} />
+          <CodeEditor defaultCode={defaultCode} onCodeChange={handleCodeChange} />
         </div>
         <div className="w-1/2 p-2">
           <Tabs defaultValue="pcb">
