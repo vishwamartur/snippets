@@ -107,7 +107,8 @@ export const LandingHero = () => {
             </span>
           </Button>
           <p className="text-sm text-gray-600">
-            A board that can be manufactured.
+            A printed circuit board containing multiple chips, resistors and
+            capacitors to form a functional, manufacturable electronic device.
           </p>
         </div>
         <div>

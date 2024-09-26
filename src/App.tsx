@@ -10,6 +10,7 @@ import { ViewSnippetPage } from "./pages/view-snippet"
 import { LandingPage } from "./pages/landing"
 import { Route, Switch } from "wouter"
 import { AiPage } from "./pages/ai"
+import { ProfilePage } from "./pages/profile"
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/editor" component={EditorPage} />
         <Route path="/dashboard" component={DashboardPage} />
         <Route path="/ai" component={AiPage} />
+        <Route path="/profile" component={ProfilePage} />
         <Route path="/:snippetName*" component={ViewSnippetPage} />
       </Switch>
     </ContextProviders>
