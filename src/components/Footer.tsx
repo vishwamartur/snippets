@@ -9,15 +9,19 @@ export default function Footer() {
           <div className="space-y-4">
             <nav className="flex flex-col space-y-2">
               {[
-                "Home",
-                "Dashboard",
-                "Editor",
-                "Create with AI",
-                "My Profile",
-                "Settings",
+                { name: "Home", href: "/" },
+                { name: "Dashboard", href: "/dashboard" },
+                { name: "Editor", href: "/editor" },
+                { name: "Create with AI", href: "/ai" },
+                { name: "My Profile", href: "/profile" },
+                { name: "Settings", href: "/settings" },
               ].map((item) => (
-                <Link key={item} href="#" className="hover:underline">
-                  {item}
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="hover:underline"
+                >
+                  {item.name}
                 </Link>
               ))}
             </nav>
@@ -26,24 +30,39 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="font-semibold uppercase">Explore</h3>
             <nav className="flex flex-col space-y-2">
-              {["Newest Snippets", "Docs"].map((item) => (
-                <Link key={item} href="#" className="hover:underline">
-                  {item}
-                </Link>
-              ))}
+              <Link href="/newest" className="hover:underline">
+                Newest Snippets
+              </Link>
+              <a href="https://docs.tscircuit.com" className="hover:underline">
+                Docs
+              </a>
             </nav>
           </div>
 
           <div className="space-y-4">
             <h3 className="font-semibold uppercase">Follow</h3>
             <nav className="flex flex-col space-y-2">
-              {["Blog", "Twitter", "Discord", "GitHub", "YouTube"].map(
-                (item) => (
-                  <Link key={item} href="#" className="hover:underline">
-                    {item}
-                  </Link>
-                ),
-              )}
+              <a href="https://blog.tscircuit.com" className="hover:underline">
+                Blog
+              </a>
+              <a href="https://x.com/tscircuit" className="hover:underline">
+                Twitter
+              </a>
+              <a href="#" className="hover:underline">
+                Discord
+              </a>
+              <a
+                href="https://github.com/tscircuit/tscircuit"
+                className="hover:underline"
+              >
+                GitHub
+              </a>
+              <a
+                href="https://youtube.com/@seveibar"
+                className="hover:underline"
+              >
+                YouTube
+              </a>
             </nav>
           </div>
 
