@@ -23,6 +23,7 @@ import { OpenInNewWindowIcon } from "@radix-ui/react-icons"
 import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash"
 import { Snippet } from "fake-snippets-api/lib/db/schema"
 import { useState, useEffect } from "react"
+import { cn } from "@/lib/utils"
 
 export default function EditorNav({
   snippet,
@@ -55,23 +56,23 @@ export default function EditorNav({
         <Button variant="ghost" size="icon" className="h-6 w-6 ml-1">
           <OpenInNewWindowIcon className="h-3 w-3 text-gray-500" />
         </Button>
-      </div>
-      <div className="flex items-center space-x-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className={"h-6 px-2 text-xs"}
+          onClick={onSave}
+        >
+          <Save className="mr-1 h-3 w-3" />
+          Save
+        </Button>
         {showUnsavedBadge && (
           <div className="animate-fadeIn bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">
-            Unsaved changes
+            unsaved changes
           </div>
         )}
+      </div>
+      <div className="flex items-center space-x-2">
         <DropdownMenu>
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-6 px-2 text-xs"
-            onClick={onSave}
-          >
-            <Save className="mr-1 h-3 w-3" />
-            Save
-          </Button>
           <DropdownMenuTrigger>
             <Button variant="outline" size="sm" className="h-6 px-2 text-xs">
               <Download className="mr-1 h-3 w-3" />
