@@ -27,7 +27,7 @@ function App() {
         <Route path="/newest" component={NewestPage} />
         <Route path="/settings" component={SettingsPage} />
         <Route path="/search" component={SearchPage} />
-        <Route path="/:snippetName*" component={ViewSnippetPage} />
+        <Route path="/:author/:snippetName" component={ViewSnippetPage} />
       </Switch>
     </ContextProviders>
   )
