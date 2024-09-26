@@ -36,16 +36,6 @@ export default function EditorNav({
   hasUnsavedChanges: boolean
   onSave: () => void
 }) {
-  const [showUnsavedBadge, setShowUnsavedBadge] = useState(false)
-
-  useEffect(() => {
-    if (hasUnsavedChanges) {
-      setShowUnsavedBadge(true)
-    } else {
-      setShowUnsavedBadge(false)
-    }
-  }, [hasUnsavedChanges])
-
   return (
     <nav className="flex items-center justify-between px-2 py-3 border-b border-gray-200 bg-white text-sm border-t">
       <div className="flex items-center space-x-1">
@@ -65,7 +55,7 @@ export default function EditorNav({
           <Save className="mr-1 h-3 w-3" />
           Save
         </Button>
-        {showUnsavedBadge && (
+        {hasUnsavedChanges && (
           <div className="animate-fadeIn bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">
             unsaved changes
           </div>
