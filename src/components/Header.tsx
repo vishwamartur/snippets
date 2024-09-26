@@ -16,16 +16,24 @@ export default function Header() {
         <nav>
           <ul className="flex items-center">
             <li>
-              <Button variant="ghost">Dashboard</Button>
+              <Link href="/dashboard">
+                <Button variant="ghost">Dashboard</Button>
+              </Link>
             </li>
             <li>
-              <Button variant="ghost">Newest</Button>
+              <Link href="/newest">
+                <Button variant="ghost">Newest</Button>
+              </Link>
             </li>
             <li>
-              <Button variant="ghost">Editor</Button>
+              <Link href="/editor">
+                <Button variant="ghost">Editor</Button>
+              </Link>
             </li>
             <li>
-              <Button variant="ghost">Docs</Button>
+              <Link href="/docs">
+                <Button variant="ghost">Docs</Button>
+              </Link>
             </li>
           </ul>
         </nav>
