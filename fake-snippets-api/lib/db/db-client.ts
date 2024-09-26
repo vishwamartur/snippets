@@ -29,7 +29,19 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
   getNewestSnippets: (limit: number): Snippet[] => {
     const state = get()
     return [...state.snippets]
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      )
       .slice(0, limit)
+  },
+  getSnippetsByAuthor: (authorName?: string): Snippet[] => {
+    const state = get()
+    if (authorName) {
+      return state.snippets.filter(
+        (snippet) => snippet.owner_name === authorName,
+      )
+    }
+    return state.snippets
   },
 }))

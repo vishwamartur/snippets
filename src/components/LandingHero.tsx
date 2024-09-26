@@ -11,11 +11,12 @@ import {
   LayoutGrid,
   Bot,
 } from "lucide-react"
+import { CreateNewSnippetHero } from "./CreateNewSnippetHero"
 
 export const LandingHero = () => {
   return (
     <div className="p-6">
-      {CreateNewSnippetHero()}
+      <CreateNewSnippetHero />
 
       <Card className="mb-6 bg-gray-50 rounded-sm">
         <CardHeader className="p-3 pl-8">
