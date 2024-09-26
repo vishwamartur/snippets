@@ -1,3 +1,4 @@
+import { createDatabase } from "./fake-snippets-api/lib/db/db-client"
 import { defineConfig, Plugin } from "vite"
 import path from "path"
 import react from "@vitejs/plugin-react"
@@ -6,7 +7,16 @@ import { getNodeHandler } from "winterspec/adapters/node"
 // @ts-ignore
 import winterspecBundle from "./dist/bundle.js"
 
-const fakeHandler = getNodeHandler(winterspecBundle as any, {})
+const db = createDatabase()
+
+const fakeHandler = getNodeHandler(winterspecBundle as any, {
+  middleware: [
+    (req, ctx, next) => {
+      ;(ctx as any).db = db
+      return next(req, ctx)
+    },
+  ],
+})
 
 function apiFakePlugin(): Plugin {
   return {

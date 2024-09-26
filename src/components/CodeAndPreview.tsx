@@ -10,17 +10,26 @@ import { Button } from "@/components/ui/button"
 import { useRunTsx } from "@/hooks/use-run-tsx"
 import EditorNav from "./EditorNav"
 import { CircuitJsonTableViewer } from "./TableViewer/CircuitJsonTableViewer"
+import { Snippet } from "fake-snippets-api/lib/db/schema"
 
-export function CodeAndPreview() {
+interface Props {
+  snippet?: Snippet | null
+}
+
+export function CodeAndPreview({ snippet }: Props) {
   const defaultCode =
     decodeUrlHashToText(window.location.toString()) ?? defaultCodeForBlankPage
   const [code, setCode] = useState(defaultCode)
 
   const { message, circuitJson } = useRunTsx(code)
 
+  if (!snippet) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="flex flex-col">
-      <EditorNav code={code} />
+      <EditorNav snippet={snippet} code={code} />
       <div className="flex">
         <div className="w-1/2 p-2 border-r border-gray-200 bg-gray-50">
           <CodeEditor defaultCode={defaultCode} onCodeChange={setCode} />

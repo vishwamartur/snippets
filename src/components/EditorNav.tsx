@@ -20,14 +20,18 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { OpenInNewWindowIcon } from "@radix-ui/react-icons"
 import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash"
+import { Snippet } from "fake-snippets-api/lib/db/schema"
 
-export default function EditorNav({ code }: { code: string }) {
+export default function EditorNav({
+  snippet,
+  code,
+}: { snippet: Snippet; code: string }) {
   return (
     <nav className="flex items-center justify-between px-2 py-3 border-b border-gray-200 bg-white text-sm border-t">
       <div className="flex items-center space-x-1">
         {/* <span className="text-base font-semibold">»</span> */}
         <span className="text-md font-semibold">
-          seveibar/new-snippet-0f83a4
+          {snippet.full_snippet_name}
         </span>
         <Button variant="ghost" size="icon" className="h-6 w-6 ml-1">
           <OpenInNewWindowIcon className="h-3 w-3 text-gray-500" />
