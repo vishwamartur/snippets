@@ -8,7 +8,8 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      "fake-snippets-api/*": ["./fake-snippets-api/*"]
     },
     "skipLibCheck": true,
 
@@ -26,5 +27,5 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": false
   },
-  "include": ["src"]
+  "include": ["src", "fake-snippets-api"]
 }

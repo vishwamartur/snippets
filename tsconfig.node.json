@@ -8,7 +8,8 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      "fake-snippets-api/*": ["./fake-snippets-api/*"]
     },
 
     /* Bundler mode */
@@ -24,5 +25,5 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": false
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "fake-snippets-api", "dist"]
 }

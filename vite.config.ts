@@ -5,6 +5,7 @@ import { getNodeHandler } from "winterspec/adapters/node"
 
 // @ts-ignore
 import winterspecBundle from "./dist/bundle.js"
+
 const fakeHandler = getNodeHandler(winterspecBundle as any, {})
 
 function apiFakePlugin(): Plugin {

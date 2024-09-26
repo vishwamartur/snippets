@@ -5,10 +5,9 @@
   "type": "module",
   "scripts": {
     "start": "bun run dev",
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "bun run build:fake-api && vite",
+    "build": "bun run build:fake-api && tsc -b && vite build",
     "preview": "vite preview",
-    "dev:fake-api": "winterspec dev",
     "build:fake-api": "winterspec bundle -o dist/bundle.js"
   },
   "dependencies": {

@@ -5,7 +5,8 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      "fake-snippets-api/*": ["./fake-snippets-api/*"]
     },
   },
   "references": [

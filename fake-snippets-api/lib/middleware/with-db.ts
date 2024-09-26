@@ -1,5 +1,5 @@
-import type { DbClient } from "lib/db/db-client"
-import { createDatabase } from "lib/db/db-client"
+import type { DbClient } from "fake-snippets-api/lib/db/db-client"
+import { createDatabase } from "fake-snippets-api/lib/db/db-client"
 import type { Middleware } from "winterspec"
 
 export const withDb: Middleware<
