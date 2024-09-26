@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <header className="flex items-center justify-between px-4 py-3">
       <div className="flex items-center">
-        <Link href="/" className="text-lg font-semibold mr-2 ">
+        <Link href="/" className="text-lg font-semibold mr-3 ">
           <span className="bg-blue-500 px-2 py-1 rounded-md text-white">
             tscircuit
           </span>{" "}
