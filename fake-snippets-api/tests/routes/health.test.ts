@@ -1,5 +1,5 @@
 import { it, expect } from "bun:test"
-import { getTestServer } from "tests/fixtures/get-test-server"
+import { getTestServer } from "fake-snippets-api/tests/fixtures/get-test-server"
 
 it("GET /health should return ok", async () => {
   const { axios } = await getTestServer()
