@@ -31,7 +31,7 @@ export default function Header() {
               </Link>
             </li>
             <li>
-              <Link href="/docs">
+              <Link href="https://docs.tscircuit.com">
                 <Button variant="ghost">Docs</Button>
               </Link>
             </li>

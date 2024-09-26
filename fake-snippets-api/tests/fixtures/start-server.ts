@@ -40,5 +40,5 @@ export const startServer = async ({
     port,
   })
 
-  return server
+  return { server: { ...server, stop: () => server.stop() }, db }
 }

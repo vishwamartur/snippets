@@ -16,15 +16,7 @@ export const createDatabase = () => {
 
 export type DbClient = ReturnType<typeof createDatabase>
 
-const initializer = combine(databaseSchema.parse({}), (set) => ({
-  // addThing: (thing: Omit<Thing, "thing_id">) => {
-  //   set((state) => ({
-  //     things: [
-  //        ...state.things, { thing_id: state.idCounter + 1, ...thing }
-  //     ],
-  //     idCounter: state.idCounter + 1,
-  //   }))
-  // },
+const initializer = combine(databaseSchema.parse({}), (set, get) => ({
   addSnippet: (snippet: Omit<Snippet, "snippet_id">) => {
     set((state) => {
       const newSnippetId = `snippet_${state.idCounter + 1}`
@@ -33,5 +25,11 @@ const initializer = combine(databaseSchema.parse({}), (set) => ({
         idCounter: state.idCounter + 1,
       }
     })
+  },
+  getNewestSnippets: (limit: number): Snippet[] => {
+    const state = get()
+    return [...state.snippets]
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .slice(0, limit)
   },
 }))
