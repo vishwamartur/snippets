@@ -1,7 +1,32 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ChevronDown, Search } from "lucide-react"
-import { Link } from "wouter"
+import { Link, useLocation } from "wouter"
+import { cn } from "@/lib/utils/index"
+
+const HeaderButton = ({
+  href,
+  children,
+}: { href: string; children: React.ReactNode }) => {
+  const [location] = useLocation()
+
+  if (location === href) {
+    return (
+      <Button
+        variant="ghost"
+        className="border-b-2 rounded-none border-blue-600"
+      >
+        {children}
+      </Button>
+    )
+  }
+
+  return (
+    <Link href={href}>
+      <Button variant="ghost">{children}</Button>
+    </Link>
+  )
+}
 
 export default function Header() {
   return (
@@ -14,21 +39,15 @@ export default function Header() {
           <span className="text-gray-800">snippets</span>
         </Link>
         <nav>
-          <ul className="flex items-center">
+          <ul className="flex items-center gap-2">
             <li>
-              <Link href="/dashboard">
-                <Button variant="ghost">Dashboard</Button>
-              </Link>
+              <HeaderButton href="/dashboard">Dashboard</HeaderButton>
             </li>
             <li>
-              <Link href="/newest">
-                <Button variant="ghost">Newest</Button>
-              </Link>
+              <HeaderButton href="/newest">Newest</HeaderButton>
             </li>
             <li>
-              <Link href="/editor">
-                <Button variant="ghost">Editor</Button>
-              </Link>
+              <HeaderButton href="/editor">Editor</HeaderButton>
             </li>
             <li>
               <Link href="https://docs.tscircuit.com">
