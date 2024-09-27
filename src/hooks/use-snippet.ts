@@ -6,6 +6,9 @@ export const useSnippet = (snippetId: string) => {
   return useQuery<Snippet, Error>(
     ["snippet", snippetId],
     async () => {
+      if (!snippetId) {
+        throw new Error("Snippet ID is required")
+      }
       const { data } = await axios.get("/api/snippets/get", {
         params: { snippet_id: snippetId },
       })

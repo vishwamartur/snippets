@@ -15,10 +15,18 @@ import {
   Clock,
 } from "lucide-react"
 import { GitHubLogoIcon } from "@radix-ui/react-icons"
+import { cn } from "@/lib/utils"
 
-export default function ViewSnippetSidebar() {
+export default function ViewSnippetSidebar({
+  className,
+}: { className?: string }) {
   return (
-    <div className="w-64 h-screen bg-gray-100 text-gray-700 flex flex-col">
+    <div
+      className={cn(
+        "w-64 h-screen bg-gray-100 text-gray-700 flex flex-col",
+        className,
+      )}
+    >
       <nav className="flex-1 overflow-y-auto">
         <ul className="p-2 space-y-2">
           {[

@@ -24,6 +24,7 @@ import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash"
 import { Snippet } from "fake-snippets-api/lib/db/schema"
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
+import { DownloadButtonAndMenu } from "./DownloadButtonAndMenu"
 
 export default function EditorNav({
   snippet,
@@ -62,59 +63,7 @@ export default function EditorNav({
         )}
       </div>
       <div className="flex items-center space-x-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button variant="outline" size="sm" className="h-6 px-2 text-xs">
-              <Download className="mr-1 h-3 w-3" />
-              Download
-              <ChevronDown className="ml-1 h-3 w-3" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem className="text-xs">
-              <Download className="mr-1 h-3 w-3" />
-              <span className="flex-grow mr-6">Download TSX</span>
-              <span className="text-[0.6rem] opacity-80 bg-blue-500 text-white font-mono rounded-md px-1 text-center py-0.5 mr-1">
-                tsx
-              </span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-xs">
-              <Download className="mr-1 h-3 w-3" />
-              <span className="flex-grow mr-6">Download Circuit JSON</span>
-              <span className="text-[0.6rem] opacity-80 bg-blue-500 text-white font-mono rounded-md px-1 text-center py-0.5 mr-1">
-                json
-              </span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-xs">
-              <Download className="mr-1 h-3 w-3" />
-              <span className="flex-grow  mr-6">Download 3D Model</span>
-              <span className="text-[0.6rem] bg-green-500 opacity-80 text-white font-mono rounded-md px-1 text-center py-0.5 mr-1">
-                stl
-              </span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-xs">
-              <Download className="mr-1 h-3 w-3" />
-              <span className="flex-grow  mr-6">Fabrication Files</span>
-              <span className="text-[0.6rem] bg-purple-500 opacity-80 text-white font-mono rounded-md px-1 text-center py-0.5 mr-1">
-                gerber/pnp/bom/csv
-              </span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-xs">
-              <Download className="mr-1 h-3 w-3" />
-              <span className="flex-grow mr-6">Download Footprint</span>
-              <span className="text-[0.6rem] bg-orange-500 opacity-80 text-white font-mono rounded-md px-1 text-center py-0.5 mr-1">
-                kicad_mod
-              </span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-xs">
-              <Download className="mr-1 h-3 w-3" />
-              <span className="flex-grow mr-6">Download KiCad Zip</span>
-              <span className="text-[0.6rem] bg-orange-500 opacity-80 text-white font-mono rounded-md px-1 text-center py-0.5 mr-1">
-                kicad_*
-              </span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DownloadButtonAndMenu />
         <Button
           variant="outline"
           size="sm"

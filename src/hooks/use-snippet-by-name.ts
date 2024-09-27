@@ -2,17 +2,18 @@ import { useQuery } from "react-query"
 import axios from "redaxios"
 import type { Snippet } from "fake-snippets-api/lib/db/schema"
 
-export const useSnippetByName = (snippetName: string) => {
+export const useSnippetByName = (fullSnippetName: string | null) => {
   return useQuery<Snippet, Error>(
-    ["snippet", snippetName],
+    ["snippet", fullSnippetName],
     async () => {
+      if (!fullSnippetName) return
       const { data } = await axios.get("/api/snippets/get", {
-        params: { snippet_name: snippetName },
+        params: { full_snippet_name: fullSnippetName },
       })
-      return data
+      return data.snippet
     },
     {
-      enabled: Boolean(snippetName),
+      enabled: Boolean(fullSnippetName),
     },
   )
 }

@@ -8,11 +8,17 @@ import { useState } from "react"
 
 export const CodeEditor = ({
   onCodeChange,
+  readOnly = false,
   defaultCode = "",
-}: { onCodeChange: (code: string) => void; defaultCode?: string }) => {
+}: {
+  onCodeChange: (code: string) => void
+  defaultCode?: string
+  readOnly?: boolean
+}) => {
   const [code, setCode] = useState(defaultCode)
   return (
     <Editor
+      readOnly={readOnly}
       value={code}
       onValueChange={(code) => {
         setCode(code)
