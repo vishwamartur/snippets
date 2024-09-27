@@ -1,4 +1,5 @@
 import Header from "@/components/Header"
+import ViewSnippetSidebar from "@/components/ViewSnippetSidebar"
 import { useParams } from "wouter"
 
 export const ViewSnippetPage = () => {
@@ -10,6 +11,7 @@ export const ViewSnippetPage = () => {
         <h1>
           Viewing snippet {author}/{snippetName}
         </h1>
+        <ViewSnippetSidebar />
       </div>
     </div>
   )
