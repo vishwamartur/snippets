@@ -17,14 +17,14 @@ export const snippetSchema = z
   .transform((snippet) => ({
     ...snippet,
     type: snippet.is_board
-      ? "board"
+      ? ("board" as const)
       : snippet.is_package
-        ? "package"
+        ? ("package" as const)
         : snippet.is_3d_model
-          ? "model"
+          ? ("model" as const)
           : snippet.is_footprint
-            ? "footprint"
-            : "board",
+            ? ("footprint" as const)
+            : ("board" as const),
   }))
 export type Snippet = z.infer<typeof snippetSchema>
 

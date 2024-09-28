@@ -16,6 +16,7 @@ const typeColors: Record<BadgeType, string> = {
 }
 
 export const TypeBadge: React.FC<TypeBadgeProps> = ({ type, className }) => {
+  if (!type) return null
   return (
     <span
       className={cn(

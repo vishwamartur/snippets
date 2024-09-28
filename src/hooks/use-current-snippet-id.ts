@@ -13,7 +13,7 @@ import { blank3dModelTemplate } from "@/lib/templates/blank-3d-model-template"
 export const useCurrentSnippetId = (): string | null => {
   const urlParams = useUrlParams()
   const urlSnippetId = urlParams.snippet_id
-  const template = urlParams.template
+  const templateName = urlParams.template
   const wouter = useParams()
   const [location] = useLocation()
   const [snippetIdFromUrl, setSnippetId] = useState<string | null>(urlSnippetId)
@@ -24,7 +24,7 @@ export const useCurrentSnippetId = (): string | null => {
       : null,
   )
 
-  const getTemplateContent = (template: string | undefined) => {
+  const getTemplate = (template: string | undefined) => {
     switch (template) {
       case "blank-circuit-module":
         return blankPackageTemplate
@@ -35,18 +35,22 @@ export const useCurrentSnippetId = (): string | null => {
       case "blank-3d-model":
         return blank3dModelTemplate
       default:
-        return defaultCodeForBlankPage
+        return { code: defaultCodeForBlankPage, type: "board" }
     }
   }
 
   const createSnippetMutation = useMutation({
     mutationKey: ["createSnippet"],
     mutationFn: async () => {
-      console.log("creating snippet")
+      const template = getTemplate(templateName)
       const {
         data: { snippet },
       } = await axios.post("/api/snippets/create", {
-        content: getTemplateContent(template),
+        content: template.code,
+        is_board: template.type === "board",
+        is_package: template.type === "package",
+        is_footprint: template.type === "footprint",
+        is_3d_model: template.type === "3d_model",
         owner_name: "seveibar",
       })
       return snippet
@@ -78,12 +82,12 @@ export const useCurrentSnippetId = (): string | null => {
   }, [])
 
   useEffect(() => {
-    if (template) {
+    if (templateName) {
       const url = new URL(window.location.href)
       url.searchParams.delete("template")
       window.history.replaceState({}, "", url.toString())
     }
-  }, [template])
+  }, [templateName])
 
   return snippetIdFromUrl ?? snippetByName?.snippet_id ?? null
 }

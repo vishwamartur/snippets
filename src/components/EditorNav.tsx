@@ -26,6 +26,7 @@ import { Snippet } from "fake-snippets-api/lib/db/schema"
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { DownloadButtonAndMenu } from "./DownloadButtonAndMenu"
+import { TypeBadge } from "./TypeBadge"
 
 export default function EditorNav({
   snippet,
@@ -93,6 +94,7 @@ export default function EditorNav({
         )}
       </div>
       <div className="flex items-center space-x-2">
+        {snippet && <TypeBadge type={snippet.type} />}
         <DownloadButtonAndMenu />
         <Button
           variant="outline"
@@ -110,13 +112,6 @@ export default function EditorNav({
         <Button variant="outline" size="sm" className="h-6 px-2 text-xs">
           <Eye className="mr-1 h-3 w-3" />
           Public
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="h-6 px-2 text-[0.6rem] bg-green-500 text-white hover:bg-green-600 hover:text-white"
-        >
-          Running
         </Button>
         <Button variant="ghost" size="icon" className="h-6 w-6">
           <Sidebar className="h-3 w-3" />

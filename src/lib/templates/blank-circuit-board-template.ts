@@ -1,4 +1,6 @@
-export const blankCircuitBoardTemplate = `
+export const blankCircuitBoardTemplate = {
+  type: "board",
+  code: `
 export default () => (
   <board width="10mm" height="10mm">
     <resistor
@@ -24,4 +26,5 @@ export default () => (
     <trace from=".R1 > .pin1" to=".C1 > .pin1" />
   </board>
 )
-`.trim()
+`.trim(),
+}

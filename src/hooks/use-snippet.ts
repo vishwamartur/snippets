@@ -2,7 +2,7 @@ import { useQuery } from "react-query"
 import axios from "redaxios"
 import type { Snippet } from "fake-snippets-api/lib/db/schema"
 
-export const useSnippet = (snippetId: string) => {
+export const useSnippet = (snippetId: string | null) => {
   return useQuery<Snippet, Error>(
     ["snippets", snippetId],
     async () => {

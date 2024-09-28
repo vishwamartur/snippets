@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TypeBadge } from "@/components/TypeBadge"
 
-export const StartEditorPage = () => {
+export const QuickstartPage = () => {
   const { data: mySnippets, isLoading } = useQuery<Snippet[]>(
     "userSnippets",
     async () => {
@@ -46,12 +46,12 @@ export const StartEditorPage = () => {
                   href={`/editor?snippet_id=${snippet.snippet_id}`}
                 >
                   <Card className="hover:shadow-md transition-shadow rounded-md">
-                    <CardHeader className="pb-2">
+                    <CardHeader className="pb-0 p-4">
                       <CardTitle className="text-md">
                         {snippet.snippet_name}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4 pt-0">
                       <p className="text-sm text-gray-500">
                         Last edited:{" "}
                         {new Date(snippet.updated_at).toLocaleDateString()}

@@ -12,6 +12,7 @@ import EditorNav from "./EditorNav"
 import { CircuitJsonTableViewer } from "./TableViewer/CircuitJsonTableViewer"
 import { Snippet } from "fake-snippets-api/lib/db/schema"
 import axios from "redaxios"
+import { TypeBadge } from "./TypeBadge"
 import { useToast } from "@/hooks/use-toast"
 import { useMutation, useQueryClient } from "react-query"
 import { ClipboardIcon, Share } from "lucide-react"
@@ -34,7 +35,7 @@ export function CodeAndPreview({ snippet }: Props) {
   }, [snippet?.content])
   const { toast } = useToast()
 
-  const { message, circuitJson } = useRunTsx(code)
+  const { message, circuitJson } = useRunTsx(code, snippet?.type!)
   const qc = useQueryClient()
 
   const updateSnippetMutation = useMutation({

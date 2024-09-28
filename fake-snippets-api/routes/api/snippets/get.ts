@@ -32,5 +32,5 @@ export default withRouteSpec({
     )
   }
 
-  return ctx.json({ snippet })
+  return ctx.json({ snippet: snippetSchema.parse(snippet) })
 })

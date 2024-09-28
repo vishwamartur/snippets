@@ -14,5 +14,7 @@ export default withRouteSpec({
 })(async (req, ctx) => {
   const author_name = req.commonParams.author_name
   const snippets = ctx.db.getSnippetsByAuthor(author_name)
-  return ctx.json({ snippets })
+  return ctx.json({
+    snippets: snippets.map((snippet) => snippetSchema.parse(snippet)),
+  })
 })
