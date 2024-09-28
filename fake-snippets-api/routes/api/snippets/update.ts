@@ -8,14 +8,24 @@ export default withRouteSpec({
     snippet_id: z.string(),
     content: z.string(),
     snippet_name: z.string().optional(),
+    is_board: z.boolean().optional(),
+    is_package: z.boolean().optional(),
+    is_3d_model: z.boolean().optional(),
+    is_footprint: z.boolean().optional(),
   }),
   jsonResponse: z.object({
     snippet: snippetSchema,
   }),
 })(async (req, ctx) => {
-  const { content, snippet_name, snippet_id } = req.jsonBody
+  const { content, snippet_name, snippet_id, is_board, is_package, is_3d_model, is_footprint } = req.jsonBody
 
-  ctx.db.updateSnippet(snippet_id, content, new Date().toISOString())
+  ctx.db.updateSnippet(snippet_id, content, new Date().toISOString(), {
+    is_board,
+    is_package,
+    is_3d_model,
+    is_footprint,
+    snippet_name,
+  })
 
   return ctx.json({ snippet: ctx.db.getSnippetById(snippet_id)! })
 })

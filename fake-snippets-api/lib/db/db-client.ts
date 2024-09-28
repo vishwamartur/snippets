@@ -44,7 +44,18 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
     }
     return state.snippets
   },
-  updateSnippet: (snippet_id: string, content: string, updated_at: string) => {
+  updateSnippet: (
+    snippet_id: string,
+    content: string,
+    updated_at: string,
+    options?: {
+      is_board?: boolean
+      is_package?: boolean
+      is_3d_model?: boolean
+      is_footprint?: boolean
+      snippet_name?: string
+    }
+  ) => {
     set((state) => {
       const snippetIndex = state.snippets.findIndex(
         (snippet) => snippet.snippet_id === snippet_id,
@@ -57,6 +68,11 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
         ...updatedSnippets[snippetIndex],
         content: content,
         updated_at: updated_at,
+        ...(options?.is_board !== undefined && { is_board: options.is_board }),
+        ...(options?.is_package !== undefined && { is_package: options.is_package }),
+        ...(options?.is_3d_model !== undefined && { is_3d_model: options.is_3d_model }),
+        ...(options?.is_footprint !== undefined && { is_footprint: options.is_footprint }),
+        ...(options?.snippet_name && { snippet_name: options.snippet_name }),
       }
       return { ...state, snippets: updatedSnippets }
     })
