@@ -35,8 +35,6 @@ export const StartEditorPage = () => {
     <div>
       <Header />
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Start a New Project</h1>
-
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4">Recent Snippets</h2>
           {isLoading ? (
@@ -113,6 +111,36 @@ export const StartEditorPage = () => {
                   </CardHeader>
                 </Card>
               </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Import as Snippet</h2>
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              { name: "KiCad Footprint", type: "FOOTPRINT", color: "purple" },
+              { name: "KiCad Project", type: "BOARD", color: "blue" },
+              { name: "KiCad Module", type: "PACKAGE", color: "green" },
+            ].map((template, index) => (
+              <Card
+                key={index}
+                className="hover:shadow-md transition-shadow rounded-md"
+              >
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center justify-between">
+                    {template.name}
+                    <span
+                      className={`ml-2 bg-${template.color}-500 text-white px-2 py-1 rounded text-xs`}
+                    >
+                      {template.type}
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Button className="w-full">Import {template.name}</Button>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
