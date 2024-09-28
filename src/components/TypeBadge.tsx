@@ -20,11 +20,11 @@ export const TypeBadge: React.FC<TypeBadgeProps> = ({ type, className }) => {
     <span
       className={cn(
         "text-white px-2 py-1 rounded text-xs font-semibold",
-        typeColors[type],
+        typeColors[type as BadgeType],
         className,
       )}
     >
-      {type}
+      {type.toUpperCase()}
     </span>
   )
 }

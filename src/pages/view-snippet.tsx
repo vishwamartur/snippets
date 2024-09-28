@@ -95,7 +95,7 @@ export const ViewSnippetPage = () => {
                       <h3 className="text-lg font-semibold text-red-800 mb-3">
                         Error
                       </h3>
-                      <p className="text-sm font-mono whitespace-pre text-red-700">
+                      <p className="text-sm font-mono whitespace-pre-wrap text-red-700">
                         {message}
                       </p>
                     </div>

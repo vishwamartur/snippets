@@ -65,7 +65,7 @@ export const LandingHero = () => {
         <div>
           <Link href="/start-editor?template=blank-circuit-board">
             <Button className="w-full justify-between mb-2 px-2">
-              Create new <TypeBadge type="BOARD" className="ml-2" />
+              Create new <TypeBadge type="board" className="ml-2" />
             </Button>
           </Link>
           <p className="text-sm text-gray-600">
@@ -76,7 +76,7 @@ export const LandingHero = () => {
         <div>
           <Link href="/start-editor?template=blank-circuit-module">
             <Button className="w-full justify-between mb-2 px-2">
-              Create new <TypeBadge type="PACKAGE" className="ml-2" />
+              Create new <TypeBadge type="package" className="ml-2" />
             </Button>
           </Link>
           <p className="text-sm text-gray-600">
@@ -87,7 +87,7 @@ export const LandingHero = () => {
         <div>
           <Link href="/start-editor?template=blank-footprint">
             <Button className="w-full justify-between mb-2 px-2">
-              Create new <TypeBadge type="FOOTPRINT" className="ml-2" />
+              Create new <TypeBadge type="footprint" className="ml-2" />
             </Button>
           </Link>
           <p className="text-sm text-gray-600">
@@ -98,7 +98,7 @@ export const LandingHero = () => {
         <div>
           <Link href="/start-editor?template=blank-3d-model">
             <Button className="w-full justify-between mb-2 px-2">
-              Create new <TypeBadge type="MODEL" className="ml-2" />
+              Create new <TypeBadge type="model" className="ml-2" />
             </Button>
           </Link>
           <p className="text-sm text-gray-600">

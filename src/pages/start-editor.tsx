@@ -22,13 +22,13 @@ export const StartEditorPage = () => {
   )
 
   const blankTemplates = [
-    { name: "Blank Circuit Board", type: "BOARD" },
-    { name: "Blank Circuit Module", type: "PACKAGE" },
-    { name: "Blank 3D Model", type: "MODEL" },
-    { name: "Blank Footprint", type: "FOOTPRINT" },
+    { name: "Blank Circuit Board", type: "board" },
+    { name: "Blank Circuit Module", type: "package" },
+    { name: "Blank 3D Model", type: "model" },
+    { name: "Blank Footprint", type: "footprint" },
   ]
 
-  const templates = [{ name: "Blinking LED Board", type: "BOARD" }]
+  const templates = [{ name: "Blinking LED Board", type: "board" }]
 
   return (
     <div>
@@ -89,9 +89,9 @@ export const StartEditorPage = () => {
           <h2 className="text-xl font-semibold mb-4">Import as Snippet</h2>
           <div className="grid grid-cols-3 gap-4">
             {[
-              { name: "KiCad Footprint", type: "FOOTPRINT" },
-              { name: "KiCad Project", type: "BOARD" },
-              { name: "KiCad Module", type: "PACKAGE" },
+              { name: "KiCad Footprint", type: "footprint" },
+              { name: "KiCad Project", type: "board" },
+              { name: "KiCad Module", type: "package" },
             ].map((template, index) => (
               <Card
                 key={index}
