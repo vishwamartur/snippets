@@ -22,8 +22,10 @@ function apiFakePlugin(): Plugin {
   return {
     name: "api-fake",
     configureServer(server) {
-      server.middlewares.use((req, res, next) => {
+      server.middlewares.use(async (req, res, next) => {
         if (req.url?.startsWith("/api/")) {
+          // simulate slow responses
+          await new Promise((resolve) => setTimeout(resolve, 500))
           fakeHandler(req, res)
         } else {
           next()

@@ -18,7 +18,10 @@ export const ViewSnippetPage = () => {
   const { author, snippetName } = useParams()
   const { snippet } = useCurrentSnippet()
 
-  const { circuitJson, message } = useRunTsx(snippet?.content ?? "")
+  const { circuitJson, message } = useRunTsx(
+    snippet?.content ?? "",
+    snippet?.type,
+  )
 
   return (
     <div>

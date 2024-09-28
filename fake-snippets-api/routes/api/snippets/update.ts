@@ -17,7 +17,15 @@ export default withRouteSpec({
     snippet: snippetSchema,
   }),
 })(async (req, ctx) => {
-  const { content, snippet_name, snippet_id, is_board, is_package, is_3d_model, is_footprint } = req.jsonBody
+  const {
+    content,
+    snippet_name,
+    snippet_id,
+    is_board,
+    is_package,
+    is_3d_model,
+    is_footprint,
+  } = req.jsonBody
 
   ctx.db.updateSnippet(snippet_id, content, new Date().toISOString(), {
     is_board,
