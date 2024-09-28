@@ -14,6 +14,8 @@ import { Snippet } from "fake-snippets-api/lib/db/schema"
 import axios from "redaxios"
 import { useToast } from "@/hooks/use-toast"
 import { useMutation, useQueryClient } from "react-query"
+import { ClipboardIcon, Share } from "lucide-react"
+import { MagicWandIcon } from "@radix-ui/react-icons"
 
 interface Props {
   snippet?: Snippet | null
@@ -97,6 +99,14 @@ export function CodeAndPreview({ snippet }: Props) {
               <TabsTrigger value="pcb">PCB</TabsTrigger>
               <TabsTrigger value="cad">3D</TabsTrigger>
               <TabsTrigger value="table">JSON</TabsTrigger>
+              <TabsTrigger value="error">
+                Errors
+                {message && (
+                  <span className="inline-flex items-center justify-center w-5 h-5 ml-2 text-xs font-bold text-white bg-red-500 rounded-full">
+                    1
+                  </span>
+                )}
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="pcb">
               <div className="mt-4 h-[500px]">
@@ -113,10 +123,39 @@ export function CodeAndPreview({ snippet }: Props) {
                 <CircuitJsonTableViewer elements={circuitJson as any} />
               </div>
             </TabsContent>
+            <TabsContent value="error">
+              <div className="mt-4 bg-red-50 rounded-md border border-red-200">
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-red-800 mb-3">
+                    Error
+                  </h3>
+                  <p className="text-sm font-mono whitespace-pre text-red-700">
+                    {message}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2 mt-4 justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (!message) return
+                    navigator.clipboard.writeText(message)
+                    toast({
+                      title: "Copied",
+                      description: "Error message copied to clipboard",
+                    })
+                  }}
+                >
+                  <ClipboardIcon className="w-4 h-4 mr-2" />
+                  Copy Error
+                </Button>
+                <Button variant="outline">
+                  <MagicWandIcon className="w-4 h-4 mr-2" />
+                  Fix with AI
+                </Button>
+              </div>
+            </TabsContent>
           </Tabs>
-          {(message ?? "").trim() && (
-            <textarea className="w-full h-32 bg-red-100" value={message} />
-          )}
         </div>
       </div>
     </div>
