@@ -20,11 +20,14 @@ export const StartEditorPage = () => {
     },
   )
 
-  const templates = [
+  const blankTemplates = [
     { name: "Blank Circuit Board", type: "BOARD", color: "blue" },
     { name: "Blank Circuit Module", type: "PACKAGE", color: "green" },
     { name: "Blank 3D Model", type: "MODEL", color: "indigo" },
     { name: "Blank Footprint", type: "FOOTPRINT", color: "purple" },
+  ]
+
+  const templates = [
     { name: "Blinking LED Board", type: "BOARD", color: "blue" },
   ]
 
@@ -39,15 +42,15 @@ export const StartEditorPage = () => {
           {isLoading ? (
             <div>Loading...</div>
           ) : (
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               {mySnippets?.slice(0, 6).map((snippet) => (
                 <Link
                   key={snippet.snippet_id}
                   href={`/editor?snippet_id=${snippet.snippet_id}`}
                 >
                   <Card className="hover:shadow-md transition-shadow">
-                    <CardHeader>
-                      <CardTitle className="text-lg">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-md">
                         {snippet.snippet_name}
                       </CardTitle>
                     </CardHeader>
@@ -62,6 +65,31 @@ export const StartEditorPage = () => {
               ))}
             </div>
           )}
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">Start Blank Snippet</h2>
+          <div className="grid grid-cols-3 gap-4">
+            {blankTemplates.map((template, index) => (
+              <Link
+                key={index}
+                href={`/editor?template=${template.name.toLowerCase().replace(/ /g, "-")}`}
+              >
+                <Card className="hover:shadow-md transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center justify-between">
+                      {template.name}
+                      <span
+                        className={`ml-2 bg-${template.color}-500 text-white px-2 py-1 rounded text-xs`}
+                      >
+                        {template.type}
+                      </span>
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
+          </div>
         </div>
 
         <div>
