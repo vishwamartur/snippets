@@ -48,7 +48,7 @@ export const StartEditorPage = () => {
                   key={snippet.snippet_id}
                   href={`/editor?snippet_id=${snippet.snippet_id}`}
                 >
-                  <Card className="hover:shadow-md transition-shadow">
+                  <Card className="hover:shadow-md transition-shadow rounded-md">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-md">
                         {snippet.snippet_name}
@@ -69,22 +69,22 @@ export const StartEditorPage = () => {
 
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4">Start Blank Snippet</h2>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             {blankTemplates.map((template, index) => (
               <Link
                 key={index}
                 href={`/editor?template=${template.name.toLowerCase().replace(/ /g, "-")}`}
               >
-                <Card className="hover:shadow-md transition-shadow">
-                  <CardHeader>
-                    <CardTitle className="text-lg flex items-center justify-between">
-                      {template.name}
+                <Card className="hover:shadow-md transition-shadow rounded-md h-full flex flex-col">
+                  <CardHeader className="p-4 flex-grow flex flex-col justify-between">
+                    <CardTitle className="text-md">{template.name}</CardTitle>
+                    <div className="mt-2 flex">
                       <span
-                        className={`ml-2 bg-${template.color}-500 text-white px-2 py-1 rounded text-xs`}
+                        className={`bg-${template.color}-500 text-white px-2 py-1 rounded text-xs`}
                       >
                         {template.type}
                       </span>
-                    </CardTitle>
+                    </div>
                   </CardHeader>
                 </Card>
               </Link>
@@ -100,7 +100,7 @@ export const StartEditorPage = () => {
                 key={index}
                 href={`/editor?template=${template.name.toLowerCase().replace(/ /g, "-")}`}
               >
-                <Card className="hover:shadow-md transition-shadow">
+                <Card className="hover:shadow-md transition-shadow rounded-md">
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center justify-between">
                       {template.name}
