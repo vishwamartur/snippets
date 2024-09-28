@@ -7,6 +7,7 @@ import { Snippet } from "fake-snippets-api/lib/db/schema"
 import { Link } from "wouter"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { TypeBadge } from "@/components/TypeBadge"
 
 export const StartEditorPage = () => {
   const { data: mySnippets, isLoading } = useQuery<Snippet[]>(
@@ -21,15 +22,13 @@ export const StartEditorPage = () => {
   )
 
   const blankTemplates = [
-    { name: "Blank Circuit Board", type: "BOARD", color: "blue" },
-    { name: "Blank Circuit Module", type: "PACKAGE", color: "green" },
-    { name: "Blank 3D Model", type: "MODEL", color: "indigo" },
-    { name: "Blank Footprint", type: "FOOTPRINT", color: "purple" },
+    { name: "Blank Circuit Board", type: "BOARD" },
+    { name: "Blank Circuit Module", type: "PACKAGE" },
+    { name: "Blank 3D Model", type: "MODEL" },
+    { name: "Blank Footprint", type: "FOOTPRINT" },
   ]
 
-  const templates = [
-    { name: "Blinking LED Board", type: "BOARD", color: "blue" },
-  ]
+  const templates = [{ name: "Blinking LED Board", type: "BOARD" }]
 
   return (
     <div>
@@ -77,11 +76,7 @@ export const StartEditorPage = () => {
                   <CardHeader className="p-4 flex-grow flex flex-col justify-between">
                     <CardTitle className="text-md">{template.name}</CardTitle>
                     <div className="mt-2 flex">
-                      <span
-                        className={`bg-${template.color}-500 text-white px-2 py-1 rounded text-xs`}
-                      >
-                        {template.type}
-                      </span>
+                      <TypeBadge type={template.type as any} />
                     </div>
                   </CardHeader>
                 </Card>
@@ -90,8 +85,36 @@ export const StartEditorPage = () => {
           </div>
         </div>
 
+        <div className="mt-12">
+          <h2 className="text-xl font-semibold mb-4">Import as Snippet</h2>
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              { name: "KiCad Footprint", type: "FOOTPRINT" },
+              { name: "KiCad Project", type: "BOARD" },
+              { name: "KiCad Module", type: "PACKAGE" },
+            ].map((template, index) => (
+              <Card
+                key={index}
+                className="hover:shadow-md transition-shadow rounded-md"
+              >
+                <CardHeader className="p-4 pb-0">
+                  <CardTitle className="text-lg flex items-center justify-between">
+                    {template.name}
+                    <TypeBadge type={template.type as any} className="ml-2" />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-4">
+                  <Button className="w-full">Import {template.name}</Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
         <div>
-          <h2 className="text-xl font-semibold mb-4">Start from a Template</h2>
+          <h2 className="text-xl font-semibold mb-4 mt-12">
+            Start from a Template
+          </h2>
           <div className="grid grid-cols-3 gap-4">
             {templates.map((template, index) => (
               <Link
@@ -99,48 +122,14 @@ export const StartEditorPage = () => {
                 href={`/editor?template=${template.name.toLowerCase().replace(/ /g, "-")}`}
               >
                 <Card className="hover:shadow-md transition-shadow rounded-md">
-                  <CardHeader>
+                  <CardHeader className="p-4">
                     <CardTitle className="text-lg flex items-center justify-between">
                       {template.name}
-                      <span
-                        className={`ml-2 bg-${template.color}-500 text-white px-2 py-1 rounded text-xs`}
-                      >
-                        {template.type}
-                      </span>
+                      <TypeBadge type={template.type as any} className="ml-2" />
                     </CardTitle>
                   </CardHeader>
                 </Card>
               </Link>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">Import as Snippet</h2>
-          <div className="grid grid-cols-3 gap-4">
-            {[
-              { name: "KiCad Footprint", type: "FOOTPRINT", color: "purple" },
-              { name: "KiCad Project", type: "BOARD", color: "blue" },
-              { name: "KiCad Module", type: "PACKAGE", color: "green" },
-            ].map((template, index) => (
-              <Card
-                key={index}
-                className="hover:shadow-md transition-shadow rounded-md"
-              >
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center justify-between">
-                    {template.name}
-                    <span
-                      className={`ml-2 bg-${template.color}-500 text-white px-2 py-1 rounded text-xs`}
-                    >
-                      {template.type}
-                    </span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full">Import {template.name}</Button>
-                </CardContent>
-              </Card>
             ))}
           </div>
         </div>
