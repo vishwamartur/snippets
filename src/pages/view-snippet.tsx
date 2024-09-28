@@ -6,15 +6,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ViewSnippetHeader from "@/components/ViewSnippetHeader"
 import ViewSnippetSidebar from "@/components/ViewSnippetSidebar"
 import { useCurrentSnippet } from "@/hooks/use-current-snippet"
+import { useRunTsx } from "@/hooks/use-run-tsx"
 import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash"
+import { MagicWandIcon } from "@radix-ui/react-icons"
 import { CadViewer } from "@tscircuit/3d-viewer"
 import { PCBViewer } from "@tscircuit/pcb-viewer"
-import { Share } from "lucide-react"
+import { ClipboardIcon, Share } from "lucide-react"
 import { useParams } from "wouter"
 
 export const ViewSnippetPage = () => {
   const { author, snippetName } = useParams()
   const { snippet } = useCurrentSnippet()
+
+  const { circuitJson, message } = useRunTsx(snippet?.content ?? "")
+
   return (
     <div>
       <Header />
@@ -43,13 +48,21 @@ export const ViewSnippetPage = () => {
                 <TabsTrigger value="code">Code</TabsTrigger>
                 <TabsTrigger value="pcb">PCB</TabsTrigger>
                 <TabsTrigger value="3d">3D</TabsTrigger>
+                <TabsTrigger value="error">
+                  Errors
+                  {message && (
+                    <span className="inline-flex items-center justify-center w-5 h-5 ml-2 text-xs font-bold text-white bg-red-500 rounded-full">
+                      1
+                    </span>
+                  )}
+                </TabsTrigger>
               </TabsList>
             </div>
             <TabsContent value="code">
               {snippet && (
                 <div className="mt-4 bg-gray-50 rounded-md border border-gray-200">
                   <CodeEditor
-                    defaultCode={snippet?.content}
+                    code={snippet?.content ?? ""}
                     onCodeChange={() => {}}
                     readOnly
                   />
@@ -58,12 +71,49 @@ export const ViewSnippetPage = () => {
             </TabsContent>
             <TabsContent value="pcb">
               <div className="mt-4 h-[500px]">
-                {/* <PCBViewer soup={circuitJson} /> */}
+                {circuitJson ? (
+                  <PCBViewer soup={circuitJson} />
+                ) : (
+                  "No Circuit JSON (might be an error in the snippet)"
+                )}
               </div>
             </TabsContent>
             <TabsContent value="3d">
               <div className="mt-4 h-[500px]">
-                {/* <CadViewer soup={circuitJson as any} /> */}
+                {circuitJson ? (
+                  <CadViewer soup={circuitJson as any} />
+                ) : (
+                  "No Circuit JSON (might be an error in the snippet)"
+                )}
+              </div>
+            </TabsContent>
+            <TabsContent value="error">
+              <div className="mt-4 bg-red-50 rounded-md border border-red-200">
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-red-800 mb-3">
+                    Error
+                  </h3>
+                  <p className="text-sm font-mono whitespace-pre text-red-700">
+                    {message}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2 mt-4 justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (!message) return
+                    navigator.clipboard.writeText(message)
+                    alert("Error copied to clipboard!")
+                  }}
+                >
+                  <ClipboardIcon className="w-4 h-4 mr-2" />
+                  Copy Error
+                </Button>
+                <Button variant="outline">
+                  <MagicWandIcon className="w-4 h-4 mr-2" />
+                  Fix with AI
+                </Button>
               </div>
             </TabsContent>
           </Tabs>

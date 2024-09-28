@@ -24,7 +24,6 @@ export function CodeAndPreview({ snippet }: Props) {
     return decodeUrlHashToText(window.location.toString()) ?? snippet?.content
   }, [])
   const [code, setCode] = useState(defaultCode ?? "")
-  console.log("2code", code)
 
   useEffect(() => {
     if (snippet?.content && !defaultCode) {

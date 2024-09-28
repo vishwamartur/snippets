@@ -15,7 +15,6 @@ export const CodeEditor = ({
   code: string
   readOnly?: boolean
 }) => {
-  console.log("code", code)
   return (
     <Editor
       readOnly={readOnly}
