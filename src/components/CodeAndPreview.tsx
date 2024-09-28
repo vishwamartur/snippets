@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { CodeEditor } from "@/components/CodeEditor"
 import { PCBViewer } from "@tscircuit/pcb-viewer"
 import { CadViewer } from "@tscircuit/3d-viewer"
@@ -20,9 +20,17 @@ interface Props {
 }
 
 export function CodeAndPreview({ snippet }: Props) {
-  const defaultCode =
-    decodeUrlHashToText(window.location.toString()) ?? defaultCodeForBlankPage
-  const [code, setCode] = useState(defaultCode)
+  const defaultCode = useMemo(() => {
+    return decodeUrlHashToText(window.location.toString()) ?? snippet?.content
+  }, [])
+  const [code, setCode] = useState(defaultCode ?? "")
+  console.log("2code", code)
+
+  useEffect(() => {
+    if (snippet?.content && !defaultCode) {
+      setCode(snippet.content)
+    }
+  }, [snippet?.content])
   const { toast } = useToast()
 
   const { message, circuitJson } = useRunTsx(code)
@@ -80,8 +88,8 @@ export function CodeAndPreview({ snippet }: Props) {
       <div className="flex">
         <div className="w-1/2 p-2 border-r border-gray-200 bg-gray-50">
           <CodeEditor
-            defaultCode={defaultCode}
-            onCodeChange={(code) => setCode(code)}
+            code={code}
+            onCodeChange={(newCode) => setCode(newCode)}
           />
         </div>
         <div className="w-1/2 p-2">

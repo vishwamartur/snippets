@@ -9,20 +9,19 @@ import { useState } from "react"
 export const CodeEditor = ({
   onCodeChange,
   readOnly = false,
-  defaultCode = "",
+  code,
 }: {
   onCodeChange: (code: string) => void
-  defaultCode?: string
+  code: string
   readOnly?: boolean
 }) => {
-  const [code, setCode] = useState(defaultCode)
+  console.log("code", code)
   return (
     <Editor
       readOnly={readOnly}
       value={code}
-      onValueChange={(code) => {
-        setCode(code)
-        onCodeChange(code)
+      onValueChange={(newCode) => {
+        onCodeChange(newCode)
       }}
       highlight={(code) => highlight(code, languages.js)}
       padding={10}
