@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useMutation, useQueryClient } from "react-query"
 import { ClipboardIcon, Share } from "lucide-react"
 import { MagicWandIcon } from "@radix-ui/react-icons"
+import { ErrorBoundary } from "react-error-boundary"
 
 interface Props {
   snippet?: Snippet | null
@@ -115,7 +116,9 @@ export function CodeAndPreview({ snippet }: Props) {
             </TabsContent>
             <TabsContent value="cad">
               <div className="mt-4 h-[500px]">
-                <CadViewer soup={circuitJson as any} />
+                <ErrorBoundary fallback={<div>Error loading 3D viewer</div>}>
+                  <CadViewer soup={circuitJson as any} />
+                </ErrorBoundary>
               </div>
             </TabsContent>
             <TabsContent value="table">

@@ -50,7 +50,7 @@ export const useCurrentSnippetId = (): string | null => {
         is_board: template.type === "board",
         is_package: template.type === "package",
         is_footprint: template.type === "footprint",
-        is_3d_model: template.type === "3d_model",
+        is_model: template.type === "model",
         owner_name: "seveibar",
       })
       return snippet

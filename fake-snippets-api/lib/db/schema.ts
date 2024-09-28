@@ -11,7 +11,7 @@ export const snippetSchema = z
     updated_at: z.string(),
     is_board: z.boolean().default(true),
     is_package: z.boolean().default(false),
-    is_3d_model: z.boolean().default(false),
+    is_model: z.boolean().default(false),
     is_footprint: z.boolean().default(false),
   })
   .transform((snippet) => ({
@@ -20,7 +20,7 @@ export const snippetSchema = z
       ? ("board" as const)
       : snippet.is_package
         ? ("package" as const)
-        : snippet.is_3d_model
+        : snippet.is_model
           ? ("model" as const)
           : snippet.is_footprint
             ? ("footprint" as const)

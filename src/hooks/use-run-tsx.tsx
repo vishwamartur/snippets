@@ -2,6 +2,8 @@ import { useMemo } from "react"
 import * as React from "react"
 import { useCompiledTsx } from "./use-compiled-tsx"
 import { Circuit } from "@tscircuit/core"
+import { createJSCADRenderer } from "jscad-fiber"
+import { jscadPlanner } from "jscad-planner"
 
 export const useRunTsx = (
   code?: string,
@@ -47,12 +49,17 @@ export const useRunTsx = (
             </board>,
           )
         } else if (type === "model") {
+          const jscadGeoms: any[] = []
+          const { createJSCADRoot } = createJSCADRenderer(jscadPlanner as any)
+          console.log({ jscadPlanner })
+          const jscadRoot = createJSCADRoot(jscadGeoms)
+          jscadRoot.render(<UserElm />)
           circuit.add(
             <board width="10mm" height="10mm">
               <chip
                 name="U1"
                 cadModel={{
-                  jscad: <UserElm />,
+                  jscad: jscadGeoms[0],
                 }}
               />
             </board>,

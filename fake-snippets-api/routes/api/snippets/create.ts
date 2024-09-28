@@ -10,14 +10,14 @@ export default withRouteSpec({
     content: z.string(),
     is_board: z.boolean().optional(),
     is_package: z.boolean().optional(),
-    is_3d_model: z.boolean().optional(),
+    is_model: z.boolean().optional(),
     is_footprint: z.boolean().optional(),
   }),
   jsonResponse: z.object({
     snippet: snippetSchema,
   }),
 })(async (req, ctx) => {
-  const { content, is_board, is_package, is_3d_model, is_footprint } = req.jsonBody
+  const { content, is_board, is_package, is_model, is_footprint } = req.jsonBody
 
   const snippet_name =
     req.jsonBody.snippet_name || `untitled-snippet-${ctx.db.idCounter + 1}`
@@ -31,9 +31,9 @@ export default withRouteSpec({
     content,
     created_at: currentTime,
     updated_at: currentTime,
-    is_board: is_board ?? (!(is_package || is_3d_model || is_footprint) ?? true),
+    is_board: is_board ?? !(is_package || is_model || is_footprint) ?? true,
     is_package: is_package ?? false,
-    is_3d_model: is_3d_model ?? false,
+    is_model: is_model ?? false,
     is_footprint: is_footprint ?? false,
   }
 

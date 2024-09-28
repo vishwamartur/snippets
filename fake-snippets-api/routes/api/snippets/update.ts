@@ -10,7 +10,7 @@ export default withRouteSpec({
     snippet_name: z.string().optional(),
     is_board: z.boolean().optional(),
     is_package: z.boolean().optional(),
-    is_3d_model: z.boolean().optional(),
+    is_model: z.boolean().optional(),
     is_footprint: z.boolean().optional(),
   }),
   jsonResponse: z.object({
@@ -23,14 +23,14 @@ export default withRouteSpec({
     snippet_id,
     is_board,
     is_package,
-    is_3d_model,
+    is_model,
     is_footprint,
   } = req.jsonBody
 
   ctx.db.updateSnippet(snippet_id, content, new Date().toISOString(), {
     is_board,
     is_package,
-    is_3d_model,
+    is_model: is_model,
     is_footprint,
     snippet_name,
   })
