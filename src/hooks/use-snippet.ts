@@ -4,7 +4,7 @@ import type { Snippet } from "fake-snippets-api/lib/db/schema"
 
 export const useSnippet = (snippetId: string) => {
   return useQuery<Snippet, Error>(
-    ["snippet", snippetId],
+    ["snippets", snippetId],
     async () => {
       if (!snippetId) {
         throw new Error("Snippet ID is required")

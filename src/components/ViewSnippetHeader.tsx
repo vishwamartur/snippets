@@ -9,13 +9,13 @@ export default function ViewSnippetHeader() {
     <header className="bg-white border-b border-gray-200 py-4 px-6">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold">
-          <Link href={`/@${snippet?.owner_name}`} className="text-blue-600">
+          <Link href={`/${snippet?.owner_name}`} className="text-blue-600">
             {snippet?.owner_name}
           </Link>
           <span className="px-1 text-gray-500">/</span>
           <Link
             className="text-blue-600"
-            href={`/@${snippet?.owner_name}/${snippet?.snippet_name}`}
+            href={`/${snippet?.owner_name}/${snippet?.snippet_name}`}
           >
             {snippet?.snippet_name}
           </Link>
@@ -25,10 +25,10 @@ export default function ViewSnippetHeader() {
             <Star className="w-4 h-4 mr-2" />
             Star
           </Button>
-          <Button variant="outline" size="sm">
+          {/* <Button variant="outline" size="sm">
             <Eye className="w-4 h-4 mr-2" />
             Watch
-          </Button>
+          </Button> */}
           <Button variant="outline" size="sm">
             <GitFork className="w-4 h-4 mr-2" />
             Fork

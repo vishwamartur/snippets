@@ -16,39 +16,45 @@ import {
 } from "lucide-react"
 import { GitHubLogoIcon } from "@radix-ui/react-icons"
 import { cn } from "@/lib/utils"
+import { useCurrentSnippet } from "@/hooks/use-current-snippet"
 
 export default function ViewSnippetSidebar({
   className,
 }: { className?: string }) {
+  const { snippet } = useCurrentSnippet()
   return (
     <div
       className={cn(
-        "w-64 h-screen bg-gray-100 text-gray-700 flex flex-col",
+        "w-64 min-h-[calc(100vh-120px)] bg-gray-100 text-gray-700 flex flex-col",
         className,
       )}
     >
-      <nav className="flex-1 overflow-y-auto">
+      <nav className="overflow-y-auto">
         <ul className="p-2 space-y-2">
           {[
-            { icon: <Code className="w-5 h-5" />, label: "Edit Code" },
+            {
+              icon: <Code className="w-5 h-5" />,
+              label: "Edit Code",
+              href: `/editor?snippet_id=${snippet?.snippet_id}`,
+            },
             {
               icon: <Bot className="w-5 h-5" />,
               label: "Edit with AI",
               badge: "AI",
             },
-            {
-              icon: <GitHubLogoIcon className="w-5 h-5" />,
-              label: "Github",
-            },
+            // {
+            //   icon: <GitHubLogoIcon className="w-5 h-5" />,
+            //   label: "Github",
+            // },
             { icon: <GitFork className="w-5 h-5" />, label: "Forks" },
             { icon: <AtSign className="w-5 h-5" />, label: "References" },
             { icon: <Package className="w-5 h-5" />, label: "Dependencies" },
             { icon: <Clock className="w-5 h-5" />, label: "Versions" },
-            { icon: <Settings className="w-5 h-5" />, label: "Settings" },
+            // { icon: <Settings className="w-5 h-5" />, label: "Settings" },
           ].map((item, index) => (
             <li key={index}>
               <Link
-                href="#"
+                href={item.href ?? "#"}
                 className="flex items-center gap-3 px-2 py-1.5 hover:bg-gray-200 rounded-md"
               >
                 {item.icon}
@@ -64,38 +70,23 @@ export default function ViewSnippetSidebar({
         </ul>
       </nav>
       <div className="p-4 border-t border-gray-200 space-y-4">
-        <div className="flex items-center gap-2 text-blue-500">
-          <LinkIcon className="w-5 h-5" />
-          <span className="text-sm font-medium">
-            https://snippets.tscircuit.com/embed/seveibar/circuitmodule
-          </span>
+        <div className="space-y-1">
+          <div className="text-xs font-medium">Copy embed code</div>
+          <div className="text-[0.5em] p-2 rounded-sm bg-blue-50 border border-blue-200 cursor-pointer font-mono whitespace-nowrap overflow-hidden text-ellipsis">
+            {`<iframe src="https://snippets.tscircuit.com/embed/seveibar/circuitmodule" width="100%" height="100%"></iframe>`}
+          </div>
         </div>
-        <div className="text-sm text-gray-500">September 26, 2024</div>
-        <div className="space-y-2">
-          <div className="text-sm font-medium">Copy embed URL</div>
-          <Input
-            value="https://snippets.tscircuit.com/embed/seveibar/circuitmodule"
-            readOnly
-            className="text-xs"
-          />
+        <div className="space-y-1">
+          <div className="text-xs font-medium">Copy import code</div>
+          <div className="text-[0.5em] p-2 rounded-sm bg-blue-50 border border-blue-200 cursor-pointer font-mono whitespace-nowrap overflow-hidden text-ellipsis">
+            import CircuitModule from "@tsci/seveibar.circuitmodule"
+          </div>
         </div>
-        <div className="space-y-2">
-          <div className="text-sm font-medium">Copy import URL</div>
-          <Input
-            value={`import CircuitModule from "@tsci/seveibar.circuitmodule"`}
-            readOnly
-            className="text-xs"
-          />
-        </div>
-        <div className="space-y-2">
-          <Button variant="outline" className="w-full justify-start">
-            <Copy className="w-4 h-4 mr-2" />
-            Copy embed code
-          </Button>
-          <Button variant="outline" className="w-full justify-start">
-            <LinkIcon className="w-4 h-4 mr-2" />
-            Copy link
-          </Button>
+        <div className="space-y-1">
+          <div className="text-xs font-medium">Copy install command</div>
+          <div className="text-[0.5em] p-2 rounded-sm bg-blue-50 border border-blue-200 cursor-pointer font-mono whitespace-nowrap overflow-hidden text-ellipsis">
+            tsci add @tsci/{snippet?.owner_name}.{snippet?.snippet_name}
+          </div>
         </div>
       </div>
     </div>

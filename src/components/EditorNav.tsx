@@ -12,6 +12,7 @@ import {
   SidebarClose,
   Save,
 } from "lucide-react"
+import { Link } from "wouter"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -31,10 +32,12 @@ export default function EditorNav({
   code,
   hasUnsavedChanges,
   onSave,
+  isSaving,
 }: {
   snippet: Snippet
   code: string
   hasUnsavedChanges: boolean
+  isSaving: boolean
   onSave: () => void
 }) {
   return (
@@ -44,9 +47,11 @@ export default function EditorNav({
         <span className="text-md font-semibold">
           {snippet.full_snippet_name}
         </span>
-        <Button variant="ghost" size="icon" className="h-6 w-6 ml-1">
-          <OpenInNewWindowIcon className="h-3 w-3 text-gray-500" />
-        </Button>
+        <Link href={`/${snippet.full_snippet_name}`}>
+          <Button variant="ghost" size="icon" className="h-6 w-6 ml-1">
+            <OpenInNewWindowIcon className="h-3 w-3 text-gray-700" />
+          </Button>
+        </Link>
         <Button
           variant="outline"
           size="sm"
@@ -56,7 +61,32 @@ export default function EditorNav({
           <Save className="mr-1 h-3 w-3" />
           Save
         </Button>
-        {hasUnsavedChanges && (
+        {isSaving && (
+          <div className="animate-fadeIn bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded flex items-center">
+            <svg
+              className="animate-spin h-3 w-3 mr-2 text-blue-600"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Saving...
+          </div>
+        )}
+        {hasUnsavedChanges && !isSaving && (
           <div className="animate-fadeIn bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">
             unsaved changes
           </div>
@@ -64,17 +94,6 @@ export default function EditorNav({
       </div>
       <div className="flex items-center space-x-2">
         <DownloadButtonAndMenu />
-        <Button
-          variant="outline"
-          size="sm"
-          className="h-6 px-2"
-          onClick={() => {}}
-        >
-          <Copy className="mr-1 h-3 w-3" />
-          <span className="font-mono text-[0.6rem]">
-            tsci add seveibar/new-snippet-0f83a4
-          </span>
-        </Button>
         <Button
           variant="outline"
           size="sm"

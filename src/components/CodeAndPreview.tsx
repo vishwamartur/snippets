@@ -13,6 +13,7 @@ import { CircuitJsonTableViewer } from "./TableViewer/CircuitJsonTableViewer"
 import { Snippet } from "fake-snippets-api/lib/db/schema"
 import axios from "redaxios"
 import { useToast } from "@/hooks/use-toast"
+import { useMutation, useQueryClient } from "react-query"
 
 interface Props {
   snippet?: Snippet | null
@@ -25,32 +26,40 @@ export function CodeAndPreview({ snippet }: Props) {
   const { toast } = useToast()
 
   const { message, circuitJson } = useRunTsx(code)
+  const qc = useQueryClient()
 
-  const handleSave = async () => {
-    if (!snippet) return
-
-    try {
+  const updateSnippetMutation = useMutation({
+    mutationFn: async () => {
+      if (!snippet) throw new Error("No snippet to update")
+      await new Promise((resolve) => setTimeout(resolve, 1000))
       const response = await axios.post("/api/snippets/update", {
         snippet_id: snippet.snippet_id,
         content: code,
       })
-
-      if (response.status === 200) {
-        toast({
-          title: "Snippet saved",
-          description: "Your changes have been saved successfully.",
-        })
-      } else {
+      if (response.status !== 200) {
         throw new Error("Failed to save snippet")
       }
-    } catch (error) {
+      return response.data
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["snippets", snippet?.snippet_id] })
+      toast({
+        title: "Snippet saved",
+        description: "Your changes have been saved successfully.",
+      })
+    },
+    onError: (error) => {
       console.error("Error saving snippet:", error)
       toast({
         title: "Error",
         description: "Failed to save the snippet. Please try again.",
         variant: "destructive",
       })
-    }
+    },
+  })
+
+  const handleSave = () => {
+    updateSnippetMutation.mutate()
   }
 
   const hasUnsavedChanges = snippet?.content !== code
@@ -64,6 +73,7 @@ export function CodeAndPreview({ snippet }: Props) {
       <EditorNav
         snippet={snippet}
         code={code}
+        isSaving={updateSnippetMutation.isLoading}
         hasUnsavedChanges={hasUnsavedChanges}
         onSave={() => handleSave()}
       />
