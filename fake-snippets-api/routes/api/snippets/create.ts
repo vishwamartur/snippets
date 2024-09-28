@@ -18,13 +18,15 @@ export default withRouteSpec({
   const snippet_name =
     req.jsonBody.snippet_name || `untitled-snippet-${ctx.db.idCounter + 1}`
 
+  const currentTime = new Date().toISOString()
   const newSnippet = {
     snippet_id: `snippet_${ctx.db.idCounter + 1}`,
     snippet_name,
     owner_name: req.jsonBody.owner_name,
     full_snippet_name: `${req.jsonBody.owner_name}/${snippet_name}`,
     content,
-    created_at: new Date().toISOString(),
+    created_at: currentTime,
+    updated_at: currentTime,
   }
 
   ctx.db.addSnippet(newSnippet)

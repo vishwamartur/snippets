@@ -25,10 +25,12 @@ test("update snippet", async () => {
 
   expect(response.status).toBe(200)
   expect(response.data.snippet.content).toBe(updatedContent)
+  expect(response.data.snippet.updated_at).not.toBe(addedSnippet.created_at)
 
   // Verify the snippet was updated in the database
   const updatedSnippet = db.snippets[0]
   expect(updatedSnippet.content).toBe(updatedContent)
+  expect(updatedSnippet.updated_at).not.toBe(updatedSnippet.created_at)
 })
 
 test.skip("update non-existent snippet", async () => {

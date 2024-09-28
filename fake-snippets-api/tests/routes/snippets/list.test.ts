@@ -11,6 +11,7 @@ test("list snippets", async () => {
       owner_name: "User1",
       content: "Content1",
       created_at: "2023-01-01T00:00:00Z",
+      updated_at: "2023-01-01T00:00:00Z",
       full_snippet_name: "User1/Snippet1",
     },
     {
@@ -18,6 +19,7 @@ test("list snippets", async () => {
       owner_name: "User2",
       content: "Content2",
       created_at: "2023-01-02T00:00:00Z",
+      updated_at: "2023-01-02T00:00:00Z",
       full_snippet_name: "User2/Snippet2",
     },
     {
@@ -25,6 +27,7 @@ test("list snippets", async () => {
       owner_name: "User1",
       content: "Content3",
       created_at: "2023-01-03T00:00:00Z",
+      updated_at: "2023-01-03T00:00:00Z",
       full_snippet_name: "User1/Snippet3",
     },
   ]

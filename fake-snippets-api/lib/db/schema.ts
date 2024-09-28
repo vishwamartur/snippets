@@ -7,6 +7,7 @@ export const snippetSchema = z.object({
   owner_name: z.string(),
   content: z.string(),
   created_at: z.string(),
+  updated_at: z.string(),
 })
 export type Snippet = z.infer<typeof snippetSchema>
 

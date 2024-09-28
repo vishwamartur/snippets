@@ -44,7 +44,7 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
     }
     return state.snippets
   },
-  updateSnippet: (snippet_id: string, content: string) => {
+  updateSnippet: (snippet_id: string, content: string, updated_at: string) => {
     set((state) => {
       const snippetIndex = state.snippets.findIndex(
         (snippet) => snippet.snippet_id === snippet_id,
@@ -56,6 +56,7 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
       updatedSnippets[snippetIndex] = {
         ...updatedSnippets[snippetIndex],
         content: content,
+        updated_at: updated_at,
       }
       return { ...state, snippets: updatedSnippets }
     })

@@ -15,7 +15,7 @@ export default withRouteSpec({
 })(async (req, ctx) => {
   const { content, snippet_name, snippet_id } = req.jsonBody
 
-  ctx.db.updateSnippet(snippet_id, content)
+  ctx.db.updateSnippet(snippet_id, content, new Date().toISOString())
 
   return ctx.json({ snippet: ctx.db.getSnippetById(snippet_id)! })
 })
