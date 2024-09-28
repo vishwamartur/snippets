@@ -12,6 +12,7 @@ import {
   Bot,
 } from "lucide-react"
 import { CreateNewSnippetHero } from "./CreateNewSnippetHero"
+import { Link } from "wouter"
 
 export const LandingHero = () => {
   return (
@@ -61,48 +62,56 @@ export const LandingHero = () => {
 
       <div className="grid grid-cols-4 gap-4">
         <div>
-          <Button className="w-full justify-between mb-2">
-            Create new{" "}
-            <span className="ml-2 bg-blue-500 text-white px-2 py-1 rounded text-xs">
-              BOARD
-            </span>
-          </Button>
+          <Link href="/start-editor?template=blank-circuit-board">
+            <Button className="w-full justify-between mb-2 px-2">
+              Create new{" "}
+              <span className="ml-2 bg-blue-500 text-white px-2 py-1 rounded text-xs">
+                BOARD
+              </span>
+            </Button>
+          </Link>
           <p className="text-sm text-gray-600">
             A printed circuit board containing multiple chips, resistors and
             capacitors to form a functional, manufacturable electronic device.
           </p>
         </div>
         <div>
-          <Button className="w-full justify-between mb-2">
-            Create new{" "}
-            <span className="ml-2 bg-green-500 text-white px-2 py-1 rounded text-xs">
-              PACKAGE
-            </span>
-          </Button>
+          <Link href="/start-editor?template=blank-circuit-module">
+            <Button className="w-full justify-between mb-2 px-2">
+              Create new{" "}
+              <span className="ml-2 bg-green-500 text-white px-2 py-1 rounded text-xs">
+                PACKAGE
+              </span>
+            </Button>
+          </Link>
           <p className="text-sm text-gray-600">
             A chip or circuit module that you'd like to use as part of a larger
             package.
           </p>
         </div>
         <div>
-          <Button className="w-full justify-between mb-2">
-            Create new{" "}
-            <span className="ml-2 bg-purple-500 text-white px-2 py-1 rounded text-xs">
-              FOOTPRINT
-            </span>
-          </Button>
+          <Link href="/start-editor?template=blank-footprint">
+            <Button className="w-full justify-between mb-2 px-2">
+              Create new{" "}
+              <span className="ml-2 bg-purple-500 text-white px-2 py-1 rounded text-xs">
+                FOOTPRINT
+              </span>
+            </Button>
+          </Link>
           <p className="text-sm text-gray-600">
             A footprint or landing-pattern for a component. This is usually used
             as part of a chip.
           </p>
         </div>
         <div>
-          <Button className="w-full justify-between mb-2">
-            Create new{" "}
-            <span className="ml-2 bg-indigo-500 text-white px-2 py-1 rounded text-xs">
-              3D MODEL
-            </span>
-          </Button>
+          <Link href="/start-editor?template=blank-3d-model">
+            <Button className="w-full justify-between mb-2 px-2">
+              Create new{" "}
+              <span className="ml-2 bg-indigo-500 text-white px-2 py-1 rounded text-xs">
+                3D MODEL
+              </span>
+            </Button>
+          </Link>
           <p className="text-sm text-gray-600">
             A 3d model of a component. This is usually used as part of a chip.
           </p>

@@ -47,7 +47,7 @@ export default function Header() {
               <HeaderButton href="/newest">Newest</HeaderButton>
             </li>
             <li>
-              <HeaderButton href="/editor">Editor</HeaderButton>
+              <HeaderButton href="/start-editor">Editor</HeaderButton>
             </li>
             <li>
               <Link href="https://docs.tscircuit.com">

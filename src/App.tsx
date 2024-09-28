@@ -14,6 +14,7 @@ import { ProfilePage } from "./pages/profile"
 import { NewestPage } from "./pages/newest"
 import { SettingsPage } from "./pages/settings"
 import { SearchPage } from "./pages/search"
+import { StartEditorPage } from "./pages/start-editor"
 import { Toaster } from "@/components/ui/toaster"
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
       <Switch>
         <Route path="/" component={LandingPage} />
         <Route path="/editor" component={EditorPage} />
+        <Route path="/start-editor" component={StartEditorPage} />
         <Route path="/dashboard" component={DashboardPage} />
         <Route path="/ai" component={AiPage} />
         <Route path="/profile" component={ProfilePage} />
