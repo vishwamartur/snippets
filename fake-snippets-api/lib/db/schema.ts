@@ -16,7 +16,7 @@ export const snippetSchema = z
   })
   .transform((snippet) => ({
     ...snippet,
-    type_description: snippet.is_board
+    type: snippet.is_board
       ? "board"
       : snippet.is_package
         ? "package"

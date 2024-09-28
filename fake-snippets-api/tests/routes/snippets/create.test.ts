@@ -19,5 +19,5 @@ test("create snippet", async () => {
   expect(response.data.snippet.is_package).toBe(true)
   expect(response.data.snippet.is_3d_model).toBe(false)
   expect(response.data.snippet.is_footprint).toBe(false)
-  expect(response.data.snippet.type_description).toBe("package")
+  expect(response.data.snippet.type).toBe("package")
 })

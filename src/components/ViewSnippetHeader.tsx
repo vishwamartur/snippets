@@ -2,24 +2,28 @@ import { Button } from "@/components/ui/button"
 import { useCurrentSnippet } from "@/hooks/use-current-snippet"
 import { ChevronLeft, Star, Eye, GitFork } from "lucide-react"
 import { Link } from "wouter"
+import { TypeBadge } from "@/components/TypeBadge"
 
 export default function ViewSnippetHeader() {
   const { snippet } = useCurrentSnippet()
   return (
     <header className="bg-white border-b border-gray-200 py-4 px-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">
-          <Link href={`/${snippet?.owner_name}`} className="text-blue-600">
-            {snippet?.owner_name}
-          </Link>
-          <span className="px-1 text-gray-500">/</span>
-          <Link
-            className="text-blue-600"
-            href={`/${snippet?.owner_name}/${snippet?.snippet_name}`}
-          >
-            {snippet?.snippet_name}
-          </Link>
-        </h1>
+        <div className="flex items-center">
+          <h1 className="text-xl font-bold mr-2">
+            <Link href={`/${snippet?.owner_name}`} className="text-blue-600">
+              {snippet?.owner_name}
+            </Link>
+            <span className="px-1 text-gray-500">/</span>
+            <Link
+              className="text-blue-600"
+              href={`/${snippet?.owner_name}/${snippet?.snippet_name}`}
+            >
+              {snippet?.snippet_name}
+            </Link>
+          </h1>
+          {snippet?.type && <TypeBadge type={snippet.type} />}
+        </div>
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm">
             <Star className="w-4 h-4 mr-2" />
