@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import {
   BotIcon,
   ChevronDown,
@@ -66,7 +66,13 @@ const Message = ({ message }: { message: Message }) => (
 
 export default function AIChatInterface() {
   const [messages, setMessages] = useState<Message[]>([])
+  const [isStreaming, setIsStreaming] = useState(false)
   const anthropic = useAiApi()
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
 
   const addMessage = async (message: string) => {
     const newMessages = messages.concat([
@@ -74,32 +80,54 @@ export default function AIChatInterface() {
         sender: "user",
         content: message,
       },
+      {
+        sender: "bot",
+        content: "",
+      },
     ])
     setMessages(newMessages)
+    setIsStreaming(true)
 
-    const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20240620",
-      system: createCircuitBoard1Template({
-        currentCode: "",
-      }),
-      messages: [
-        // TODO include previous messages
-        {
-          role: "user",
-          content: message,
-        },
-      ],
-      max_tokens: 4096,
-    })
+    try {
+      const stream = await anthropic.messages.stream({
+        model: "claude-3-sonnet-20240229",
+        system: createCircuitBoard1Template({
+          currentCode: "",
+        }),
+        messages: [
+          // TODO: include previous messages
+          {
+            role: "user",
+            content: message,
+          },
+        ],
+        max_tokens: 4096,
+      })
 
-    setMessages(
-      newMessages.concat([
-        {
-          sender: "bot",
-          content: (response as any).content[0].text,
-        },
-      ]),
-    )
+      let accumulatedContent = ""
+
+      for await (const chunk of stream) {
+        if (chunk.type === "content_block_delta") {
+          accumulatedContent += chunk.delta.text
+          setMessages((prevMessages) => {
+            const updatedMessages = [...prevMessages]
+            updatedMessages[updatedMessages.length - 1].content =
+              accumulatedContent
+            return updatedMessages
+          })
+        }
+      }
+    } catch (error) {
+      console.error("Error streaming response:", error)
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages]
+        updatedMessages[updatedMessages.length - 1].content =
+          "An error occurred while generating the response."
+        return updatedMessages
+      })
+    } finally {
+      setIsStreaming(false)
+    }
   }
 
   return (
@@ -108,11 +136,13 @@ export default function AIChatInterface() {
         {messages.map((message, index) => (
           <Message key={index} message={message} />
         ))}
+        <div ref={messagesEndRef} />
       </div>
       <ChatInput
         onSubmit={async (message: string) => {
           addMessage(message)
         }}
+        disabled={isStreaming}
       />
     </div>
   )

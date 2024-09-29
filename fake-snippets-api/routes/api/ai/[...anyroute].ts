@@ -24,8 +24,6 @@ export default async (req: Request) => {
     duplex: "half",
   }).then((r) => r.json())
 
-  console.log({ response })
-
   return new Response(JSON.stringify(response), {
     status: 200,
     headers: { "Content-Type": "application/json" },

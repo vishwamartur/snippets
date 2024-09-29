@@ -5,9 +5,10 @@ import { useState, FormEvent } from "react"
 
 interface ChatInputProps {
   onSubmit: (message: string) => void
+  disabled: boolean
 }
 
-export default function ChatInput({ onSubmit }: ChatInputProps) {
+export default function ChatInput({ onSubmit, disabled }: ChatInputProps) {
   const [inputValue, setInputValue] = useState("")
 
   const handleSubmit = (e: FormEvent) => {
@@ -24,6 +25,7 @@ export default function ChatInput({ onSubmit }: ChatInputProps) {
       className="relative shadow-lg border-2 border-gray-300 rounded-full m-4"
     >
       <Input
+        disabled={disabled}
         type="text"
         placeholder="Ask for more"
         className="pr-20 pl-4 py-6 rounded-full bg-gray-100 border-none focus:ring-2 focus:ring-blue-500"
