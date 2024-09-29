@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useAiApi } from "@/hooks/use-ai-api"
 import { createCircuitBoard1Template } from "@tscircuit/prompt-benchmarks"
+import { TextDelta } from "@anthropic-ai/sdk/resources/messages.mjs"
 
 interface Message {
   sender: "user" | "bot"
@@ -64,11 +65,14 @@ const Message = ({ message }: { message: Message }) => (
   </div>
 )
 
-export default function AIChatInterface() {
+export default function AIChatInterface({
+  onCodeChange,
+}: { onCodeChange: (code: string) => void }) {
   const [messages, setMessages] = useState<Message[]>([])
   const [isStreaming, setIsStreaming] = useState(false)
   const anthropic = useAiApi()
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const [currentCodeBlock, setCurrentCodeBlock] = useState<string | null>(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -105,10 +109,33 @@ export default function AIChatInterface() {
       })
 
       let accumulatedContent = ""
+      let isInCodeBlock = false
 
       for await (const chunk of stream) {
         if (chunk.type === "content_block_delta") {
-          accumulatedContent += chunk.delta.text
+          const chunkText = (chunk.delta as TextDelta).text
+          accumulatedContent += chunkText
+
+          if (chunkText.includes("```")) {
+            isInCodeBlock = !isInCodeBlock
+            if (isInCodeBlock) {
+              setCurrentCodeBlock("")
+            } else {
+              const codeContent = accumulatedContent
+                .split("```")
+                .slice(-2, -1)[0]
+                .trim()
+              onCodeChange(codeContent.replace(/^tsx/, ""))
+              setCurrentCodeBlock(null)
+            }
+          } else if (isInCodeBlock) {
+            setCurrentCodeBlock((prev) => {
+              const updatedCode = (prev || "") + chunkText
+              onCodeChange(updatedCode)
+              return updatedCode
+            })
+          }
+
           setMessages((prevMessages) => {
             const updatedMessages = [...prevMessages]
             updatedMessages[updatedMessages.length - 1].content =

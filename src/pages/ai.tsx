@@ -7,18 +7,19 @@ import { MagicWandIcon } from "@radix-ui/react-icons"
 import { CadViewer } from "@tscircuit/3d-viewer"
 import { PCBViewer } from "@tscircuit/pcb-viewer"
 import { ClipboardIcon } from "lucide-react"
+import { useState } from "react"
+import { useRunTsx } from "@/hooks/use-run-tsx"
 
 export const AiPage = () => {
-  const message = ""
-  const circuitJson: any[] = []
-  const snippet: any = { content: "" }
+  const [code, setCode] = useState("")
+  const { message, circuitJson } = useRunTsx(code)
 
   return (
     <div>
       <Header />
       <div className="flex bg-gray-100">
         <div className="w-1/2">
-          <AIChatInterface />
+          <AIChatInterface onCodeChange={setCode} />
         </div>
         <div className="w-1/2">
           <div className="p-4 h-full">
@@ -40,15 +41,13 @@ export const AiPage = () => {
                   </TabsList>
                 </div>
                 <TabsContent value="code">
-                  {snippet && (
-                    <div className="mt-4 bg-gray-50 rounded-md border border-gray-200">
-                      <CodeEditor
-                        code={snippet?.content ?? ""}
-                        onCodeChange={() => {}}
-                        readOnly
-                      />
-                    </div>
-                  )}
+                  <div className="mt-4 bg-gray-50 rounded-md border border-gray-200">
+                    <CodeEditor
+                      code={code}
+                      onCodeChange={setCode}
+                      readOnly={false}
+                    />
+                  </div>
                 </TabsContent>
                 <TabsContent value="pcb">
                   <div className="mt-4 h-[500px]">
