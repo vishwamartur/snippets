@@ -17,10 +17,10 @@ export const AiPage = () => {
     <div>
       <Header />
       <div className="flex bg-gray-100">
-        <div className="w-2/5">
+        <div className="w-1/2">
           <AIChatInterface />
         </div>
-        <div className="w-3/5">
+        <div className="w-1/2">
           <div className="p-4 h-full">
             <div className="bg-white h-full p-4 rounded-lg shadow">
               <Tabs defaultValue="code">
