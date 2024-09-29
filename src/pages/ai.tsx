@@ -12,14 +12,18 @@ import { useRunTsx } from "@/hooks/use-run-tsx"
 
 export const AiPage = () => {
   const [code, setCode] = useState("")
-  const { message, circuitJson } = useRunTsx(code)
+  const { message: errorMessage, circuitJson } = useRunTsx(code)
 
   return (
     <div>
       <Header />
       <div className="flex bg-gray-100">
         <div className="w-1/2">
-          <AIChatInterface onCodeChange={setCode} />
+          <AIChatInterface
+            code={code}
+            onCodeChange={setCode}
+            errorMessage={errorMessage}
+          />
         </div>
         <div className="w-1/2">
           <div className="p-4 h-full">
@@ -32,7 +36,7 @@ export const AiPage = () => {
                     <TabsTrigger value="3d">3D</TabsTrigger>
                     <TabsTrigger value="error">
                       Errors
-                      {message && (
+                      {errorMessage && (
                         <span className="inline-flex items-center justify-center w-5 h-5 ml-2 text-xs font-bold text-white bg-red-500 rounded-full">
                           1
                         </span>
@@ -68,7 +72,7 @@ export const AiPage = () => {
                   </div>
                 </TabsContent>
                 <TabsContent value="error">
-                  {message ? (
+                  {errorMessage ? (
                     <>
                       <div className="mt-4 bg-red-50 rounded-md border border-red-200">
                         <div className="p-4">
@@ -76,7 +80,7 @@ export const AiPage = () => {
                             Error
                           </h3>
                           <p className="text-sm font-mono whitespace-pre-wrap text-red-700">
-                            {message}
+                            {errorMessage}
                           </p>
                         </div>
                       </div>
@@ -84,8 +88,8 @@ export const AiPage = () => {
                         <Button
                           variant="outline"
                           onClick={() => {
-                            if (!message) return
-                            navigator.clipboard.writeText(message)
+                            if (!errorMessage) return
+                            navigator.clipboard.writeText(errorMessage)
                             alert("Error copied to clipboard!")
                           }}
                         >

@@ -79,7 +79,7 @@ export const useRunTsx = (
         console.error("Evaluation error:", error)
         return {
           compiledModule: module,
-          message: `Error: ${error.message}`,
+          message: `Render Error: ${error.message}`,
           circuitJson: null,
         }
       }
@@ -87,7 +87,7 @@ export const useRunTsx = (
       console.error("Evaluation error:", error)
       return {
         compiledModule: null,
-        message: `Error: ${error.message}`,
+        message: `Eval Error: ${error.message}\n\n${error.stack}`,
         circuitJson: null,
       }
     }

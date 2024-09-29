@@ -20,10 +20,12 @@ import {
 import { useAiApi } from "@/hooks/use-ai-api"
 import { createCircuitBoard1Template } from "@tscircuit/prompt-benchmarks"
 import { TextDelta } from "@anthropic-ai/sdk/resources/messages.mjs"
+import { MagicWandIcon } from "@radix-ui/react-icons"
 
 interface Message {
   sender: "user" | "bot"
   content: string
+  codeVersion?: number
 }
 
 const Message = ({ message }: { message: Message }) => (
@@ -43,31 +45,37 @@ const Message = ({ message }: { message: Message }) => (
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Button variant="outline" size="sm" className="h-6 px-2 text-xs">
-                version 1
+                version {message.codeVersion}
                 <ChevronDown className="ml-1 h-3 w-3" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem className="text-xs bg-white flex">
                 <RotateCcw className="mr-1 h-3 w-3" />
-                Revert to v1
+                Revert to v{message.codeVersion}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-xs bg-white flex">
                 <Eye className="mr-1 h-3 w-3" />
-                View v1
+                View v{message.codeVersion}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       )}
-      <p className="text-sm font-mono whitespace-pre-wrap">{message.content}</p>
+      <p className="text-xs font-mono whitespace-pre-wrap">{message.content}</p>
     </div>
   </div>
 )
 
 export default function AIChatInterface({
+  code,
   onCodeChange,
-}: { onCodeChange: (code: string) => void }) {
+  errorMessage,
+}: {
+  code: string
+  onCodeChange: (code: string) => void
+  errorMessage: string | null
+}) {
   const [messages, setMessages] = useState<Message[]>([])
   const [isStreaming, setIsStreaming] = useState(false)
   const anthropic = useAiApi()
@@ -87,6 +95,7 @@ export default function AIChatInterface({
       {
         sender: "bot",
         content: "",
+        codeVersion: messages.filter((m) => m.sender === "bot").length,
       },
     ])
     setMessages(newMessages)
@@ -96,7 +105,7 @@ export default function AIChatInterface({
       const stream = await anthropic.messages.stream({
         model: "claude-3-sonnet-20240229",
         system: createCircuitBoard1Template({
-          currentCode: "",
+          currentCode: code,
         }),
         messages: [
           // TODO: include previous messages
@@ -165,6 +174,23 @@ export default function AIChatInterface({
         ))}
         <div ref={messagesEndRef} />
       </div>
+      {code && errorMessage && !isStreaming && (
+        <div className="flex justify-end mr-6">
+          <Button
+            onClick={() => {
+              addMessage(`Fix this error: ${errorMessage}`)
+            }}
+            className="mb-2 bg-green-50 hover:bg-green-100"
+            variant="outline"
+          >
+            <MagicWandIcon className="w-4 h-4 mr-2" />
+            <span className="font-bold">Fix Error with AI</span>
+            <span className="italic font-normal ml-2">
+              "{errorMessage.slice(0, 20)}..."
+            </span>
+          </Button>
+        </div>
+      )}
       <ChatInput
         onSubmit={async (message: string) => {
           addMessage(message)
