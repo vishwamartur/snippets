@@ -8,6 +8,7 @@ import { jscadPlanner } from "jscad-planner"
 export const useRunTsx = (
   code?: string,
   type?: "board" | "footprint" | "package" | "model",
+  { isStreaming = false }: { isStreaming?: boolean } = {},
 ) => {
   type ??= "board"
   const compiledCode = useCompiledTsx(code)

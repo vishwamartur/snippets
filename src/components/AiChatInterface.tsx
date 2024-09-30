@@ -134,7 +134,7 @@ export default function AIChatInterface({
                 .split("```")
                 .slice(-2, -1)[0]
                 .trim()
-              onCodeChange(codeContent.replace(/^tsx[\s\S]*/, ""))
+              onCodeChange(codeContent.replace(/^tsx/, "").trim())
               setCurrentCodeBlock(null)
             }
           } else if (isInCodeBlock) {

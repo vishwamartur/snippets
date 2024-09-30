@@ -13,7 +13,9 @@ import { ErrorTabContent } from "@/components/ErrorTabContent"
 
 export const AiPage = () => {
   const [code, setCode] = useState("")
-  const { message: errorMessage, circuitJson } = useRunTsx(code)
+  const { message: errorMessage, circuitJson } = useRunTsx(code, "board", {
+    isStreaming: true,
+  })
 
   return (
     <div>
