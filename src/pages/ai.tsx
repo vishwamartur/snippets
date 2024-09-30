@@ -9,6 +9,7 @@ import { PCBViewer } from "@tscircuit/pcb-viewer"
 import { ClipboardIcon } from "lucide-react"
 import { useState } from "react"
 import { useRunTsx } from "@/hooks/use-run-tsx"
+import { ErrorTabContent } from "@/components/ErrorTabContent"
 
 export const AiPage = () => {
   const [code, setCode] = useState("")
@@ -72,48 +73,7 @@ export const AiPage = () => {
                   </div>
                 </TabsContent>
                 <TabsContent value="error">
-                  {errorMessage ? (
-                    <>
-                      <div className="mt-4 bg-red-50 rounded-md border border-red-200">
-                        <div className="p-4">
-                          <h3 className="text-lg font-semibold text-red-800 mb-3">
-                            Error
-                          </h3>
-                          <p className="text-sm font-mono whitespace-pre-wrap text-red-700">
-                            {errorMessage}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex gap-2 mt-4 justify-end">
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            if (!errorMessage) return
-                            navigator.clipboard.writeText(errorMessage)
-                            alert("Error copied to clipboard!")
-                          }}
-                        >
-                          <ClipboardIcon className="w-4 h-4 mr-2" />
-                          Copy Error
-                        </Button>
-                        <Button variant="outline">
-                          <MagicWandIcon className="w-4 h-4 mr-2" />
-                          Fix with AI
-                        </Button>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="mt-4 bg-green-50 rounded-md border border-green-200">
-                      <div className="p-4">
-                        <h3 className="text-lg font-semibold text-green-800 mb-3">
-                          No Errors 👌
-                        </h3>
-                        <p className="text-sm text-green-700">
-                          Your code is running without any errors.
-                        </p>
-                      </div>
-                    </div>
-                  )}
+                  <ErrorTabContent code={code} errorMessage={errorMessage} />
                 </TabsContent>
               </Tabs>
             </div>
