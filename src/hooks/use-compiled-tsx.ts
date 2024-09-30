@@ -1,9 +1,13 @@
 import { useMemo } from "react"
 import * as Babel from "@babel/standalone"
 
-export const useCompiledTsx = (code?: string) => {
+export const useCompiledTsx = (
+  code?: string,
+  { isStreaming = false }: { isStreaming?: boolean } = {},
+) => {
   return useMemo(() => {
     if (!code) return ""
+    if (isStreaming) return ""
     try {
       const result = Babel.transform(code, {
         presets: ["react", "typescript"],
@@ -15,5 +19,5 @@ export const useCompiledTsx = (code?: string) => {
       console.error("Babel compilation error:", error)
       return `Error: ${error.message}`
     }
-  }, [code])
+  }, [code, isStreaming])
 }

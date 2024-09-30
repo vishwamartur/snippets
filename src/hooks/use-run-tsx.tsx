@@ -11,9 +11,16 @@ export const useRunTsx = (
   { isStreaming = false }: { isStreaming?: boolean } = {},
 ) => {
   type ??= "board"
-  const compiledCode = useCompiledTsx(code)
+  const compiledCode = useCompiledTsx(code, { isStreaming })
 
   return useMemo(() => {
+    if (isStreaming || !compiledCode) {
+      return {
+        compiledModule: null,
+        message: "",
+        circuitJson: null,
+      }
+    }
     try {
       globalThis.React = React
 
@@ -92,5 +99,5 @@ export const useRunTsx = (
         circuitJson: null,
       }
     }
-  }, [compiledCode])
+  }, [compiledCode, isStreaming])
 }

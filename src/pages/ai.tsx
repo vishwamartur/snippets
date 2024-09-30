@@ -6,15 +6,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { MagicWandIcon } from "@radix-ui/react-icons"
 import { CadViewer } from "@tscircuit/3d-viewer"
 import { PCBViewer } from "@tscircuit/pcb-viewer"
-import { ClipboardIcon } from "lucide-react"
+import { ArrowRight, ClipboardIcon, Save } from "lucide-react"
 import { useState } from "react"
 import { useRunTsx } from "@/hooks/use-run-tsx"
 import { ErrorTabContent } from "@/components/ErrorTabContent"
 
 export const AiPage = () => {
   const [code, setCode] = useState("")
+  const [isStreaming, setIsStreaming] = useState(false)
   const { message: errorMessage, circuitJson } = useRunTsx(code, "board", {
-    isStreaming: true,
+    isStreaming,
   })
 
   return (
@@ -26,6 +27,12 @@ export const AiPage = () => {
             code={code}
             onCodeChange={setCode}
             errorMessage={errorMessage}
+            onStartStreaming={() => {
+              setIsStreaming(true)
+            }}
+            onStopStreaming={() => {
+              setIsStreaming(false)
+            }}
           />
         </div>
         <div className="w-1/2">
@@ -46,6 +53,11 @@ export const AiPage = () => {
                       )}
                     </TabsTrigger>
                   </TabsList>
+                  <div className="flex-grow" />
+                  <Button size="sm" variant="outline">
+                    Save Snippet
+                    <Save className="w-4 h-4 ml-2" />
+                  </Button>
                 </div>
                 <TabsContent value="code">
                   <div className="mt-4 bg-gray-50 rounded-md border border-gray-200">

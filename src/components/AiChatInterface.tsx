@@ -70,10 +70,14 @@ const Message = ({ message }: { message: Message }) => (
 export default function AIChatInterface({
   code,
   onCodeChange,
+  onStartStreaming,
+  onStopStreaming,
   errorMessage,
 }: {
   code: string
   onCodeChange: (code: string) => void
+  onStartStreaming: () => void
+  onStopStreaming: () => void
   errorMessage: string | null
 }) {
   const [messages, setMessages] = useState<Message[]>([])
@@ -100,6 +104,7 @@ export default function AIChatInterface({
     ])
     setMessages(newMessages)
     setIsStreaming(true)
+    onStartStreaming()
 
     try {
       const stream = await anthropic.messages.stream({
@@ -163,11 +168,12 @@ export default function AIChatInterface({
       })
     } finally {
       setIsStreaming(false)
+      onStopStreaming()
     }
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-50px)] max-w-2xl mx-auto p-4 bg-gray-100">
+    <div className="flex flex-col h-[calc(100vh-60px)] max-w-2xl mx-auto p-4 bg-gray-100">
       <div className="flex-1 overflow-y-auto space-y-4 mb-4">
         {messages.map((message, index) => (
           <Message key={index} message={message} />
