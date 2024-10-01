@@ -1,5 +1,7 @@
 # TSCircuit Snippets
 
+[Docs](https://docs.tscircuit.com) &middot; [Website](https://tscircuit.com) &middot; [Twitter](https://x.com/tscircuit) &middot; [discord](https://tscircuit.com/community/join-redirect) &middot; [Quickstart](https://docs.tscircuit.com/quickstart) &middot; [Online Playground](https://tscircuit.com/playground)
+
 TSCircuit Snippets is a web application for creating, sharing, and managing circuit designs using TypeScript and React. It provides an intuitive interface for designing circuit boards, packages, footprints, and 3D models.
 
 ## Features
