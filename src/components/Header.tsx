@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input"
 import { ChevronDown, Search } from "lucide-react"
 import { Link, useLocation } from "wouter"
 import { cn } from "@/lib/utils/index"
+import { HeaderLogin } from "@/components/HeaderLogin"
 
 const HeaderButton = ({
   href,
@@ -79,7 +80,7 @@ export default function Header() {
         >
           New <ChevronDown className="ml-1" size={16} />
         </Button>
-        <div className="rounded-full w-8 h-8 bg-gray-300" />
+        <HeaderLogin />
       </div>
     </header>
   )
