@@ -12,6 +12,8 @@
     "dev": "bun run build:fake-api && vite",
     "build": "bun run build:fake-api && tsc -b && vite build",
     "preview": "vite preview",
+    "format": "biome format --write .",
+    "lint": "biome check .",
     "build:fake-api": "winterspec bundle -o dist/bundle.js"
   },
   "dependencies": {
