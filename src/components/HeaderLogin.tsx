@@ -8,13 +8,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Link } from "wouter"
+import { User } from "lucide-react"
 
 export const HeaderLogin: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   if (!isLoggedIn) {
     return (
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 justify-end">
         <Button onClick={() => setIsLoggedIn(true)} variant="ghost" size="sm">
           Login
         </Button>
@@ -26,24 +27,28 @@ export const HeaderLogin: React.FC = () => {
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Avatar className="w-8 h-8">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem>
-          <Link href="/dashboard">Dashboard</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link href="/settings">Settings</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setIsLoggedIn(false)}>
-          Sign out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex justify-end">
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Avatar className="w-8 h-8">
+            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarFallback>
+              <User size={16} />
+            </AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem>
+            <Link href="/dashboard">Dashboard</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/settings">Settings</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsLoggedIn(false)}>
+            Sign out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   )
 }
