@@ -11,6 +11,9 @@ import {
   Sidebar,
   SidebarClose,
   Save,
+  EyeIcon,
+  CodeIcon,
+  Menu,
 } from "lucide-react"
 import { Link } from "wouter"
 import { Button } from "@/components/ui/button"
@@ -32,12 +35,16 @@ export default function EditorNav({
   snippet,
   code,
   hasUnsavedChanges,
+  onTogglePreview,
+  previewOpen,
   onSave,
   isSaving,
 }: {
   snippet: Snippet
   code: string
   hasUnsavedChanges: boolean
+  previewOpen: boolean
+  onTogglePreview: () => void
   isSaving: boolean
   onSave: () => void
 }) {
@@ -95,11 +102,11 @@ export default function EditorNav({
       </div>
       <div className="flex items-center space-x-2">
         {snippet && <TypeBadge type={snippet.type} />}
-        <DownloadButtonAndMenu />
+        <DownloadButtonAndMenu className="hidden md:flex" />
         <Button
           variant="outline"
           size="sm"
-          className="h-6 px-2 text-xs"
+          className="hidden md:flex h-6 px-2 text-xs"
           onClick={() => {
             const url = encodeTextToUrlHash(code)
             navigator.clipboard.writeText(url)
@@ -109,12 +116,69 @@ export default function EditorNav({
           <Share className="mr-1 h-3 w-3" />
           Copy URL
         </Button>
-        <Button variant="outline" size="sm" className="h-6 px-2 text-xs">
+        <Button
+          variant="outline"
+          size="sm"
+          className="hidden md:flex h-6 px-2 text-xs"
+        >
           <Eye className="mr-1 h-3 w-3" />
           Public
+        </Button>{" "}
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn(
+            "h-6 w-6 hidden md:flex",
+            !previewOpen
+              ? "bg-blue-600 text-white hover:bg-blue-700 hover:text-white"
+              : "",
+          )}
+          onClick={() => onTogglePreview()}
+        >
+          {previewOpen ? (
+            <Sidebar className="h-3 w-3" />
+          ) : (
+            <EyeIcon className="h-3 w-3" />
+          )}
         </Button>
-        <Button variant="ghost" size="icon" className="h-6 w-6">
-          <Sidebar className="h-3 w-3" />
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button className="md:hidden" variant="secondary" size="sm">
+              <ChevronDown className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem className="text-xs">
+              <Download className="mr-1 h-3 w-3" />
+              Download
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-xs">
+              <Share className="mr-1 h-3 w-3" />
+              Copy URL
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-xs">
+              <Eye className="mr-1 h-3 w-3" />
+              Public
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="md:hidden"
+          onClick={() => onTogglePreview()}
+        >
+          {previewOpen ? (
+            <div className="flex items-center">
+              <CodeIcon className="h-3 w-3 mr-1" />
+              Show Code
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <EyeIcon className="h-3 w-3 mr-1" />
+              Show Preview
+            </div>
+          )}
         </Button>
       </div>
     </nav>

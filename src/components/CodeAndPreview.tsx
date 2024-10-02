@@ -15,9 +15,11 @@ import axios from "redaxios"
 import { TypeBadge } from "./TypeBadge"
 import { useToast } from "@/hooks/use-toast"
 import { useMutation, useQueryClient } from "react-query"
-import { ClipboardIcon, Share } from "lucide-react"
+import { ClipboardIcon, Share, Eye, EyeOff } from "lucide-react"
 import { MagicWandIcon } from "@radix-ui/react-icons"
 import { ErrorBoundary } from "react-error-boundary"
+import { ErrorTabContent } from "./ErrorTabContent"
+import { cn } from "@/lib/utils"
 
 interface Props {
   snippet?: Snippet | null
@@ -28,6 +30,7 @@ export function CodeAndPreview({ snippet }: Props) {
     return decodeUrlHashToText(window.location.toString()) ?? snippet?.content
   }, [])
   const [code, setCode] = useState(defaultCode ?? "")
+  const [showPreview, setShowPreview] = useState(true)
 
   useEffect(() => {
     if (snippet?.content && !defaultCode) {
@@ -86,94 +89,60 @@ export function CodeAndPreview({ snippet }: Props) {
         isSaving={updateSnippetMutation.isLoading}
         hasUnsavedChanges={hasUnsavedChanges}
         onSave={() => handleSave()}
+        onTogglePreview={() => setShowPreview(!showPreview)}
+        previewOpen={showPreview}
       />
-      <div className="flex">
-        <div className="w-1/2 p-2 border-r border-gray-200 bg-gray-50">
+      <div className={`flex ${showPreview ? "flex-col md:flex-row" : ""}`}>
+        <div
+          className={cn(
+            "hidden md:flex p-2 border-r border-gray-200 bg-gray-50",
+            showPreview ? "w-full md:w-1/2" : "w-full flex",
+          )}
+        >
           <CodeEditor
             code={code}
             onCodeChange={(newCode) => setCode(newCode)}
           />
         </div>
-        <div className="w-1/2 p-2">
-          <Tabs defaultValue="pcb">
-            <TabsList>
-              <TabsTrigger value="pcb">PCB</TabsTrigger>
-              <TabsTrigger value="cad">3D</TabsTrigger>
-              <TabsTrigger value="table">JSON</TabsTrigger>
-              <TabsTrigger value="error">
-                Errors
-                {message && (
-                  <span className="inline-flex items-center justify-center w-5 h-5 ml-2 text-xs font-bold text-white bg-red-500 rounded-full">
-                    1
-                  </span>
-                )}
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="pcb">
-              <div className="mt-4 h-[500px]">
-                <PCBViewer soup={circuitJson} />
-              </div>
-            </TabsContent>
-            <TabsContent value="cad">
-              <div className="mt-4 h-[500px]">
-                <ErrorBoundary fallback={<div>Error loading 3D viewer</div>}>
-                  <CadViewer soup={circuitJson as any} />
-                </ErrorBoundary>
-              </div>
-            </TabsContent>
-            <TabsContent value="table">
-              <div className="mt-4 h-[500px]">
-                <CircuitJsonTableViewer elements={circuitJson as any} />
-              </div>
-            </TabsContent>
-            <TabsContent value="error">
-              {message ? (
-                <>
-                  <div className="mt-4 bg-red-50 rounded-md border border-red-200">
-                    <div className="p-4">
-                      <h3 className="text-lg font-semibold text-red-800 mb-3">
-                        Error
-                      </h3>
-                      <p className="text-sm font-mono whitespace-pre-wrap text-red-700">
-                        {message}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2 mt-4 justify-end">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        navigator.clipboard.writeText(message)
-                        toast({
-                          title: "Copied",
-                          description: "Error message copied to clipboard",
-                        })
-                      }}
-                    >
-                      <ClipboardIcon className="w-4 h-4 mr-2" />
-                      Copy Error
-                    </Button>
-                    <Button variant="outline">
-                      <MagicWandIcon className="w-4 h-4 mr-2" />
-                      Fix with AI
-                    </Button>
-                  </div>
-                </>
-              ) : (
-                <div className="mt-4 bg-green-50 rounded-md border border-green-200">
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-green-800 mb-3">
-                      No Errors 👌
-                    </h3>
-                    <p className="text-sm text-green-700">
-                      Your code is running without any errors.
-                    </p>
-                  </div>
+        {showPreview && (
+          <div className="w-full md:w-1/2 p-2 min-h-[640px]">
+            <Tabs defaultValue="pcb">
+              <TabsList>
+                <TabsTrigger value="pcb">PCB</TabsTrigger>
+                <TabsTrigger value="cad">3D</TabsTrigger>
+                <TabsTrigger value="table">JSON</TabsTrigger>
+                <TabsTrigger value="error">
+                  Errors
+                  {message && (
+                    <span className="inline-flex items-center justify-center w-5 h-5 ml-2 text-xs font-bold text-white bg-red-500 rounded-full">
+                      1
+                    </span>
+                  )}
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="pcb">
+                <div className="mt-4 h-[500px]">
+                  <PCBViewer soup={circuitJson} />
                 </div>
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
+              </TabsContent>
+              <TabsContent value="cad">
+                <div className="mt-4 h-[500px]">
+                  <ErrorBoundary fallback={<div>Error loading 3D viewer</div>}>
+                    <CadViewer soup={circuitJson as any} />
+                  </ErrorBoundary>
+                </div>
+              </TabsContent>
+              <TabsContent value="table">
+                <div className="mt-4 h-[500px]">
+                  <CircuitJsonTableViewer elements={circuitJson as any} />
+                </div>
+              </TabsContent>
+              <TabsContent value="error">
+                <ErrorTabContent code={code} errorMessage={message} />
+              </TabsContent>
+            </Tabs>
+          </div>
+        )}
       </div>
     </div>
   )
