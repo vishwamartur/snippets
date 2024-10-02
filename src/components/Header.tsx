@@ -1,18 +1,18 @@
-import { HeaderLogin } from "@/components/HeaderLogin";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import { Link, useLocation } from "wouter";
-import HeaderDropdown from "./HeaderDropdown";
+import { HeaderLogin } from "@/components/HeaderLogin"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Search } from "lucide-react"
+import { Link, useLocation } from "wouter"
+import HeaderDropdown from "./HeaderDropdown"
 
 const HeaderButton = ({
   href,
   children,
 }: {
-  href: string;
-  children: React.ReactNode;
+  href: string
+  children: React.ReactNode
 }) => {
-  const [location] = useLocation();
+  const [location] = useLocation()
 
   if (location === href) {
     return (
@@ -22,21 +22,21 @@ const HeaderButton = ({
       >
         {children}
       </Button>
-    );
+    )
   }
 
   return (
     <Link href={href}>
       <Button variant="ghost">{children}</Button>
     </Link>
-  );
-};
+  )
+}
 
 export default function Header() {
   return (
     <header className="flex items-center justify-between px-4 py-3">
       <div className="flex items-center">
-        <Link href="/" className="text-lg font-semibold mr-3 ">
+        <Link href="/" className="text-lg font-semibold mr-3 whitespace-nowrap">
           <span className="bg-blue-500 px-2 py-1 rounded-md text-white">
             tscircuit
           </span>{" "}
@@ -80,5 +80,5 @@ export default function Header() {
         <HeaderLogin />
       </div>
     </header>
-  );
+  )
 }
