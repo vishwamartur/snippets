@@ -1,15 +1,18 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ChevronDown, Search } from "lucide-react"
-import { Link, useLocation } from "wouter"
-import { cn } from "@/lib/utils/index"
-import { HeaderLogin } from "@/components/HeaderLogin"
+import { HeaderLogin } from "@/components/HeaderLogin";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import HeaderDropdown from "./HeaderDropdown";
 
 const HeaderButton = ({
   href,
   children,
-}: { href: string; children: React.ReactNode }) => {
-  const [location] = useLocation()
+}: {
+  href: string;
+  children: React.ReactNode;
+}) => {
+  const [location] = useLocation();
 
   if (location === href) {
     return (
@@ -19,15 +22,15 @@ const HeaderButton = ({
       >
         {children}
       </Button>
-    )
+    );
   }
 
   return (
     <Link href={href}>
       <Button variant="ghost">{children}</Button>
     </Link>
-  )
-}
+  );
+};
 
 export default function Header() {
   return (
@@ -73,15 +76,9 @@ export default function Header() {
             className="pl-8 focus:border-blue-500 placeholder-gray-400"
           />
         </div>
-        <Button
-          size="sm"
-          variant="default"
-          className="bg-blue-600 hover:bg-blue-700"
-        >
-          New <ChevronDown className="ml-1" size={16} />
-        </Button>
+        <HeaderDropdown />
         <HeaderLogin />
       </div>
     </header>
-  )
+  );
 }
