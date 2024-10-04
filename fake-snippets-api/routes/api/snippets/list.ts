@@ -12,16 +12,14 @@ export default withRouteSpec({
   jsonBody: z.any().optional(),
   jsonResponse: z.object({
     ok: z.boolean(),
-    snippets: z.array(snippetSchema.extend({ snippet_type: z.enum(["board", "package", "model", "footprint"]) })),
+    snippets: z.array(snippetSchema),
   }),
 })(async (req, ctx) => {
   const { owner_name, unscoped_name } = req.commonParams
 
-  const snippets = ctx.db.snippets.filter(
-    (s) =>
-      (!owner_name || s.owner_name === owner_name) &&
-      (!unscoped_name || s.unscoped_name === unscoped_name),
-  )
+  const snippets = ctx.db
+    .getSnippetsByAuthor(owner_name)
+    .filter((s) => !unscoped_name || s.unscoped_name === unscoped_name)
 
   return ctx.json({
     ok: true,

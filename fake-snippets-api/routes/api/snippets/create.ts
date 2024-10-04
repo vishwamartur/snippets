@@ -19,7 +19,7 @@ export default withRouteSpec({
   let {
     unscoped_name,
     code = "",
-    snippet_type: snippet_type,
+    snippet_type,
     description = "",
   } = req.jsonBody
   if (!unscoped_name) {
