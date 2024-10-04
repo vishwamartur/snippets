@@ -42,6 +42,7 @@ if (!process.env.SNIPPETS_API_URL) {
   plugins.push(apiFakePlugin())
 } else {
   console.log(`Using snippets API at "${process.env.SNIPPETS_API_URL}"`)
+  process.env.VITE_SNIPPETS_API_URL = process.env.SNIPPETS_API_URL
   proxy = {
     "/api": {
       target: process.env.SNIPPETS_API_URL as string,

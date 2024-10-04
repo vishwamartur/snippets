@@ -9,14 +9,26 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Link } from "wouter"
 import { User } from "lucide-react"
+import { useSnippetsBaseApiUrl } from "@/hooks/use-snippets-base-api-url"
 
 export const HeaderLogin: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const snippetsBaseApiUrl = useSnippetsBaseApiUrl()
 
   if (!isLoggedIn) {
     return (
       <div className="flex items-center space-x-2 justify-end">
-        <Button onClick={() => setIsLoggedIn(true)} variant="ghost" size="sm">
+        <Button
+          onClick={() => {
+            if (snippetsBaseApiUrl) {
+              window.location.href = `${snippetsBaseApiUrl}/internal/oauth/github/authorize?next=${window.location.href}`
+            } else {
+              setIsLoggedIn(true)
+            }
+          }}
+          variant="ghost"
+          size="sm"
+        >
           Login
         </Button>
         <Button size="sm" onClick={() => setIsLoggedIn(true)}>
