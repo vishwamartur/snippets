@@ -15,7 +15,7 @@ test("update snippet", async () => {
     snippet_type: "package",
     description: "Original Description",
   }
-  db.addSnippet(snippet)
+  db.addSnippet(snippet as any)
 
   const addedSnippet = db.snippets[0]
 
