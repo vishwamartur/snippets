@@ -6,9 +6,9 @@ export default withRouteSpec({
   methods: ["POST"],
   auth: "session",
   jsonBody: z.object({
-    unscoped_name: z.string(),
+    unscoped_name: z.string().optional(),
     code: z.string().optional(),
-    type: z.enum(["board", "package", "model", "footprint"]),
+    snippet_type: z.enum(["board", "package", "model", "footprint"]),
     description: z.string().optional(),
   }),
   jsonResponse: z.object({
@@ -16,7 +16,15 @@ export default withRouteSpec({
     snippet: snippetSchema,
   }),
 })(async (req, ctx) => {
-  const { unscoped_name, code = "", type, description = "" } = req.jsonBody
+  let {
+    unscoped_name,
+    code = "",
+    snippet_type,
+    description = "",
+  } = req.jsonBody
+  if (!unscoped_name) {
+    unscoped_name = `untitled-${snippet_type}-${ctx.db.idCounter + 1}`
+  }
   const newSnippet = {
     snippet_id: `snippet_${ctx.db.idCounter + 1}`,
     name: `${ctx.auth.github_username}/${unscoped_name}`,
@@ -25,7 +33,7 @@ export default withRouteSpec({
     code,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
-    type,
+    snippet_type,
     description,
   }
 

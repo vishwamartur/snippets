@@ -16,7 +16,7 @@ export const QuickstartPage = () => {
     async () => {
       const currentUser = "seveibar"
       const response = await axios.get(
-        `/api/snippets/list?author_name=${currentUser}`,
+        `/api/snippets/list?owner_name=${currentUser}`,
       )
       return response.data.snippets
     },
@@ -49,7 +49,7 @@ export const QuickstartPage = () => {
                   <Card className="hover:shadow-md transition-shadow rounded-md">
                     <CardHeader className="pb-0 p-4">
                       <CardTitle className="text-md">
-                        {snippet.snippet_name}
+                        {snippet.unscoped_name}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-4 pt-0">

@@ -19,7 +19,7 @@ export const DashboardPage = () => {
   } = useQuery<Snippet[]>("userSnippets", async () => {
     const currentUser = "seveibar"
     const response = await axios.get(
-      `/api/snippets/list?author_name=${currentUser}`,
+      `/api/snippets/list?owner_name=${currentUser}`,
     )
     return response.data.snippets
   })
@@ -62,7 +62,7 @@ export const DashboardPage = () => {
                           size="sm"
                           className="font-medium"
                         >
-                          {snippet.snippet_name}
+                          {snippet.unscoped_name}
                           <Edit2 className="w-3 h-3 ml-2" />
                         </Button>
                       </Link>
@@ -83,11 +83,11 @@ export const DashboardPage = () => {
                     className="border p-4 rounded-md"
                   >
                     <Link
-                      href={`/${snippet.full_snippet_name}`}
+                      href={`/${snippet.owner_name}/${snippet.unscoped_name}`}
                       className="text-blue-600 hover:underline"
                     >
                       <h3 className="text-lg font-semibold">
-                        {snippet.snippet_name}
+                        {snippet.unscoped_name}
                       </h3>
                     </Link>
                     <p className="text-sm text-gray-500">
@@ -107,10 +107,10 @@ export const DashboardPage = () => {
                 {trendingSnippets.map((snippet) => (
                   <li key={snippet.snippet_id}>
                     <Link
-                      href={`/${snippet.full_snippet_name}`}
+                      href={`/${snippet.owner_name}/${snippet.unscoped_name}`}
                       className="text-blue-600 hover:underline text-sm"
                     >
-                      {snippet.full_snippet_name}
+                      {snippet.owner_name}/{snippet.unscoped_name}
                     </Link>
                   </li>
                 ))}

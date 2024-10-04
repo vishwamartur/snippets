@@ -4,12 +4,20 @@ import { test, expect } from "bun:test"
 test("create snippet", async () => {
   const { axios } = await getTestServer()
 
-  const response = await axios.post("/api/snippets/create", {
-    snippet_name: "TestSnippet",
-    owner_name: "TestUser",
-    content: "Test Content",
-    is_package: true,
-  })
+  const response = await axios.post(
+    "/api/snippets/create",
+    {
+      snippet_name: "TestSnippet",
+      owner_name: "TestUser",
+      content: "Test Content",
+      is_package: true,
+    },
+    {
+      headers: {
+        Authorization: "Bearer 1234",
+      },
+    },
+  )
 
   expect(response.status).toBe(200)
   expect(response.data.snippet.snippet_name).toBe("TestSnippet")

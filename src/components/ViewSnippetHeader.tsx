@@ -17,9 +17,9 @@ export default function ViewSnippetHeader() {
             <span className="px-1 text-gray-500">/</span>
             <Link
               className="text-blue-600"
-              href={`/${snippet?.owner_name}/${snippet?.snippet_name}`}
+              href={`/${snippet?.owner_name}/${snippet?.unscoped_name}`}
             >
-              {snippet?.snippet_name}
+              {snippet?.unscoped_name}
             </Link>
           </h1>
           {snippet?.type && <TypeBadge type={snippet.type} />}

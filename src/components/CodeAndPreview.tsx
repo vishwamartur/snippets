@@ -40,7 +40,7 @@ export function CodeAndPreview({ snippet }: Props) {
   }, [snippet?.content])
   const { toast } = useToast()
 
-  const { message, circuitJson } = useRunTsx(code, snippet?.type!)
+  const { message, circuitJson } = useRunTsx(code, snippet?.type)
   const qc = useQueryClient()
 
   const updateSnippetMutation = useMutation({
@@ -48,7 +48,7 @@ export function CodeAndPreview({ snippet }: Props) {
       if (!snippet) throw new Error("No snippet to update")
       const response = await axios.post("/api/snippets/update", {
         snippet_id: snippet.snippet_id,
-        content: code,
+        code: code,
       })
       if (response.status !== 200) {
         throw new Error("Failed to save snippet")
