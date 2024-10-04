@@ -28,19 +28,19 @@ interface Props {
 export function CodeAndPreview({ snippet }: Props) {
   const axios = useAxios()
   const defaultCode = useMemo(() => {
-    return decodeUrlHashToText(window.location.toString()) ?? snippet?.content
+    return decodeUrlHashToText(window.location.toString()) ?? snippet?.code
   }, [])
   const [code, setCode] = useState(defaultCode ?? "")
   const [showPreview, setShowPreview] = useState(true)
 
   useEffect(() => {
-    if (snippet?.content && !defaultCode) {
-      setCode(snippet.content)
+    if (snippet?.code && !defaultCode) {
+      setCode(snippet.code)
     }
-  }, [snippet?.content])
+  }, [snippet?.code])
   const { toast } = useToast()
 
-  const { message, circuitJson } = useRunTsx(code, snippet?.type)
+  const { message, circuitJson } = useRunTsx(code, snippet?.snippet_type)
   const qc = useQueryClient()
 
   const updateSnippetMutation = useMutation({
@@ -76,7 +76,7 @@ export function CodeAndPreview({ snippet }: Props) {
     updateSnippetMutation.mutate()
   }
 
-  const hasUnsavedChanges = snippet?.content !== code
+  const hasUnsavedChanges = snippet?.code !== code
 
   if (!snippet) {
     return <div>Loading...</div>
