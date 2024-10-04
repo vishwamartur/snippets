@@ -5,7 +5,7 @@ import { snippetSchema } from "fake-snippets-api/lib/db/schema"
 export default withRouteSpec({
   methods: ["GET"],
   jsonResponse: z.object({
-    snippets: z.array(snippetSchema.extend({ snippet_type: z.enum(["board", "package", "model", "footprint"]) })),
+    snippets: z.array(snippetSchema),
   }),
 })(async (req, ctx) => {
   const newestSnippets = ctx.db.getNewestSnippets(20)
