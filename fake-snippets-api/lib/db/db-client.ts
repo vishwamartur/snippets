@@ -2,12 +2,7 @@ import { createStore, type StoreApi } from "zustand/vanilla"
 import { immer } from "zustand/middleware/immer"
 import { hoist, type HoistedStoreApi } from "zustand-hoist"
 
-import {
-  databaseSchema,
-  Snippet,
-  type DatabaseSchema,
-  type Thing,
-} from "./schema.ts"
+import { databaseSchema, Snippet, type DatabaseSchema } from "./schema.ts"
 import { combine } from "zustand/middleware"
 
 export const createDatabase = () => {
@@ -46,7 +41,7 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
   },
   updateSnippet: (
     snippet_id: string,
-    content: string,
+    code: string,
     updated_at: string,
     options?: {
       is_board?: boolean
@@ -66,7 +61,7 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
       const updatedSnippets = [...state.snippets]
       updatedSnippets[snippetIndex] = {
         ...updatedSnippets[snippetIndex],
-        content: content,
+        code: code,
         updated_at: updated_at,
         ...(options?.is_board !== undefined && { is_board: options.is_board }),
         ...(options?.is_package !== undefined && {

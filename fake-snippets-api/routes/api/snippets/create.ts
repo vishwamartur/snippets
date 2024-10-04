@@ -4,40 +4,35 @@ import { snippetSchema } from "fake-snippets-api/lib/db/schema"
 
 export default withRouteSpec({
   methods: ["POST"],
+  auth: "session",
   jsonBody: z.object({
-    snippet_name: z.string().optional(),
-    owner_name: z.string(),
-    content: z.string(),
-    is_board: z.boolean().optional(),
-    is_package: z.boolean().optional(),
-    is_model: z.boolean().optional(),
-    is_footprint: z.boolean().optional(),
+    unscoped_name: z.string(),
+    code: z.string().optional(),
+    type: z.enum(["board", "package", "model", "footprint"]),
+    description: z.string().optional(),
   }),
   jsonResponse: z.object({
+    ok: z.boolean(),
     snippet: snippetSchema,
   }),
 })(async (req, ctx) => {
-  const { content, is_board, is_package, is_model, is_footprint } = req.jsonBody
-
-  const snippet_name =
-    req.jsonBody.snippet_name || `untitled-snippet-${ctx.db.idCounter + 1}`
-
-  const currentTime = new Date().toISOString()
+  const { unscoped_name, code = "", type, description = "" } = req.jsonBody
   const newSnippet = {
     snippet_id: `snippet_${ctx.db.idCounter + 1}`,
-    snippet_name,
-    owner_name: req.jsonBody.owner_name,
-    full_snippet_name: `${req.jsonBody.owner_name}/${snippet_name}`,
-    content,
-    created_at: currentTime,
-    updated_at: currentTime,
-    is_board: is_board ?? !(is_package || is_model || is_footprint) ?? true,
-    is_package: is_package ?? false,
-    is_model: is_model ?? false,
-    is_footprint: is_footprint ?? false,
+    name: `${ctx.auth.github_username}/${unscoped_name}`,
+    unscoped_name,
+    owner_name: ctx.auth.github_username,
+    code,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    type,
+    description,
   }
 
   ctx.db.addSnippet(newSnippet)
 
-  return ctx.json({ snippet: newSnippet })
+  return ctx.json({
+    ok: true,
+    snippet: newSnippet,
+  })
 })
