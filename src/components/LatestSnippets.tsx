@@ -1,10 +1,11 @@
 import React from "react"
 import { useQuery } from "react-query"
-import axios from "redaxios"
+import { useAxios } from "@/hooks/use-axios"
 import { Snippet } from "fake-snippets-api/lib/db/schema"
 import { Link } from "wouter"
 
 export const LatestSnippets: React.FC = () => {
+  const axios = useAxios()
   const {
     data: snippets,
     isLoading,

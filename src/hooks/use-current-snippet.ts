@@ -1,6 +1,7 @@
 import { useCurrentSnippetId } from "./use-current-snippet-id"
 import { useSnippet } from "./use-snippet"
 import type { Snippet } from "fake-snippets-api/lib/db/schema"
+import { useAxios } from "./use-axios"
 
 export const useCurrentSnippet = (): {
   snippet: Snippet | null
@@ -8,7 +9,8 @@ export const useCurrentSnippet = (): {
   error: Error | null
 } => {
   const snippetId = useCurrentSnippetId()
-  const { data: snippet, isLoading, error } = useSnippet(snippetId || "")
+  const axios = useAxios()
+  const { data: snippet, isLoading, error } = useSnippet(snippetId || "", axios)
 
   return {
     snippet: snippet || null,

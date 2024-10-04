@@ -1,6 +1,6 @@
 import React from "react"
 import { useQuery } from "react-query"
-import axios from "redaxios"
+import { useAxios } from "@/hooks/use-axios"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { Snippet } from "fake-snippets-api/lib/db/schema"
@@ -10,6 +10,8 @@ import { Edit2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export const DashboardPage = () => {
+  const axios = useAxios()
+
   const {
     data: mySnippets,
     isLoading,

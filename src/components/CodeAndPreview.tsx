@@ -11,7 +11,7 @@ import { useRunTsx } from "@/hooks/use-run-tsx"
 import EditorNav from "./EditorNav"
 import { CircuitJsonTableViewer } from "./TableViewer/CircuitJsonTableViewer"
 import { Snippet } from "fake-snippets-api/lib/db/schema"
-import axios from "redaxios"
+import { useAxios } from "@/hooks/use-axios"
 import { TypeBadge } from "./TypeBadge"
 import { useToast } from "@/hooks/use-toast"
 import { useMutation, useQueryClient } from "react-query"
@@ -26,6 +26,7 @@ interface Props {
 }
 
 export function CodeAndPreview({ snippet }: Props) {
+  const axios = useAxios()
   const defaultCode = useMemo(() => {
     return decodeUrlHashToText(window.location.toString()) ?? snippet?.content
   }, [])

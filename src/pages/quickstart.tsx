@@ -1,6 +1,6 @@
 import React from "react"
 import { useQuery } from "react-query"
-import axios from "redaxios"
+import { useAxios } from "@/hooks/use-axios"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { Snippet } from "fake-snippets-api/lib/db/schema"
@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TypeBadge } from "@/components/TypeBadge"
 
 export const QuickstartPage = () => {
+  const axios = useAxios()
   const { data: mySnippets, isLoading } = useQuery<Snippet[]>(
     "userSnippets",
     async () => {
