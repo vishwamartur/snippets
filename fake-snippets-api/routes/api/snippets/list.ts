@@ -12,7 +12,7 @@ export default withRouteSpec({
   jsonBody: z.any().optional(),
   jsonResponse: z.object({
     ok: z.boolean(),
-    snippets: z.array(snippetSchema),
+    snippets: z.array(snippetSchema.extend({ snippet_type: z.enum(["board", "package", "model", "footprint"]) })),
   }),
 })(async (req, ctx) => {
   const { owner_name, unscoped_name } = req.commonParams

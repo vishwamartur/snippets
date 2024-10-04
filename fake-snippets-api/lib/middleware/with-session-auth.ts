@@ -29,7 +29,13 @@ export const withSessionAuth: Middleware<
     })
   }
 
-  // TODO add ctx.auth
+  ctx.auth = {
+    type: "session",
+    account_id: "account-1234",
+    personal_org_id: "org-1234",
+    github_username: "testuser",
+    session_id: "session-1234",
+  }
 
   return next(req, ctx)
 }

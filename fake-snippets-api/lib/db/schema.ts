@@ -8,7 +8,7 @@ export const snippetSchema = z.object({
   code: z.string(),
   created_at: z.string(),
   updated_at: z.string(),
-  type: z.enum(["board", "package", "model", "footprint"]),
+  snippet_type: z.enum(["board", "package", "model", "footprint"]),
   description: z.string().optional(),
 })
 export type Snippet = z.infer<typeof snippetSchema>
