@@ -79,7 +79,8 @@ export default function ViewSnippetSidebar({
         <div className="space-y-1">
           <div className="text-xs font-medium">Copy import code</div>
           <div className="text-[0.5em] p-2 rounded-sm bg-blue-50 border border-blue-200 cursor-pointer font-mono whitespace-nowrap overflow-hidden text-ellipsis">
-            import CircuitModule from "@tsci/{snippet?.owner_name}.{snippet?.unscoped_name}"
+            import CircuitModule from "@tsci/{snippet?.owner_name}.
+            {snippet?.unscoped_name}"
           </div>
         </div>
         <div className="space-y-1">
