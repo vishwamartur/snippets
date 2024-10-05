@@ -7,19 +7,44 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Link } from "wouter"
+import { Link, useLocation, useRouter } from "wouter"
 import { User } from "lucide-react"
+import { useSnippetsBaseApiUrl } from "@/hooks/use-snippets-base-api-url"
+import { useGlobalStore } from "@/hooks/use-global-store"
 
 export const HeaderLogin: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [, setLocation] = useLocation()
+  const session = useGlobalStore((s) => s.session)
+  const isLoggedIn = Boolean(session)
+  const setSession = useGlobalStore((s) => s.setSession)
+  const snippetsBaseApiUrl = useSnippetsBaseApiUrl()
 
   if (!isLoggedIn) {
     return (
       <div className="flex items-center space-x-2 justify-end">
-        <Button onClick={() => setIsLoggedIn(true)} variant="ghost" size="sm">
+        <Button
+          onClick={() => {
+            if (snippetsBaseApiUrl) {
+              window.location.href = `${snippetsBaseApiUrl}/internal/oauth/github/authorize?next=${window.location.origin}/authorize`
+            } else {
+              setSession({})
+            }
+          }}
+          variant="ghost"
+          size="sm"
+        >
           Login
         </Button>
-        <Button size="sm" onClick={() => setIsLoggedIn(true)}>
+        <Button
+          size="sm"
+          onClick={() => {
+            if (snippetsBaseApiUrl) {
+              window.location.href = `${snippetsBaseApiUrl}/internal/oauth/github/authorize?next=${window.location.origin}/authorize`
+            } else {
+              setSession({})
+            }
+          }}
+        >
           Sign Up
         </Button>
       </div>
@@ -31,20 +56,22 @@ export const HeaderLogin: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar className="w-8 h-8">
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage
+              src={`https://github.com/${session?.github_username}.png`}
+            />
             <AvatarFallback>
               <User size={16} />
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            <Link href="/dashboard">Dashboard</Link>
+          <DropdownMenuItem onClick={() => setLocation("/dashboard")}>
+            Dashboard
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link href="/settings">Settings</Link>
+          <DropdownMenuItem onClick={() => setLocation("/settings")}>
+            Settings
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setIsLoggedIn(false)}>
+          <DropdownMenuItem onClick={() => setSession(null)}>
             Sign out
           </DropdownMenuItem>
         </DropdownMenuContent>
