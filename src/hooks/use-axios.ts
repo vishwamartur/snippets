@@ -8,7 +8,7 @@ export const useAxios = () => {
   const session = useGlobalStore((s) => s.session)
   return useMemo(() => {
     const instance = axios.create({
-      baseURL: snippetsBaseApiUrl ?? "/api",
+      baseURL: snippetsBaseApiUrl,
       headers: session
         ? {
             Authorization: `Bearer ${session?.token}`,
