@@ -6,16 +6,23 @@ import { createCircuitBoard1Template } from "@tscircuit/prompt-benchmarks"
 import { TextDelta } from "@anthropic-ai/sdk/resources/messages.mjs"
 import { MagicWandIcon } from "@radix-ui/react-icons"
 import { AiChatMessage } from "./AiChatMessage"
-import { useLocation } from "wouter"
+import { Link, useLocation } from "wouter"
+import { useSnippet } from "@/hooks/use-snippet"
+import { Edit2 } from "lucide-react"
+import { SnippetLink } from "./SnippetLink"
 
 export default function AIChatInterface({
   code,
+  hasUnsavedChanges,
+  snippetId,
   onCodeChange,
   onStartStreaming,
   onStopStreaming,
   errorMessage,
 }: {
   code: string
+  hasUnsavedChanges: boolean
+  snippetId?: string | null
   onCodeChange: (code: string) => void
   onStartStreaming: () => void
   onStopStreaming: () => void
@@ -25,8 +32,9 @@ export default function AIChatInterface({
   const [isStreaming, setIsStreaming] = useState(false)
   const anthropic = useAiApi()
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const { data: snippet } = useSnippet(snippetId!)
   const [currentCodeBlock, setCurrentCodeBlock] = useState<string | null>(null)
-  const [location] = useLocation()
+  const [location, navigate] = useLocation()
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -61,7 +69,7 @@ export default function AIChatInterface({
             content: message,
           },
         ],
-        max_tokens: 4096,
+        max_tokens: 1000,
       })
 
       let accumulatedContent = ""
@@ -130,9 +138,27 @@ export default function AIChatInterface({
   return (
     <div className="flex flex-col h-[calc(100vh-60px)] max-w-2xl mx-auto p-4 bg-gray-100">
       <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+        {snippet && (
+          <div className="flex pl-4 p-2 rounded items-center bg-white border border-gray-200 text-sm mb-4 shadow-sm">
+            <SnippetLink snippet={snippet} />
+            <div className="flex-grow" />
+            <Button
+              size="sm"
+              className="text-xs"
+              variant="ghost"
+              onClick={async () => {
+                navigate(`/editor?snippet_id=${snippet.snippet_id}`)
+              }}
+              disabled={hasUnsavedChanges}
+            >
+              Open in Editor
+              <Edit2 className="w-3 h-3 ml-2 opacity-60" />
+            </Button>
+          </div>
+        )}
         {messages.length === 0 && (
-          <div className="text-gray-500 text-xl text-center mt-[30vh] flex flex-col items-center">
-            <div>Submit a prompt to get started!</div>
+          <div className="text-gray-500 text-xl text-center pt-[30vh] flex flex-col items-center">
+            <div>Submit a prompt to {snippet ? "edit!" : "get started!"}</div>
             <div className="text-6xl mt-4">↓</div>
           </div>
         )}
