@@ -16,7 +16,7 @@ export const QuickstartPage = () => {
     async () => {
       const currentUser = "seveibar"
       const response = await axios.get(
-        `/api/snippets/list?owner_name=${currentUser}`,
+        `/snippets/list?owner_name=${currentUser}`,
       )
       return response.data.snippets
     },

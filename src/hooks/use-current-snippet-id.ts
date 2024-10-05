@@ -46,7 +46,7 @@ export const useCurrentSnippetId = (): string | null => {
       const template = getTemplate(templateName)
       const {
         data: { snippet },
-      } = await axios.post("/api/snippets/create", {
+      } = await axios.post("/snippets/create", {
         code: template.code,
         snippet_type: template.type ?? "board",
         owner_name: "seveibar",

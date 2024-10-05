@@ -11,7 +11,7 @@ export const LatestSnippets: React.FC = () => {
     isLoading,
     error,
   } = useQuery<Snippet[]>("latestSnippets", async () => {
-    const response = await axios.get("/api/snippets/list_newest")
+    const response = await axios.get("/snippets/list_newest")
     return response.data.snippets
   })
 

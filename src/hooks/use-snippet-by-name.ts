@@ -8,7 +8,7 @@ export const useSnippetByName = (fullSnippetName: string | null) => {
     ["snippet", fullSnippetName],
     async () => {
       if (!fullSnippetName) return
-      const { data } = await axios.get("/api/snippets/get", {
+      const { data } = await axios.get("/snippets/get", {
         params: { full_snippet_name: fullSnippetName },
       })
       return data.snippet

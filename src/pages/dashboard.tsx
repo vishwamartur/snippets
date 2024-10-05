@@ -18,16 +18,14 @@ export const DashboardPage = () => {
     error,
   } = useQuery<Snippet[]>("userSnippets", async () => {
     const currentUser = "seveibar"
-    const response = await axios.get(
-      `/api/snippets/list?owner_name=${currentUser}`,
-    )
+    const response = await axios.get(`/snippets/list?owner_name=${currentUser}`)
     return response.data.snippets
   })
 
   const { data: trendingSnippets } = useQuery<Snippet[]>(
     "trendingSnippets",
     async () => {
-      const response = await axios.get("/api/snippets/list_trending")
+      const response = await axios.get("/snippets/list_trending")
       return response.data.snippets
     },
   )
@@ -35,7 +33,7 @@ export const DashboardPage = () => {
   const { data: newestSnippets } = useQuery<Snippet[]>(
     "newestSnippets",
     async () => {
-      const response = await axios.get("/api/snippets/list_newest")
+      const response = await axios.get("/snippets/list_newest")
       return response.data.snippets
     },
   )

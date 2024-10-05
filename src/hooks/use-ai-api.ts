@@ -9,7 +9,7 @@ export const useAiApi = ({
       new Anthropic({
         // apiKey: "{REPLACE_ON_SERVER}",
         apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-        // baseURL: `${window.location.origin}/api/ai`,
+        // baseURL: `${window.location.origin}/ai`,
         dangerouslyAllowBrowser: true,
       }),
     [],

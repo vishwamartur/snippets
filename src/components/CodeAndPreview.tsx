@@ -46,7 +46,7 @@ export function CodeAndPreview({ snippet }: Props) {
   const updateSnippetMutation = useMutation({
     mutationFn: async () => {
       if (!snippet) throw new Error("No snippet to update")
-      const response = await axios.post("/api/snippets/update", {
+      const response = await axios.post("/snippets/update", {
         snippet_id: snippet.snippet_id,
         code: code,
       })

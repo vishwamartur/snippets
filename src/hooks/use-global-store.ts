@@ -22,3 +22,7 @@ export const useGlobalStore = create<Store>()(
     },
   ),
 )
+
+useGlobalStore.subscribe((state, prevState) => {
+  ;(window as any).globalStore = state
+})

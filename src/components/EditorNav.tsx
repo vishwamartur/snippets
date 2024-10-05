@@ -52,10 +52,8 @@ export default function EditorNav({
     <nav className="flex items-center justify-between px-2 py-3 border-b border-gray-200 bg-white text-sm border-t">
       <div className="flex items-center space-x-1">
         {/* <span className="text-base font-semibold">»</span> */}
-        <span className="text-md font-semibold">
-          {snippet.full_snippet_name}
-        </span>
-        <Link href={`/${snippet.full_snippet_name}`}>
+        <span className="text-md font-semibold">{snippet.name}</span>
+        <Link href={`/${snippet.name}`}>
           <Button variant="ghost" size="icon" className="h-6 w-6 ml-1">
             <OpenInNewWindowIcon className="h-3 w-3 text-gray-700" />
           </Button>

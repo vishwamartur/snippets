@@ -10,7 +10,7 @@ export const useSnippet = (snippetId: string | null) => {
       if (!snippetId) {
         throw new Error("Snippet ID is required")
       }
-      const { data } = await axios.get("/api/snippets/get", {
+      const { data } = await axios.get("/snippets/get", {
         params: { snippet_id: snippetId },
       })
       return data.snippet
