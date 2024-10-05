@@ -7,7 +7,7 @@ interface AccountBalance {
 
 export const useAccountBalance = () => {
   const axios = useAxios()
-  
+
   return useQuery<AccountBalance, Error>(
     "accountBalance",
     async () => {
@@ -16,6 +16,6 @@ export const useAccountBalance = () => {
     },
     {
       refetchInterval: 60000, // Refetch every minute
-    }
+    },
   )
 }
