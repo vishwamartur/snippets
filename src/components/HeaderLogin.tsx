@@ -11,6 +11,7 @@ import { Link, useLocation, useRouter } from "wouter"
 import { User } from "lucide-react"
 import { useSnippetsBaseApiUrl } from "@/hooks/use-snippets-base-api-url"
 import { useGlobalStore } from "@/hooks/use-global-store"
+import { useAccountBalance } from "@/hooks/use-account-balance"
 
 export const HeaderLogin: React.FC = () => {
   const [, setLocation] = useLocation()
@@ -18,6 +19,7 @@ export const HeaderLogin: React.FC = () => {
   const isLoggedIn = Boolean(session)
   const setSession = useGlobalStore((s) => s.setSession)
   const snippetsBaseApiUrl = useSnippetsBaseApiUrl()
+  const { data: accountBalance } = useAccountBalance()
 
   if (!isLoggedIn) {
     return (
@@ -52,7 +54,7 @@ export const HeaderLogin: React.FC = () => {
   }
 
   return (
-    <div className="flex justify-end">
+    <div className="flex justify-end items-center">
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar className="w-8 h-8">
@@ -65,6 +67,11 @@ export const HeaderLogin: React.FC = () => {
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <DropdownMenuItem className="text-gray-500 text-xs" disabled>
+            AI Usage $
+            {accountBalance?.monthly_ai_budget_used_usd.toFixed(2) ?? "0.00"} /
+            $5.00
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setLocation("/dashboard")}>
             Dashboard
           </DropdownMenuItem>
