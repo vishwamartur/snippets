@@ -81,7 +81,9 @@ export default function AIChatInterface({
                 .split("```")
                 .slice(-2, -1)[0]
                 .trim()
-              onCodeChange(codeContent.replace(/^tsx/, "").trim())
+                .replace(/^tsx/, "")
+                .trim()
+              onCodeChange(codeContent)
               setCurrentCodeBlock(null)
             }
           } else if (isInCodeBlock) {
@@ -145,7 +147,7 @@ export default function AIChatInterface({
             <MagicWandIcon className="w-4 h-4 mr-2" />
             <span className="font-bold">Fix Error with AI</span>
             <span className="italic font-normal ml-2">
-              "{errorMessage.slice(0, 20)}..."
+              "{errorMessage.slice(0, 26)}..."
             </span>
           </Button>
         </div>
