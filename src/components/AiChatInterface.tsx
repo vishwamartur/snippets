@@ -6,6 +6,7 @@ import { createCircuitBoard1Template } from "@tscircuit/prompt-benchmarks"
 import { TextDelta } from "@anthropic-ai/sdk/resources/messages.mjs"
 import { MagicWandIcon } from "@radix-ui/react-icons"
 import { AiChatMessage } from "./AiChatMessage"
+import { useLocation } from "wouter"
 
 export default function AIChatInterface({
   code,
@@ -25,6 +26,7 @@ export default function AIChatInterface({
   const anthropic = useAiApi()
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [currentCodeBlock, setCurrentCodeBlock] = useState<string | null>(null)
+  const [location] = useLocation()
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -111,6 +113,17 @@ export default function AIChatInterface({
       onStopStreaming()
     }
   }
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(
+      window.location.search.split("?")[1],
+    )
+    const initialPrompt = searchParams.get("initial_prompt")
+
+    if (initialPrompt && messages.length === 0) {
+      addMessage(initialPrompt)
+    }
+  }, [])
 
   return (
     <div className="flex flex-col h-[calc(100vh-60px)] max-w-2xl mx-auto p-4 bg-gray-100">

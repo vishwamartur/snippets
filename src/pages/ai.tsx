@@ -7,9 +7,10 @@ import { MagicWandIcon } from "@radix-ui/react-icons"
 import { CadViewer } from "@tscircuit/3d-viewer"
 import { PCBViewer } from "@tscircuit/pcb-viewer"
 import { ArrowRight, ClipboardIcon, Save } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRunTsx } from "@/hooks/use-run-tsx"
 import { ErrorTabContent } from "@/components/ErrorTabContent"
+import { useLocation } from "wouter"
 
 export const AiPage = () => {
   const [code, setCode] = useState("")
