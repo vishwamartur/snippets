@@ -2,7 +2,14 @@ import { createStore, type StoreApi } from "zustand/vanilla"
 import { immer } from "zustand/middleware/immer"
 import { hoist, type HoistedStoreApi } from "zustand-hoist"
 
-import { databaseSchema, Snippet, Session, LoginPage, Account, type DatabaseSchema } from "./schema.ts"
+import {
+  databaseSchema,
+  Snippet,
+  Session,
+  LoginPage,
+  Account,
+  type DatabaseSchema,
+} from "./schema.ts"
 import { combine } from "zustand/middleware"
 
 export const createDatabase = () => {
@@ -89,12 +96,16 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
     }))
     return newSession
   },
-  getSessions: ({ account_id, is_cli_session }: { account_id: string, is_cli_session?: boolean }): Session[] => {
+  getSessions: ({
+    account_id,
+    is_cli_session,
+  }: { account_id: string; is_cli_session?: boolean }): Session[] => {
     const state = get()
     return state.sessions.filter(
-      (session) => 
-        session.account_id === account_id && 
-        (is_cli_session === undefined || session.is_cli_session === is_cli_session)
+      (session) =>
+        session.account_id === account_id &&
+        (is_cli_session === undefined ||
+          session.is_cli_session === is_cli_session),
     )
   },
   createLoginPage: (): LoginPage => {
@@ -115,10 +126,13 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
     const state = get()
     return state.loginPages.find((lp) => lp.login_page_id === login_page_id)
   },
-  updateLoginPage: (login_page_id: string, updates: Partial<LoginPage>): void => {
+  updateLoginPage: (
+    login_page_id: string,
+    updates: Partial<LoginPage>,
+  ): void => {
     set((state) => ({
       loginPages: state.loginPages.map((lp) =>
-        lp.login_page_id === login_page_id ? { ...lp, ...updates } : lp
+        lp.login_page_id === login_page_id ? { ...lp, ...updates } : lp,
       ),
     }))
   },
