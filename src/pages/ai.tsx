@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { MagicWandIcon } from "@radix-ui/react-icons"
 import { CadViewer } from "@tscircuit/3d-viewer"
 import { PCBViewer } from "@tscircuit/pcb-viewer"
-import { ArrowRight, ClipboardIcon, Save } from "lucide-react"
+import { ArrowRight, ClipboardIcon, Save, Edit2 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRunTsx } from "@/hooks/use-run-tsx"
 import { ErrorTabContent } from "@/components/ErrorTabContent"
@@ -55,10 +55,16 @@ export const AiPage = () => {
                     </TabsTrigger>
                   </TabsList>
                   <div className="flex-grow" />
-                  <Button size="sm" variant="outline">
-                    Save Snippet
-                    <Save className="w-4 h-4 ml-2" />
-                  </Button>
+                  <div className="flex space-x-2">
+                    <Button size="sm" variant="outline">
+                      Save Snippet
+                      <Save className="w-3 h-3 ml-2 opacity-60" />
+                    </Button>
+                    <Button size="sm" variant="outline">
+                      Open in Editor
+                      <Edit2 className="w-3 h-3 ml-2 opacity-60" />
+                    </Button>
+                  </div>
                 </div>
                 <TabsContent value="code">
                   <div className="mt-4 bg-gray-50 rounded-md border border-gray-200">
