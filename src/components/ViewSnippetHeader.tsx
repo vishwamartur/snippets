@@ -22,7 +22,7 @@ export default function ViewSnippetHeader() {
               {snippet?.unscoped_name}
             </Link>
           </h1>
-          {snippet?.type && <TypeBadge type={snippet.type} />}
+          {snippet?.snippet_type && <TypeBadge type={snippet.snippet_type} />}
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm">

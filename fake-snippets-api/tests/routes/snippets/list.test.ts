@@ -36,7 +36,7 @@ test("list snippets", async () => {
   ]
 
   for (const snippet of snippets) {
-    db.addSnippet(snippet)
+    db.addSnippet(snippet as any)
   }
 
   // Test without owner_name parameter

@@ -1,7 +1,7 @@
 import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec"
 import { z } from "zod"
 import ms from "ms"
-import jwt from "jsonwebtoken"
+import { SignJWT } from "jose"
 
 export default withRouteSpec({
   methods: ["POST"],
@@ -45,17 +45,14 @@ export default withRouteSpec({
     is_cli_session: false,
   })
 
-  const token = jwt.sign(
-    {
-      account_id: account.account_id,
-      session_id: new_session.session_id,
-      github_username: account.github_username,
-    },
-    process.env.JWT_SECRET || "",
-    {
-      expiresIn: ms("60 day"),
-    },
-  )
+  const token = await new SignJWT({
+    account_id: account.account_id,
+    session_id: new_session.session_id,
+    github_username: account.github_username,
+  })
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime(new Date(Date.now() + ms("60 day")).toISOString())
+    .sign(new TextEncoder().encode(process.env.JWT_SECRET || ""))
 
   return ctx.json({
     session: {

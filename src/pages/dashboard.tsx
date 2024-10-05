@@ -122,10 +122,10 @@ export const DashboardPage = () => {
                 {newestSnippets.map((snippet) => (
                   <li key={snippet.snippet_id}>
                     <Link
-                      href={`/${snippet.full_snippet_name}`}
+                      href={`/${snippet.name}`}
                       className="text-blue-600 hover:underline text-sm"
                     >
-                      {snippet.full_snippet_name}
+                      {snippet.name}
                     </Link>
                   </li>
                 ))}

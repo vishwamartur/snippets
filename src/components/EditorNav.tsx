@@ -99,7 +99,7 @@ export default function EditorNav({
         )}
       </div>
       <div className="flex items-center space-x-2">
-        {snippet && <TypeBadge type={snippet.type} />}
+        {snippet && <TypeBadge type={snippet.snippet_type} />}
         <DownloadButtonAndMenu className="hidden md:flex" />
         <Button
           variant="outline"

@@ -36,7 +36,7 @@ test("list newest snippets", async () => {
   ]
 
   for (const snippet of snippets) {
-    db.addSnippet(snippet)
+    db.addSnippet(snippet as any)
   }
 
   const { data } = await axios.get("/api/snippets/list_newest")
