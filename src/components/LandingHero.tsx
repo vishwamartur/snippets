@@ -1,19 +1,12 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Globe,
-  Code,
-  Sun,
-  Battery,
-  Cpu,
-  Grid,
-  LayoutGrid,
-  Bot,
+import { useState } from "react"
+import { useLocation, Link } from "wouter"
+import { TypeBadge } from "./TypeBadge"
+import { Button } from "@/components/ui/button"
+import { CreateNewSnippetHero } from "./CreateNewSnippetHero"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const LandingHero = () => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(true)
   const [, setLocation] = useLocation()
   return (
     <div className="p-6">
@@ -119,5 +112,5 @@ export const LandingHero = () => {
         <span className="mr-2">📄</span> More Templates
       </Button>
     </div>
-  );
-};
+  )
+}
