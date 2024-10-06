@@ -48,7 +48,6 @@
               {
                 "selector": {
                   "kind": "const",
-                  "scope": "global"
                 },
                 "formats": ["camelCase"]
               }
