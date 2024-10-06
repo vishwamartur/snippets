@@ -36,7 +36,7 @@
           "options": {
             "strictCase": true,
             "requireAscii": true,
-            "filenameCases": ["kebab-case", "export"]
+            "filenameCases": ["camelCase", "kebab-case", "export"]
           }
         }
       }
