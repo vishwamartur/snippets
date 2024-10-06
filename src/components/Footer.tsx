@@ -4,7 +4,9 @@ export default function Footer() {
   return (
     <footer className="bg-white text-black py-12 border-t mt-8">
       <div className="container mx-auto px-4">
-        <h2 className="text-xl font-semibold mb-4 whitespace-nowrap">tscircuit snippets</h2>
+        <h2 className="text-xl font-semibold mb-4 whitespace-nowrap">
+          tscircuit snippets
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm text-gray-600">
           <div className="space-y-4">
             <nav className="flex flex-col space-y-2">
@@ -69,9 +71,18 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="font-semibold uppercase">Company</h3>
             <nav className="flex flex-col space-y-2">
-              <Link href="#" className="hover:underline">
-                About
-              </Link>
+              <a
+                href="https://tscircuit.com/legal/terms-of-service"
+                className="hover:underline"
+              >
+                Terms of Service
+              </a>
+              <a
+                href="https://tscircuit.com/legal/privacy-policy"
+                className="hover:underline"
+              >
+                Privacy Policy
+              </a>
               <Link
                 href="mailto:contact@tscircuit.com"
                 className="hover:underline"

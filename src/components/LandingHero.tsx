@@ -11,13 +11,10 @@ import {
   Grid,
   LayoutGrid,
   Bot,
-} from "lucide-react";
-import { CreateNewSnippetHero } from "./CreateNewSnippetHero";
-import { Link } from "wouter";
-import { TypeBadge } from "./TypeBadge";
 
 export const LandingHero = () => {
   const [visible, setVisible] = useState(true);
+  const [, setLocation] = useLocation()
   return (
     <div className="p-6">
       <CreateNewSnippetHero />
@@ -71,7 +68,7 @@ export const LandingHero = () => {
 
       <div className="grid grid-cols-4 gap-4">
         <div>
-          <Link href="/quickstart?template=blank-circuit-board">
+          <Link href="/editor?template=blank-circuit-board">
             <Button className="w-full justify-between mb-2 px-2">
               Create new <TypeBadge type="board" className="ml-2" />
             </Button>
@@ -82,7 +79,7 @@ export const LandingHero = () => {
           </p>
         </div>
         <div>
-          <Link href="/quickstart?template=blank-circuit-module">
+          <Link href="/editor?template=blank-circuit-module">
             <Button className="w-full justify-between mb-2 px-2">
               Create new <TypeBadge type="package" className="ml-2" />
             </Button>
@@ -93,7 +90,7 @@ export const LandingHero = () => {
           </p>
         </div>
         <div>
-          <Link href="/quickstart?template=blank-footprint">
+          <Link href="/editor?template=blank-footprint">
             <Button className="w-full justify-between mb-2 px-2">
               Create new <TypeBadge type="footprint" className="ml-2" />
             </Button>
@@ -104,7 +101,7 @@ export const LandingHero = () => {
           </p>
         </div>
         <div>
-          <Link href="/quickstart?template=blank-3d-model">
+          <Link href="/editor?template=blank-3d-model">
             <Button className="w-full justify-between mb-2 px-2">
               Create new <TypeBadge type="model" className="ml-2" />
             </Button>
@@ -114,8 +111,12 @@ export const LandingHero = () => {
           </p>
         </div>
       </div>
-      <Button variant="outline" className="mt-4">
-        <span className="mr-2">📄</span> View more templates
+      <Button
+        onClick={() => setLocation("/quickstart")}
+        variant="outline"
+        className="mt-4"
+      >
+        <span className="mr-2">📄</span> More Templates
       </Button>
     </div>
   );
