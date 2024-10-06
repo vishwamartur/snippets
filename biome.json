@@ -36,7 +36,24 @@
           "options": {
             "strictCase": true,
             "requireAscii": true,
-            "filenameCases": ["camelCase", "kebab-case", "export"]
+            "filenameCases": ["kebab-case", "export"]
+          }
+        },
+        "useNamingConvention": {
+          "level": "error",
+          "options": {
+            "strictCase": true,
+            "requireAscii": true,
+            "enumMemberCase": "camelCase",
+            "conventions": [
+              {
+                "selector": {
+                  "kind": "const",
+                  "scope": "global"
+                },
+                "formats": ["camelCase"]
+              }
+            ]
           }
         }
       }
