@@ -1,66 +1,63 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  Globe,
-  Code,
-  Sun,
-  Battery,
-  Cpu,
-  Grid,
-  LayoutGrid,
-  Bot,
-} from "lucide-react"
-import { CreateNewSnippetHero } from "./CreateNewSnippetHero"
-import { Link, useLocation } from "wouter"
+import { useState } from "react"
+import { useLocation, Link } from "wouter"
 import { TypeBadge } from "./TypeBadge"
+import { Button } from "@/components/ui/button"
+import { CreateNewSnippetHero } from "./CreateNewSnippetHero"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const LandingHero = () => {
+  const [visible, setVisible] = useState(true)
   const [, setLocation] = useLocation()
   return (
     <div className="p-6">
       <CreateNewSnippetHero />
 
-      <Card className="mb-6 bg-gray-50 rounded-sm">
-        <CardHeader className="p-3 pl-8">
-          <CardTitle className="flex justify-between items-center">
-            <div className="pt-2">Onboarding Tips</div>
-            <Button variant="ghost" className="text-gray-400 text-xl">
-              &times;
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="list-disc marker:text-gray-400 pl-5 space-y-2">
-            <li>
-              tscircuit snippets are React components that turn into
-              manufacturable circuit boards, circuit modules, 3D models or
-              footprints.
-            </li>
-            <li>
-              You can design full boards, or individual components like chips
-            </li>
-            <li>
-              You can export snippets to{" "}
-              <a href="#" className="text-blue-600">
-                KiCad
-              </a>
-              ,{" "}
-              <a href="#" className="text-blue-600">
-                Gerbers
-              </a>
-              ,{" "}
-              <a href="#" className="text-blue-600">
-                STEP
-              </a>
-              , and other formats
-            </li>
-            <li>
-              Type <b>@</b> when coding to import other snippets
-            </li>
-          </ul>
-        </CardContent>
-      </Card>
+      {visible && (
+        <Card className="mb-6 bg-gray-50 rounded-sm">
+          <CardHeader className="p-3 pl-8">
+            <CardTitle className="flex justify-between items-center">
+              <div className="pt-2">Onboarding Tips</div>
+              <Button
+                variant="ghost"
+                className="text-gray-400 text-xl"
+                onClick={() => setVisible(!visible)}
+              >
+                &times;
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc marker:text-gray-400 pl-5 space-y-2">
+              <li>
+                tscircuit snippets are React components that turn into
+                manufacturable circuit boards, circuit modules, 3D models or
+                footprints.
+              </li>
+              <li>
+                You can design full boards, or individual components like chips
+              </li>
+              <li>
+                You can export snippets to{" "}
+                <a href="#" className="text-blue-600">
+                  KiCad
+                </a>
+                ,{" "}
+                <a href="#" className="text-blue-600">
+                  Gerbers
+                </a>
+                ,{" "}
+                <a href="#" className="text-blue-600">
+                  STEP
+                </a>
+                , and other formats
+              </li>
+              <li>
+                Type <b>@</b> when coding to import other snippets
+              </li>
+            </ul>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-4 gap-4">
         <div>
