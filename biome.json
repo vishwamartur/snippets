@@ -44,7 +44,6 @@
           "options": {
             "strictCase": true,
             "requireAscii": true,
-            "enumMemberCase": "camelCase",
             "conventions": [
               {
                 "selector": {
