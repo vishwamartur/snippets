@@ -5,7 +5,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, Zap } from "lucide-react"
+import { Link } from "wouter"
 
 export default function HeaderDropdown() {
   const blankTemplates = [
@@ -31,6 +32,12 @@ export default function HeaderDropdown() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-fit">
+        <DropdownMenuItem asChild>
+          <Link href="/quickstart" className="flex items-center cursor-pointer">
+            <Zap className="mr-2 h-3 w-3" />
+            Quickstart Templates
+          </Link>
+        </DropdownMenuItem>
         {blankTemplates.map((template, index) => (
           <DropdownMenuItem key={index} asChild>
             <a
