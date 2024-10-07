@@ -75,7 +75,10 @@ export const CodeEditor = ({
     }
 
     const ata = setupTypeAcquisition(ataConfig)
-    ata(`import React from "@types/react"`)
+    ata(`
+import React from "@types/react"
+import { Circuit } from "@tscircuit/core"
+`)
 
     const state = EditorState.create({
       doc: code,
