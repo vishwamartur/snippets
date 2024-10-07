@@ -18,52 +18,53 @@ import {
 import ts from "typescript"
 import { setupTypeAcquisition } from "@typescript/ata"
 import { ATABootstrapConfig } from "@typescript/ata"
+import { useAxios } from "@/hooks/use-axios"
+import { useSnippetsBaseApiUrl } from "@/hooks/use-snippets-base-api-url"
 
 export const CodeEditor = ({
   onCodeChange,
+  onDtsChange,
   readOnly = false,
   code,
 }: {
   onCodeChange: (code: string) => void
+  onDtsChange?: (dts: string) => void
   code: string
   readOnly?: boolean
 }) => {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
+  const apiUrl = useSnippetsBaseApiUrl()
 
   useEffect(() => {
     if (!editorRef.current) return
 
     const fsMap = new Map<string, string>()
     fsMap.set("index.tsx", code)
-    fsMap.set("package.json", `{"dependencies": {"react": "18.3.1"}}`)
-
-    //     fsMap.set(
-    //       "tscircuit-core.d.ts",
-    //       `
-
-    // declare global {
-    //   namespace JSX {
-    //     interface IntrinsicElements {
-    //       board: any
-    //     }
-    //   }
-    // }
-
-    // `.trim(),
-    //     )
 
     const system = createSystem(fsMap)
     const env = createVirtualTypeScriptEnvironment(system, [], ts, {
       jsx: ts.JsxEmit.ReactJSX,
+      declaration: true,
     })
 
     const ataConfig: ATABootstrapConfig = {
       projectName: "my-project",
       typescript: ts,
       logger: console,
-      fetcher: (input, init) => {
-        // TODO redirect @tsci/* stuff to our api registry
+      fetcher: (input: RequestInfo | URL, init?: RequestInit) => {
+        const registryPrefix =
+          "https://data.jsdelivr.com/v1/package/resolve/npm/@tsci/"
+        if (typeof input === "string" && input.startsWith(registryPrefix)) {
+          const fullPackageName = input.split(registryPrefix)[1]
+          // TODO: Implement redirection to our API registry for @tsci/* packages
+          // For now, we'll just log the package name
+          console.log(`Intercepted @tsci package: ${fullPackageName}`)
+          return fetch(
+            `${apiUrl}/snippets/download?path=${encodeURIComponent(fullPackageName)}`,
+          )
+        }
+        // For all other cases, proceed with the original fetch
         return fetch(input, init)
       },
       delegate: {
@@ -78,6 +79,7 @@ export const CodeEditor = ({
     ata(`
 import React from "@types/react"
 import { Circuit } from "@tscircuit/core"
+${code}
 `)
 
     const state = EditorState.create({
@@ -93,6 +95,18 @@ import { Circuit } from "@tscircuit/core"
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             onCodeChange(update.state.doc.toString())
+
+            const { outputFiles } = env.languageService.getEmitOutput(
+              "index.tsx",
+              true,
+            )
+
+            const indexDts = outputFiles.find(
+              (file) => file.name === "index.d.ts",
+            )
+            if (indexDts?.text && onDtsChange) {
+              onDtsChange(indexDts.text)
+            }
           }
         }),
         EditorState.readOnly.of(readOnly),

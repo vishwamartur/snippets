@@ -35,6 +35,12 @@ export const A555Timer = ({ name }: { name: string }) => (
   <chip name={name} footprint="dip8" />
 )
 `.trim(),
+    dts: `
+export declare const A555Timer: ({ name }: {
+    name: string;
+}) => any;
+`.trim(),
+
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     snippet_type: "package",
