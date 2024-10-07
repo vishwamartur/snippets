@@ -17,6 +17,7 @@ import {
 } from "@typescript/vfs"
 import ts from "typescript"
 import { setupTypeAcquisition } from "@typescript/ata"
+import { ATABootstrapConfig } from "@typescript/ata"
 
 export const CodeEditor = ({
   onCodeChange,
@@ -35,6 +36,7 @@ export const CodeEditor = ({
 
     const fsMap = new Map<string, string>()
     fsMap.set("index.tsx", code)
+    fsMap.set("package.json", `{"dependencies": {"react": "18.3.1"}}`)
 
     //     fsMap.set(
     //       "tscircuit-core.d.ts",
@@ -54,17 +56,22 @@ export const CodeEditor = ({
     const system = createSystem(fsMap)
     const env = createVirtualTypeScriptEnvironment(system, [], ts, {
       jsx: ts.JsxEmit.ReactJSX,
-      // jsxFactory: "React.createElement",
     })
 
-    // const program = ts.createProgram({
-    //   rootNames: ["index.tsx"],
-    //   options: {
-    //     jsx: ts.JsxEmit.ReactJSX,
-    //   },
-    // })
+    const ataConfig: ATABootstrapConfig = {
+      projectName: "my-project",
+      typescript: ts,
+      logger: console,
+      delegate: {
+        receivedFile: (code: string, path: string) => {
+          fsMap.set(path, code)
+          env.createFile(path, code)
+        },
+      },
+    }
 
-    // program.emit()
+    const ata = setupTypeAcquisition(ataConfig)
+    ata(`import React from "@types/react/jsx-runtime"`)
 
     const state = EditorState.create({
       doc: code,
