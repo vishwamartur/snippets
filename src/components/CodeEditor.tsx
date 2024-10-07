@@ -1,10 +1,21 @@
-import Editor from "react-simple-code-editor"
-// @ts-ignore
-import { highlight, languages } from "prismjs/components/prism-core"
-import "prismjs/components/prism-clike"
-import "prismjs/components/prism-javascript"
-import "prismjs/themes/prism.css"
-import { useState } from "react"
+import { useEffect, useRef } from "react"
+import { EditorView, basicSetup } from "codemirror"
+import { javascript } from "@codemirror/lang-javascript"
+import { EditorState } from "@codemirror/state"
+import {
+  tsFacet,
+  tsSync,
+  tsLinter,
+  tsAutocomplete,
+  tsHover,
+} from "@valtown/codemirror-ts"
+import { autocompletion } from "@codemirror/autocomplete"
+import { linter } from "@codemirror/lint"
+import {
+  createSystem,
+  createVirtualTypeScriptEnvironment,
+} from "@typescript/vfs"
+import ts from "typescript"
 
 export const CodeEditor = ({
   onCodeChange,
@@ -15,21 +26,50 @@ export const CodeEditor = ({
   code: string
   readOnly?: boolean
 }) => {
-  return (
-    <Editor
-      readOnly={readOnly}
-      value={code}
-      onValueChange={(newCode) => {
-        onCodeChange(newCode)
-      }}
-      highlight={(code) => highlight(code, languages.js)}
-      padding={10}
-      style={{
-        fontFamily: '"Fira code", "Fira Mono", monospace',
-        fontSize: 12,
-        height: 640,
-        width: "100%",
-      }}
-    />
-  )
+  const editorRef = useRef<HTMLDivElement>(null)
+  const viewRef = useRef<EditorView | null>(null)
+
+  useEffect(() => {
+    if (!editorRef.current) return
+
+    const fsMap = new Map<string, string>()
+    fsMap.set("index.ts", code)
+
+    const system = createSystem(fsMap)
+    const env = createVirtualTypeScriptEnvironment(system, [], ts, {})
+
+    const path = "index.ts"
+
+    const state = EditorState.create({
+      doc: code,
+      extensions: [
+        basicSetup,
+        javascript({ typescript: true, jsx: true }),
+        tsFacet.of({ env, path }),
+        tsSync(),
+        tsLinter(),
+        autocompletion({ override: [tsAutocomplete()] }),
+        tsHover(),
+        EditorView.updateListener.of((update) => {
+          if (update.docChanged) {
+            onCodeChange(update.state.doc.toString())
+          }
+        }),
+        EditorState.readOnly.of(readOnly),
+      ],
+    })
+
+    const view = new EditorView({
+      state,
+      parent: editorRef.current,
+    })
+
+    viewRef.current = view
+
+    return () => {
+      view.destroy()
+    }
+  }, [code !== ""])
+
+  return <div ref={editorRef} style={{ height: "640px", width: "100%" }} />
 }
