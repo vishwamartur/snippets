@@ -1,7 +1,7 @@
 import { getTestServer } from "fake-snippets-api/tests/fixtures/get-test-server"
 import { test, expect } from "bun:test"
 
-test("download snippet files", async () => {
+test("download snippet files and directory listing", async () => {
   const { axios, db } = await getTestServer()
 
   // Add a test snippet
@@ -45,11 +45,27 @@ test("download snippet files", async () => {
     types: "index.d.ts",
   })
 
-  // Test downloading root
+  // Test downloading root (directory listing)
   const rootResponse = await axios.get("/api/snippets/download", {
     params: { jsdelivr_path: "testuser/test-package@1.0.0" },
   })
   expect(rootResponse.status).toBe(200)
+  const rootData = rootResponse.data
+  expect(rootData.default).toBe("/index.ts")
+  expect(rootData.files).toHaveLength(1)
+  expect(rootData.files[0].type).toBe("directory")
+  expect(rootData.files[0].name).toBe(".")
+  expect(rootData.files[0].files).toHaveLength(3)
+
+  // Test downloading flat directory listing
+  const flatResponse = await axios.get("/api/snippets/download", {
+    params: { jsdelivr_path: "testuser/test-package@1.0.0/flat" },
+  })
+  expect(flatResponse.status).toBe(200)
+  const flatData = flatResponse.data
+  expect(flatData.default).toBe("/index.ts")
+  expect(flatData.files).toHaveLength(3)
+  expect(flatData.files[0].name).toMatch(/^\//)
 
   // Test downloading non-existent file
   try {

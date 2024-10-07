@@ -12,8 +12,9 @@ export default withRouteSpec({
   const { jsdelivr_path } = req.query
 
   // Parse the file path
-  const [owner, packageWithVersion, fileName] = jsdelivr_path.split("/")
+  const [owner, packageWithVersion, ...rest] = jsdelivr_path.split("/")
   const [packageName, version] = packageWithVersion.split("@")
+  const fileName = rest.join("/")
 
   // Find the snippet
   const snippet = ctx.db.snippets.find(
@@ -27,6 +28,63 @@ export default withRouteSpec({
     })
   }
 
+  // If no fileName is provided, return the directory listing
+  if (!fileName || fileName === "flat") {
+    const files = [
+      {
+        type: "file",
+        name: "index.ts",
+        hash: "placeholder_hash",
+        time: snippet.updated_at,
+        size: snippet.code.length,
+      },
+      {
+        type: "file",
+        name: "index.d.ts",
+        hash: "placeholder_hash",
+        time: snippet.updated_at,
+        size: (snippet.dts || "").length,
+      },
+      {
+        type: "file",
+        name: "package.json",
+        hash: "placeholder_hash",
+        time: snippet.updated_at,
+        size: JSON.stringify({
+          name: `@tsci/${owner}.${packageName}`,
+          version: version || "0.0.1",
+          main: "index.ts",
+          types: "index.d.ts",
+        }).length,
+      },
+    ]
+
+    const response = {
+      default: "/index.ts",
+      files:
+        fileName === "flat"
+          ? files.map((f) => ({
+              name: `/${f.name}`,
+              hash: f.hash,
+              time: f.time,
+              size: f.size,
+            }))
+          : [
+              {
+                type: "directory",
+                name: ".",
+                files: files,
+              },
+            ],
+    }
+
+    return new Response(JSON.stringify(response, null, 2), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })
+  }
+
+  // Handle file downloads
   let content: string
   switch (fileName) {
     case "index.ts":
@@ -56,5 +114,6 @@ export default withRouteSpec({
 
   return new Response(content, {
     status: 200,
+    headers: { "Content-Type": "text/plain" },
   })
 })
