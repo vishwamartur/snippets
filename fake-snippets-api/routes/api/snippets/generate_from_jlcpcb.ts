@@ -35,12 +35,12 @@ export default withRouteSpec({
       description: `Generated from JLCPCB part number ${jlcpcb_part_number}`,
     }
 
-    ctx.db.addSnippet(newSnippet)
+    ctx.db.addSnippet(newSnippet as any)
 
     return ctx.json({
-      snippet: newSnippet,
+      snippet: newSnippet as any,
     })
-  } catch (error) {
+  } catch (error: any) {
     return ctx.error(500, {
       error_code: "jlcpcb_generation_failed",
       message: `Failed to generate snippet from JLCPCB part: ${error.message}`,
