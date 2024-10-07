@@ -62,6 +62,10 @@ export const CodeEditor = ({
       projectName: "my-project",
       typescript: ts,
       logger: console,
+      fetcher: (input, init) => {
+        // TODO redirect @tsci/* stuff to our api registry
+        return fetch(input, init)
+      },
       delegate: {
         receivedFile: (code: string, path: string) => {
           fsMap.set(path, code)
@@ -71,7 +75,7 @@ export const CodeEditor = ({
     }
 
     const ata = setupTypeAcquisition(ataConfig)
-    ata(`import React from "@types/react/jsx-runtime"`)
+    ata(`import React from "@types/react"`)
 
     const state = EditorState.create({
       doc: code,
