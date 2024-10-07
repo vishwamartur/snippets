@@ -33,19 +33,44 @@ export const CodeEditor = ({
     if (!editorRef.current) return
 
     const fsMap = new Map<string, string>()
-    fsMap.set("index.ts", code)
+    fsMap.set("index.tsx", code)
+
+    //     fsMap.set(
+    //       "tscircuit-core.d.ts",
+    //       `
+
+    // declare global {
+    //   namespace JSX {
+    //     interface IntrinsicElements {
+    //       board: any
+    //     }
+    //   }
+    // }
+
+    // `.trim(),
+    //     )
 
     const system = createSystem(fsMap)
-    const env = createVirtualTypeScriptEnvironment(system, [], ts, {})
+    const env = createVirtualTypeScriptEnvironment(system, [], ts, {
+      jsx: ts.JsxEmit.ReactJSX,
+      // jsxFactory: "React.createElement",
+    })
 
-    const path = "index.ts"
+    // const program = ts.createProgram({
+    //   rootNames: ["index.tsx"],
+    //   options: {
+    //     jsx: ts.JsxEmit.ReactJSX,
+    //   },
+    // })
+
+    // program.emit()
 
     const state = EditorState.create({
       doc: code,
       extensions: [
         basicSetup,
         javascript({ typescript: true, jsx: true }),
-        tsFacet.of({ env, path }),
+        tsFacet.of({ env, path: "index.tsx" }),
         tsSync(),
         tsLinter(),
         autocompletion({ override: [tsAutocomplete()] }),
