@@ -12,5 +12,7 @@ test("get account balance", async () => {
 
   expect(response.status).toBe(200)
   expect(response.data.account_balance).toBeDefined()
-  expect(typeof response.data.account_balance.monthly_ai_budget_used_usd).toBe("number")
+  expect(typeof response.data.account_balance.monthly_ai_budget_used_usd).toBe(
+    "number",
+  )
 })

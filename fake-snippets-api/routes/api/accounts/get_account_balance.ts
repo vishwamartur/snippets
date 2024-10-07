@@ -13,7 +13,7 @@ export default withRouteSpec({
   // For this example, we'll return a mock balance
   // In a real implementation, you would fetch this from a database or external service
   const mockBalance = {
-    monthly_ai_budget_used_usd: 2.50,
+    monthly_ai_budget_used_usd: 2.5,
   }
 
   return ctx.json({
