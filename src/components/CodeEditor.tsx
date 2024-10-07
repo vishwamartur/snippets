@@ -16,6 +16,7 @@ import {
   createVirtualTypeScriptEnvironment,
 } from "@typescript/vfs"
 import ts from "typescript"
+import { setupTypeAcquisition } from "@typescript/ata"
 
 export const CodeEditor = ({
   onCodeChange,
