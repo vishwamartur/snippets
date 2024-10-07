@@ -6,9 +6,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ChevronDown, Zap } from "lucide-react"
-import { Link } from "wouter"
+import { Link, useLocation } from "wouter"
+import { useState } from "react"
 
 export default function HeaderDropdown() {
+  const [isHovered, setIsHovered] = useState(false)
+  const [, navigate] = useLocation() // useLocation to navigate on button click
   const blankTemplates = [
     { name: "Blank Circuit Board", type: "board", badgeColor: "bg-blue-500" },
     {
@@ -21,17 +24,24 @@ export default function HeaderDropdown() {
   ]
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isHovered}>
       <DropdownMenuTrigger asChild>
         <Button
           size="sm"
           variant="default"
           className="bg-blue-600 hover:bg-blue-700"
+          onMouseEnter={() => setIsHovered(true)} // Show dropdown on hover
+          onMouseLeave={() => setIsHovered(false)} // Hide dropdown when not hovering
+          onClick={() => navigate("/editor")} // Navigate on click
         >
           New <ChevronDown className="ml-1 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-fit">
+      <DropdownMenuContent
+        className="w-fit"
+        onMouseEnter={() => setIsHovered(true)} // Keep dropdown open when hovering over content
+        onMouseLeave={() => setIsHovered(false)} // Hide dropdown when not hovering
+      >
         <DropdownMenuItem asChild>
           <Link href="/quickstart" className="flex items-center cursor-pointer">
             <Zap className="mr-2 h-3 w-3" />
@@ -41,7 +51,9 @@ export default function HeaderDropdown() {
         {blankTemplates.map((template, index) => (
           <DropdownMenuItem key={index} asChild>
             <a
-              href={`/editor?template=${template.name.toLowerCase().replace(/ /g, "-")}`}
+              href={`/editor?template=${template.name
+                .toLowerCase()
+                .replace(/ /g, "-")}`}
               className="flex items-center cursor-pointer"
             >
               <span
@@ -55,3 +67,4 @@ export default function HeaderDropdown() {
     </DropdownMenu>
   )
 }
+
