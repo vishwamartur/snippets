@@ -4,11 +4,12 @@ import { z } from "zod"
 export default withRouteSpec({
   methods: ["GET"],
   auth: "none",
-  commonParams: z.object({
+  queryParams: z.object({
     jsdelivr_path: z.string(),
   }),
+  jsonResponse: z.any(),
 })(async (req, ctx) => {
-  const { jsdelivr_path } = req.commonParams
+  const { jsdelivr_path } = req.query
 
   // Parse the file path
   const [owner, packageWithVersion, fileName] = jsdelivr_path.split("/")
@@ -53,5 +54,7 @@ export default withRouteSpec({
       })
   }
 
-  return ctx.json({ content })
+  return new Response(content, {
+    status: 200,
+  })
 })
