@@ -11,14 +11,28 @@ import {
   type DatabaseSchema,
 } from "./schema.ts"
 import { combine } from "zustand/middleware"
+import { seed as seedFn } from "./seed"
 
-export const createDatabase = () => {
-  return hoist(createStore(initializer))
+export const createDatabase = ({ seed }: { seed?: boolean } = {}) => {
+  const db = hoist(createStore(initializer))
+  if (seed) {
+    seedFn(db)
+  }
+  return db
 }
 
 export type DbClient = ReturnType<typeof createDatabase>
 
 const initializer = combine(databaseSchema.parse({}), (set, get) => ({
+  addAccount: (account: Omit<Account, "account_id">) => {
+    set((state) => {
+      const newAccountId = `account_${state.idCounter + 1}`
+      return {
+        accounts: [...state.accounts, { account_id: newAccountId, ...account }],
+        idCounter: state.idCounter + 1,
+      }
+    })
+  },
   addSnippet: (snippet: Omit<Snippet, "snippet_id">) => {
     set((state) => {
       const newSnippetId = `snippet_${state.idCounter + 1}`
