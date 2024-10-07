@@ -32,7 +32,7 @@ export default function HeaderDropdown() {
           className="bg-blue-600 hover:bg-blue-700"
           onMouseEnter={() => setIsHovered(true)} // Show dropdown on hover
           onMouseLeave={() => setIsHovered(false)} // Hide dropdown when not hovering
-          onClick={() => navigate("/editor")} // Navigate on click
+          onClick={() => navigate("/quickstart")} // Navigate on click
         >
           New <ChevronDown className="ml-1 h-4 w-4" />
         </Button>
@@ -67,4 +67,3 @@ export default function HeaderDropdown() {
     </DropdownMenu>
   )
 }
-
