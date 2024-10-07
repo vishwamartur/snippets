@@ -57,11 +57,17 @@ export const CodeEditor = ({
           "https://data.jsdelivr.com/v1/package/resolve/npm/@tsci/"
         if (typeof input === "string" && input.startsWith(registryPrefix)) {
           const fullPackageName = input.split(registryPrefix)[1]
+          // seveibar.a555timer -> seveibar/a555timer
+
+          const packageName = fullPackageName.split("/")[0].replace(/\./g, "/")
+          const filePath = `${packageName}${fullPackageName.split("/").slice(1).join("/")}`
           // TODO: Implement redirection to our API registry for @tsci/* packages
           // For now, we'll just log the package name
-          console.log(`Intercepted @tsci package: ${fullPackageName}`)
+          console.log(`Intercepted @tsci package: ${fullPackageName}`, {
+            filePath,
+          })
           return fetch(
-            `${apiUrl}/snippets/download?path=${encodeURIComponent(fullPackageName)}`,
+            `${apiUrl}/snippets/download?file_path=${encodeURIComponent(fullPackageName)}`,
           )
         }
         // For all other cases, proceed with the original fetch
