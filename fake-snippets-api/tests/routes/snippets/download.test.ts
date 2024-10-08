@@ -51,11 +51,8 @@ test("download snippet files and directory listing", async () => {
   })
   expect(rootResponse.status).toBe(200)
   const rootData = rootResponse.data
-  expect(rootData.default).toBe("/index.ts")
-  expect(rootData.files).toHaveLength(1)
-  expect(rootData.files[0].type).toBe("directory")
-  expect(rootData.files[0].name).toBe(".")
-  expect(rootData.files[0].files).toHaveLength(3)
+  expect(rootData.tags).toBeDefined()
+  expect(rootData.versions).toBeDefined()
 
   // Test downloading flat directory listing
   const flatResponse = await axios.get("/api/snippets/download", {

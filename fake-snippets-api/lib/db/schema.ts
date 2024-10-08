@@ -7,6 +7,7 @@ export const snippetSchema = z.object({
   owner_name: z.string(),
   code: z.string(),
   dts: z.string().optional(),
+  compiled_js: z.string().optional().nullable(),
   created_at: z.string(),
   updated_at: z.string(),
   snippet_type: z.enum(["board", "package", "model", "footprint"]),

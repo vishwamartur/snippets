@@ -10,6 +10,8 @@ export default withRouteSpec({
     code: z.string().optional(),
     snippet_type: z.enum(["board", "package", "model", "footprint"]),
     description: z.string().optional(),
+    compiled_js: z.string().optional(),
+    dts: z.string().optional(),
   }),
   jsonResponse: z.object({
     ok: z.boolean(),
@@ -21,6 +23,8 @@ export default withRouteSpec({
     code = "",
     snippet_type,
     description = "",
+    compiled_js,
+    dts,
   } = req.jsonBody
   if (!unscoped_name) {
     unscoped_name = `untitled-${snippet_type}-${ctx.db.idCounter + 1}`
@@ -35,6 +39,8 @@ export default withRouteSpec({
     updated_at: new Date().toISOString(),
     snippet_type,
     description,
+    compiled_js,
+    dts,
   }
 
   ctx.db.addSnippet(newSnippet)

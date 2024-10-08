@@ -5,12 +5,17 @@ export default withRouteSpec({
   methods: ["GET"],
   auth: "none",
   queryParams: z.object({
-    jsdelivr_resolve: z.enum(["true", "false"]).transform((v) => v === "true"),
+    jsdelivr_resolve: z
+      .enum(["true", "false"])
+      .optional()
+      .transform((v) => v === "true"),
     jsdelivr_path: z.string(),
   }),
   jsonResponse: z.any(),
 })(async (req, ctx) => {
   const { jsdelivr_path, jsdelivr_resolve } = req.query
+
+  console.log({ jsdelivr_path, jsdelivr_resolve })
 
   // Parse the file path
   const [owner, packageWithVersion, ...rest] = jsdelivr_path.split("/")
