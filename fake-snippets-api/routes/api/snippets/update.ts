@@ -20,7 +20,8 @@ export default withRouteSpec({
     }),
   }),
 })(async (req, ctx) => {
-  const { snippet_id, code, description, unscoped_name, dts, compiled_js } = req.jsonBody
+  const { snippet_id, code, description, unscoped_name, dts, compiled_js } =
+    req.jsonBody
 
   const snippetIndex = ctx.db.snippets.findIndex(
     (s) => s.snippet_id === snippet_id,
