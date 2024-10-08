@@ -17,7 +17,6 @@ export default withRouteSpec({
 })(async (req, ctx) => {
   const { owner_name, unscoped_name } = req.commonParams
 
-  console.log(ctx.db.snippets)
   const snippets = ctx.db
     .getSnippetsByAuthor(owner_name)
     .filter((s) => !unscoped_name || s.unscoped_name === unscoped_name)
