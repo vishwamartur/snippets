@@ -6,10 +6,12 @@ export const snippetSchema = z.object({
   unscoped_name: z.string(),
   owner_name: z.string(),
   code: z.string(),
+  dts: z.string().optional(),
   created_at: z.string(),
   updated_at: z.string(),
   snippet_type: z.enum(["board", "package", "model", "footprint"]),
   description: z.string().optional(),
+  version: z.string().default("0.0.1"),
 })
 export type Snippet = z.infer<typeof snippetSchema>
 

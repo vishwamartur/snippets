@@ -18,52 +18,62 @@ import {
 import ts from "typescript"
 import { setupTypeAcquisition } from "@typescript/ata"
 import { ATABootstrapConfig } from "@typescript/ata"
+import { useAxios } from "@/hooks/use-axios"
+import { useSnippetsBaseApiUrl } from "@/hooks/use-snippets-base-api-url"
 
 export const CodeEditor = ({
   onCodeChange,
+  onDtsChange,
   readOnly = false,
   code,
 }: {
   onCodeChange: (code: string) => void
+  onDtsChange?: (dts: string) => void
   code: string
   readOnly?: boolean
 }) => {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
+  const apiUrl = useSnippetsBaseApiUrl()
 
   useEffect(() => {
     if (!editorRef.current) return
 
     const fsMap = new Map<string, string>()
     fsMap.set("index.tsx", code)
-    fsMap.set("package.json", `{"dependencies": {"react": "18.3.1"}}`)
-
-    //     fsMap.set(
-    //       "tscircuit-core.d.ts",
-    //       `
-
-    // declare global {
-    //   namespace JSX {
-    //     interface IntrinsicElements {
-    //       board: any
-    //     }
-    //   }
-    // }
-
-    // `.trim(),
-    //     )
 
     const system = createSystem(fsMap)
     const env = createVirtualTypeScriptEnvironment(system, [], ts, {
       jsx: ts.JsxEmit.ReactJSX,
+      declaration: true,
     })
 
     const ataConfig: ATABootstrapConfig = {
       projectName: "my-project",
       typescript: ts,
       logger: console,
-      fetcher: (input, init) => {
-        // TODO redirect @tsci/* stuff to our api registry
+      fetcher: (input: RequestInfo | URL, init?: RequestInit) => {
+        const registryPrefixes = [
+          "https://data.jsdelivr.com/v1/package/resolve/npm/@tsci/",
+          "https://data.jsdelivr.com/v1/package/npm/@tsci/",
+          "https://cdn.jsdelivr.net/npm/@tsci/",
+        ]
+        if (
+          typeof input === "string" &&
+          registryPrefixes.some((prefix) => input.startsWith(prefix))
+        ) {
+          const fullPackageName = input
+            .replace(registryPrefixes[0], "")
+            .replace(registryPrefixes[1], "")
+            .replace(registryPrefixes[2], "")
+          const packageName = fullPackageName.split("/")[0].replace(/\./, "/")
+          const pathInPackage = fullPackageName.split("/").slice(1).join("/")
+          const jsdelivrPath = `${packageName}${pathInPackage ? `/${pathInPackage}` : ""}`
+          return fetch(
+            `${apiUrl}/snippets/download?jsdelivr_resolve=${input.includes("/resolve/")}&jsdelivr_path=${encodeURIComponent(jsdelivrPath)}`,
+          )
+        }
+        // For all other cases, proceed with the original fetch
         return fetch(input, init)
       },
       delegate: {
@@ -76,8 +86,9 @@ export const CodeEditor = ({
 
     const ata = setupTypeAcquisition(ataConfig)
     ata(`
-import React from "@types/react"
+import React from "@types/react/jsx-runtime"
 import { Circuit } from "@tscircuit/core"
+${code}
 `)
 
     const state = EditorState.create({
@@ -93,6 +104,18 @@ import { Circuit } from "@tscircuit/core"
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             onCodeChange(update.state.doc.toString())
+
+            const { outputFiles } = env.languageService.getEmitOutput(
+              "index.tsx",
+              true,
+            )
+
+            const indexDts = outputFiles.find(
+              (file) => file.name === "index.d.ts",
+            )
+            if (indexDts?.text && onDtsChange) {
+              onDtsChange(indexDts.text)
+            }
           }
         }),
         EditorState.readOnly.of(readOnly),
