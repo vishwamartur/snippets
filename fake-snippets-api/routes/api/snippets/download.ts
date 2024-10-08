@@ -5,11 +5,12 @@ export default withRouteSpec({
   methods: ["GET"],
   auth: "none",
   queryParams: z.object({
+    jsdelivr_resolve: z.enum(["true", "false"]).transform((v) => v === "true"),
     jsdelivr_path: z.string(),
   }),
   jsonResponse: z.any(),
 })(async (req, ctx) => {
-  const { jsdelivr_path } = req.query
+  const { jsdelivr_path, jsdelivr_resolve } = req.query
 
   // Parse the file path
   const [owner, packageWithVersion, ...rest] = jsdelivr_path.split("/")
@@ -26,6 +27,31 @@ export default withRouteSpec({
       error_code: "snippet_not_found",
       message: "Snippet not found",
     })
+  }
+
+  if (!fileName && !jsdelivr_resolve) {
+    return new Response(
+      JSON.stringify({
+        tags: {
+          latest: "0.0.1",
+        },
+        versions: ["0.0.1"],
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      },
+    )
+  } else if (!fileName && jsdelivr_resolve) {
+    return new Response(
+      JSON.stringify({
+        version: "0.0.1",
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      },
+    )
   }
 
   // If no fileName is provided, return the directory listing

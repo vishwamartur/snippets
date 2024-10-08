@@ -36,9 +36,11 @@ export const A555Timer = ({ name }: { name: string }) => (
 )
 `.trim(),
     dts: `
-export declare const A555Timer: ({ name }: {
+declare module "@tsci/seveibar.a555timer" {
+  export const A555Timer: ({ name }: {
     name: string;
-}) => any;
+  }) => any;
+}
 `.trim(),
 
     created_at: new Date().toISOString(),

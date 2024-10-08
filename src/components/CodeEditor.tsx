@@ -53,21 +53,24 @@ export const CodeEditor = ({
       typescript: ts,
       logger: console,
       fetcher: (input: RequestInfo | URL, init?: RequestInit) => {
-        const registryPrefix =
-          "https://data.jsdelivr.com/v1/package/resolve/npm/@tsci/"
-        if (typeof input === "string" && input.startsWith(registryPrefix)) {
-          const fullPackageName = input.split(registryPrefix)[1]
-          // seveibar.a555timer -> seveibar/a555timer
-
-          const packageName = fullPackageName.split("/")[0].replace(/\./g, "/")
-          const filePath = `${packageName}${fullPackageName.split("/").slice(1).join("/")}`
-          // TODO: Implement redirection to our API registry for @tsci/* packages
-          // For now, we'll just log the package name
-          console.log(`Intercepted @tsci package: ${fullPackageName}`, {
-            filePath,
-          })
+        const registryPrefixes = [
+          "https://data.jsdelivr.com/v1/package/resolve/npm/@tsci/",
+          "https://data.jsdelivr.com/v1/package/npm/@tsci/",
+          "https://cdn.jsdelivr.net/npm/@tsci/",
+        ]
+        if (
+          typeof input === "string" &&
+          registryPrefixes.some((prefix) => input.startsWith(prefix))
+        ) {
+          const fullPackageName = input
+            .replace(registryPrefixes[0], "")
+            .replace(registryPrefixes[1], "")
+            .replace(registryPrefixes[2], "")
+          const packageName = fullPackageName.split("/")[0].replace(/\./, "/")
+          const pathInPackage = fullPackageName.split("/").slice(1).join("/")
+          const jsdelivrPath = `${packageName}${pathInPackage ? `/${pathInPackage}` : ""}`
           return fetch(
-            `${apiUrl}/snippets/download?file_path=${encodeURIComponent(fullPackageName)}`,
+            `${apiUrl}/snippets/download?jsdelivr_resolve=${input.includes("/resolve/")}&jsdelivr_path=${encodeURIComponent(jsdelivrPath)}`,
           )
         }
         // For all other cases, proceed with the original fetch
@@ -83,7 +86,7 @@ export const CodeEditor = ({
 
     const ata = setupTypeAcquisition(ataConfig)
     ata(`
-import React from "@types/react"
+import React from "@types/react/jsx-runtime"
 import { Circuit } from "@tscircuit/core"
 ${code}
 `)

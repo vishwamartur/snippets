@@ -1,6 +1,7 @@
 import { createStore, type StoreApi } from "zustand/vanilla"
 import { immer } from "zustand/middleware/immer"
 import { hoist, type HoistedStoreApi } from "zustand-hoist"
+import { z } from "zod"
 
 import {
   databaseSchema,
@@ -9,6 +10,7 @@ import {
   LoginPage,
   Account,
   type DatabaseSchema,
+  snippetSchema,
 } from "./schema.ts"
 import { combine } from "zustand/middleware"
 import { seed as seedFn } from "./seed"
@@ -33,11 +35,14 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
       }
     })
   },
-  addSnippet: (snippet: Omit<Snippet, "snippet_id">) => {
+  addSnippet: (snippet: Omit<z.input<typeof snippetSchema>, "snippet_id">) => {
     set((state) => {
       const newSnippetId = `snippet_${state.idCounter + 1}`
       return {
-        snippets: [...state.snippets, { snippet_id: newSnippetId, ...snippet }],
+        snippets: [
+          ...state.snippets,
+          snippetSchema.parse({ ...snippet, snippet_id: newSnippetId }),
+        ],
         idCounter: state.idCounter + 1,
       }
     })
