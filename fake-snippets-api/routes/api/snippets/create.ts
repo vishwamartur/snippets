@@ -25,7 +25,7 @@ export default withRouteSpec({
   if (!unscoped_name) {
     unscoped_name = `untitled-${snippet_type}-${ctx.db.idCounter + 1}`
   }
-  const newSnippet: Snippet = {
+  const newSnippet: z.input<typeof snippetSchema> = {
     snippet_id: `snippet_${ctx.db.idCounter + 1}`,
     name: `${ctx.auth.github_username}/${unscoped_name}`,
     unscoped_name,
@@ -41,6 +41,6 @@ export default withRouteSpec({
 
   return ctx.json({
     ok: true,
-    snippet: newSnippet,
+    snippet: newSnippet as any,
   })
 })
