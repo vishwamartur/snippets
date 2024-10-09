@@ -126,7 +126,7 @@ export const useRunTsx = (
           React.createElement(module.exports[primaryKey], props)
 
         try {
-          const circuit = constructCircuit(UserElm, type)
+          const circuit = constructCircuit(UserElm, type as any)
           circuit.render()
           const circuitJson = circuit.getCircuitJson()
 
