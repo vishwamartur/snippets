@@ -8,7 +8,7 @@ export const seed = (db: DbClient) => {
     github_username: "seveibar",
   })
   db.addSnippet({
-    name: "My Test Board",
+    name: "testuser/my-test-board",
     unscoped_name: "my-test-board",
     owner_name: "testuser",
     code: `
