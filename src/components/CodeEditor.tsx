@@ -26,11 +26,13 @@ export const CodeEditor = ({
   onDtsChange,
   readOnly = false,
   code,
+  isStreaming = false,
 }: {
   onCodeChange: (code: string) => void
   onDtsChange?: (dts: string) => void
   code: string
   readOnly?: boolean
+  isStreaming?: boolean
 }) => {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
@@ -132,7 +134,11 @@ ${code}
     return () => {
       view.destroy()
     }
-  }, [code !== ""])
+  }, [code !== "", !isStreaming])
+
+  if (isStreaming) {
+    return <div className="font-mono whitespace-pre-wrap text-xs">{code}</div>
+  }
 
   return <div ref={editorRef} style={{ height: "640px", width: "100%" }} />
 }

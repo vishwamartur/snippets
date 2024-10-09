@@ -82,10 +82,6 @@ export const AiPage = () => {
                       size="sm"
                       variant="outline"
                       onClick={async () => {
-                        if (snippetId) {
-                          // TODO update snippet
-                        }
-
                         try {
                           const snippet = await saveSnippet(code, "board", dts)
                           navigate(`/ai?snippet_id=${snippet.snippet_id}`)
@@ -115,6 +111,7 @@ export const AiPage = () => {
                   <div className="mt-4 bg-gray-50 rounded-md border border-gray-200">
                     <CodeEditor
                       code={code}
+                      isStreaming={isStreaming}
                       onCodeChange={setCode}
                       onDtsChange={setDts}
                       readOnly={false}
