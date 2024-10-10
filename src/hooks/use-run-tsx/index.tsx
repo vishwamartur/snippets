@@ -102,7 +102,7 @@ export const useRunTsx = ({
       try {
         globalThis.React = React
 
-        const module = evalCompiledJs(compiledJs)
+        const module = evalCompiledJs(compiledJs!)
 
         if (Object.keys(module.exports).length > 1) {
           throw new Error(
