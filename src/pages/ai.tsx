@@ -68,15 +68,18 @@ export const AiPage = () => {
         </div>
         <div className="w-1/2">
           <div className="p-4 h-full">
-            <div className="bg-white h-full p-4 rounded-lg shadow">
-              <PreviewContent
-                code={code}
-                triggerRunTsx={triggerRunTsx}
-                errorMessage={errorMessage}
-                circuitJson={circuitJson}
-                tsxRunTriggerCount={tsxRunTriggerCount}
-              />
-            </div>
+            <PreviewContent
+              className="bg-white h-full p-4 rounded-lg shadow"
+              code={code}
+              isStreaming={isStreaming}
+              onCodeChange={setCode}
+              onDtsChange={setDts}
+              showCodeTab
+              triggerRunTsx={triggerRunTsx}
+              errorMessage={errorMessage}
+              circuitJson={circuitJson}
+              tsxRunTriggerCount={tsxRunTriggerCount}
+            />
           </div>
         </div>
       </div>

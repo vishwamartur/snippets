@@ -22,14 +22,31 @@ import { ErrorTabContent } from "./ErrorTabContent"
 import { cn } from "@/lib/utils"
 import { useCallback } from "react"
 
-export interface PreviewContentProps {
-  code: string
-  triggerRunTsx: () => void
-  hasUnsavedChanges: boolean
-  tsxRunTriggerCount: number
-  errorMessage: string | null
-  circuitJson: any
-}
+export type PreviewContentProps =
+  | {
+      code: string
+      triggerRunTsx: () => void
+      tsxRunTriggerCount: number
+      errorMessage: string | null
+      circuitJson: any
+      className?: string
+      showCodeTab?: false
+      isStreaming?: boolean
+      onCodeChange?: (code: string) => void
+      onDtsChange?: (dts: string) => void
+    }
+  | {
+      code: string
+      triggerRunTsx: () => void
+      tsxRunTriggerCount: number
+      errorMessage: string | null
+      circuitJson: any
+      className?: string
+      showCodeTab: true
+      isStreaming: boolean
+      onCodeChange: (code: string) => void
+      onDtsChange: (dts: string) => void
+    }
 
 const PreviewEmptyState = ({
   triggerRunTsx,
@@ -49,8 +66,13 @@ export const PreviewContent = ({
   tsxRunTriggerCount,
   errorMessage,
   circuitJson,
+  showCodeTab = false,
+  className,
+  isStreaming,
+  onCodeChange,
+  onDtsChange,
 }: PreviewContentProps) => {
-  const [activeTab, setActiveTab] = useState("pcb")
+  const [activeTab, setActiveTab] = useState(showCodeTab ? "code" : "pcb")
   const [versionOfCodeLastRun, setVersionOfCodeLastRun] = useState("")
 
   useEffect(() => {
@@ -64,8 +86,14 @@ export const PreviewContent = ({
     }
   }, [errorMessage])
 
+  useEffect(() => {
+    if (activeTab === "code" && circuitJson && !errorMessage) {
+      setActiveTab("pcb")
+    }
+  }, [circuitJson])
+
   return (
-    <div className="w-full md:w-1/2 p-2 min-h-[640px]">
+    <div className={className}>
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <div className="flex items-center gap-2">
           <Button
@@ -78,8 +106,33 @@ export const PreviewContent = ({
           </Button>
           <div className="flex-grow" />
           <TabsList>
-            <TabsTrigger value="pcb">PCB</TabsTrigger>
-            <TabsTrigger value="cad">3D</TabsTrigger>
+            {showCodeTab && <TabsTrigger value="code">Code</TabsTrigger>}
+            <TabsTrigger value="pcb">
+              {circuitJson && (
+                <span
+                  className={cn(
+                    "inline-flex items-center justify-center w-2 h-2 mr-1 text-xs font-bold text-white rounded-full",
+                    versionOfCodeLastRun === code
+                      ? "bg-blue-500"
+                      : "bg-gray-500",
+                  )}
+                />
+              )}
+              PCB
+            </TabsTrigger>
+            <TabsTrigger value="cad">
+              {circuitJson && (
+                <span
+                  className={cn(
+                    "inline-flex items-center justify-center w-2 h-2 mr-1 text-xs font-bold text-white rounded-full",
+                    versionOfCodeLastRun === code
+                      ? "bg-blue-500"
+                      : "bg-gray-500",
+                  )}
+                />
+              )}
+              3D
+            </TabsTrigger>
             <TabsTrigger value="table">JSON</TabsTrigger>
             <TabsTrigger value="error">
               Errors
@@ -91,6 +144,17 @@ export const PreviewContent = ({
             </TabsTrigger>
           </TabsList>
         </div>
+        {showCodeTab && (
+          <TabsContent value="code">
+            <CodeEditor
+              code={code}
+              isStreaming={isStreaming}
+              onCodeChange={onCodeChange!}
+              onDtsChange={onDtsChange!}
+              readOnly={false}
+            />
+          </TabsContent>
+        )}
         <TabsContent value="pcb">
           <div className="mt-4 h-[500px]">
             <ErrorBoundary fallback={<div>Error loading PCB viewer</div>}>

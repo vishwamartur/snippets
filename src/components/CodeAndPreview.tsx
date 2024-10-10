@@ -121,6 +121,7 @@ export function CodeAndPreview({ snippet }: Props) {
         </div>
         {showPreview && (
           <PreviewContent
+            className="w-full md:w-1/2 p-2 min-h-[640px]"
             code={code}
             triggerRunTsx={triggerRunTsx}
             tsxRunTriggerCount={tsxRunTriggerCount}
