@@ -44,7 +44,7 @@ export const HeaderLogin: React.FC<HeaderLoginProps> = () => {
             Fake testuser Login
           </Button>
         ) : (
-          <div>
+          <>
             <Button
               onClick={() => {
                 window.location.href = `${snippetsBaseApiUrl}/internal/oauth/github/authorize?next=${window.location.origin}/authorize`
@@ -62,7 +62,7 @@ export const HeaderLogin: React.FC<HeaderLoginProps> = () => {
             >
               Sign Up
             </Button>
-          </div>
+          </>
         )}
       </div>
     )
