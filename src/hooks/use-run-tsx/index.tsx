@@ -83,7 +83,9 @@ export const useRunTsx = ({
 
       const __tscircuit_require = (name: string) => {
         if (!preSuppliedImports[name]) {
-          throw new Error(`Import "${name}" not found`)
+          throw new Error(
+            `Import "${name}" not found (imports available: ${Object.keys(preSuppliedImports).join(",")})`,
+          )
         }
         return preSuppliedImports[name]
       }

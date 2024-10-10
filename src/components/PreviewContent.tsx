@@ -20,6 +20,7 @@ import { MagicWandIcon } from "@radix-ui/react-icons"
 import { ErrorBoundary } from "react-error-boundary"
 import { ErrorTabContent } from "./ErrorTabContent"
 import { cn } from "@/lib/utils"
+import { useCallback } from "react"
 
 export interface PreviewContentProps {
   code: string
@@ -50,9 +51,17 @@ export const PreviewContent = ({
   errorMessage,
   circuitJson,
 }: PreviewContentProps) => {
+  const [activeTab, setActiveTab] = useState("pcb")
+
+  useEffect(() => {
+    if (errorMessage) {
+      setActiveTab("error")
+    }
+  }, [errorMessage])
+
   return (
     <div className="w-full md:w-1/2 p-2 min-h-[640px]">
-      <Tabs defaultValue="pcb">
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
         <div className="flex items-center gap-2">
           <Button
             className="bg-blue-600 hover:bg-blue-500"
@@ -111,7 +120,11 @@ export const PreviewContent = ({
           </div>
         </TabsContent>
         <TabsContent value="error">
-          <ErrorTabContent code={code} errorMessage={errorMessage} />
+          {circuitJson || errorMessage ? (
+            <ErrorTabContent code={code} errorMessage={errorMessage} />
+          ) : (
+            <PreviewEmptyState triggerRunTsx={triggerRunTsx} />
+          )}
         </TabsContent>
       </Tabs>
     </div>
