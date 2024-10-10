@@ -123,7 +123,6 @@ export function CodeAndPreview({ snippet }: Props) {
           <PreviewContent
             code={code}
             triggerRunTsx={triggerRunTsx}
-            hasUnsavedChanges={hasUnsavedChanges}
             tsxRunTriggerCount={tsxRunTriggerCount}
             errorMessage={message}
             circuitJson={circuitJson}

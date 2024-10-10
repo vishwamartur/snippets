@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useReducer, useState } from "react"
 import * as React from "react"
-import { useCompiledTsx } from "../use-compiled-tsx"
+import { safeCompileTsx, useCompiledTsx } from "../use-compiled-tsx"
 import { Circuit } from "@tscircuit/core"
 import { createJSCADRenderer } from "jscad-fiber"
 import { jscadPlanner } from "jscad-planner"
@@ -30,7 +30,6 @@ export const useRunTsx = ({
   tsxRunTriggerCount: number
 } => {
   type ??= "board"
-  const compiledJs = useCompiledTsx(code, { isStreaming })
   const [tsxRunTriggerCount, incTsxRunTriggerCount] = useReducer(
     (c) => c + 1,
     0,
@@ -45,15 +44,25 @@ export const useRunTsx = ({
 
   useEffect(() => {
     if (tsxRunTriggerCount === 0) return
+    if (isStreaming) {
+      setTsxResult({
+        compiledModule: null,
+        message: "",
+        circuitJson: null,
+        isLoading: false,
+      })
+    }
+    if (!code) return
     async function run() {
-      if (isStreaming || !compiledJs || !code) {
+      const { success, compiledTsx: compiledJs, error } = safeCompileTsx(code!)
+
+      if (!success) {
         setTsxResult({
           compiledModule: null,
-          message: "",
+          message: `Compile Error: ${error.message}`,
           circuitJson: null,
           isLoading: false,
         })
-        return
       }
 
       const imports = getImportsFromCode(code!).filter((imp) =>
@@ -66,7 +75,6 @@ export const useRunTsx = ({
         const fullSnippetName = importName
           .replace("@tsci/", "")
           .replace(".", "/")
-        console.log({ importName, fullSnippetName })
         // Fetch compiled code from the server
         const { snippet: importedSnippet } = await fetch(
           `${apiBaseUrl}/snippets/get?name=${fullSnippetName}`,
@@ -75,7 +83,7 @@ export const useRunTsx = ({
         try {
           preSuppliedImports[importName] = evalCompiledJs(
             importedSnippet.compiled_js,
-          ).default.exports
+          ).exports
         } catch (e) {
           console.error("Error importing snippet", e)
         }
@@ -139,7 +147,7 @@ export const useRunTsx = ({
       }
     }
     run()
-  }, [tsxRunTriggerCount, compiledJs, isStreaming])
+  }, [tsxRunTriggerCount])
 
   return {
     ...tsxResult,

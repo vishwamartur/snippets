@@ -46,12 +46,17 @@ const PreviewEmptyState = ({
 export const PreviewContent = ({
   code,
   triggerRunTsx,
-  hasUnsavedChanges,
   tsxRunTriggerCount,
   errorMessage,
   circuitJson,
 }: PreviewContentProps) => {
   const [activeTab, setActiveTab] = useState("pcb")
+  const [versionOfCodeLastRun, setVersionOfCodeLastRun] = useState("")
+
+  useEffect(() => {
+    if (tsxRunTriggerCount === 0) return
+    setVersionOfCodeLastRun(code)
+  }, [tsxRunTriggerCount])
 
   useEffect(() => {
     if (errorMessage) {
@@ -66,7 +71,7 @@ export const PreviewContent = ({
           <Button
             className="bg-blue-600 hover:bg-blue-500"
             onClick={() => triggerRunTsx()}
-            disabled={hasUnsavedChanges && tsxRunTriggerCount !== 0}
+            disabled={versionOfCodeLastRun === code && tsxRunTriggerCount !== 0}
           >
             Run
             <PlayIcon className="w-3 h-3 ml-2" />

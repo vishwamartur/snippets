@@ -72,7 +72,6 @@ export const AiPage = () => {
               <PreviewContent
                 code={code}
                 triggerRunTsx={triggerRunTsx}
-                hasUnsavedChanges={hasUnsavedChanges}
                 errorMessage={errorMessage}
                 circuitJson={circuitJson}
                 tsxRunTriggerCount={tsxRunTriggerCount}
