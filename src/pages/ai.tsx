@@ -19,7 +19,9 @@ export const AiPage = () => {
   const [code, setCode] = useState("")
   const [dts, setDts] = useState("")
   const [isStreaming, setIsStreaming] = useState(false)
-  const { message: errorMessage, circuitJson } = useRunTsx(code, "board", {
+  const { message: errorMessage, circuitJson } = useRunTsx({
+    code,
+    type: "board",
     isStreaming,
   })
   const { saveSnippet, isLoading: isSaving } = useSaveSnippet()
