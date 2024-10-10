@@ -81,7 +81,7 @@ export const PreviewContent = ({
           <div className="mt-4 h-[500px]">
             <ErrorBoundary fallback={<div>Error loading PCB viewer</div>}>
               {circuitJson ? (
-                <PCBViewer soup={circuitJson} />
+                <PCBViewer key={tsxRunTriggerCount} soup={circuitJson} />
               ) : (
                 <PreviewEmptyState triggerRunTsx={triggerRunTsx} />
               )}
