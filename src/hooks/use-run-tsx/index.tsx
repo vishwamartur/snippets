@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useReducer, useState } from "react"
 import * as React from "react"
-import { useCompiledTsx } from "../use-compiled-tsx"
+import { safeCompileTsx, useCompiledTsx } from "../use-compiled-tsx"
 import { Circuit } from "@tscircuit/core"
 import { createJSCADRenderer } from "jscad-fiber"
 import { jscadPlanner } from "jscad-planner"
@@ -17,13 +17,23 @@ type RunTsxResult = {
   isLoading: boolean
 }
 
-export const useRunTsx = (
-  code?: string,
-  type?: "board" | "footprint" | "package" | "model",
-  { isStreaming = false }: { isStreaming?: boolean } = {},
-): RunTsxResult => {
+export const useRunTsx = ({
+  code,
+  type,
+  isStreaming = false,
+}: {
+  code?: string
+  type?: "board" | "footprint" | "package" | "model"
+  isStreaming?: boolean
+} = {}): RunTsxResult & {
+  triggerRunTsx: () => void
+  tsxRunTriggerCount: number
+} => {
   type ??= "board"
-  const compiledJs = useCompiledTsx(code, { isStreaming })
+  const [tsxRunTriggerCount, incTsxRunTriggerCount] = useReducer(
+    (c) => c + 1,
+    0,
+  )
   const [tsxResult, setTsxResult] = useState<RunTsxResult>({
     compiledModule: null,
     message: "",
@@ -33,15 +43,26 @@ export const useRunTsx = (
   const apiBaseUrl = useSnippetsBaseApiUrl()
 
   useEffect(() => {
+    if (tsxRunTriggerCount === 0) return
+    if (isStreaming) {
+      setTsxResult({
+        compiledModule: null,
+        message: "",
+        circuitJson: null,
+        isLoading: false,
+      })
+    }
+    if (!code) return
     async function run() {
-      if (isStreaming || !compiledJs || !code) {
+      const { success, compiledTsx: compiledJs, error } = safeCompileTsx(code!)
+
+      if (!success) {
         setTsxResult({
           compiledModule: null,
-          message: "",
+          message: `Compile Error: ${error.message}`,
           circuitJson: null,
           isLoading: false,
         })
-        return
       }
 
       const imports = getImportsFromCode(code!).filter((imp) =>
@@ -54,18 +75,15 @@ export const useRunTsx = (
         const fullSnippetName = importName
           .replace("@tsci/", "")
           .replace(".", "/")
-        console.log({ importName, fullSnippetName })
         // Fetch compiled code from the server
         const { snippet: importedSnippet } = await fetch(
           `${apiBaseUrl}/snippets/get?name=${fullSnippetName}`,
         ).then((res) => res.json())
 
         try {
-          console.log("importedSnippet", importedSnippet)
-          // eval the imported snippet compiled_js
           preSuppliedImports[importName] = evalCompiledJs(
             importedSnippet.compiled_js,
-          )
+          ).exports
         } catch (e) {
           console.error("Error importing snippet", e)
         }
@@ -73,7 +91,9 @@ export const useRunTsx = (
 
       const __tscircuit_require = (name: string) => {
         if (!preSuppliedImports[name]) {
-          throw new Error(`Import "${name}" not found`)
+          throw new Error(
+            `Import "${name}" not found (imports available: ${Object.keys(preSuppliedImports).join(",")})`,
+          )
         }
         return preSuppliedImports[name]
       }
@@ -82,7 +102,7 @@ export const useRunTsx = (
       try {
         globalThis.React = React
 
-        const module = evalCompiledJs(compiledJs)
+        const module = evalCompiledJs(compiledJs!)
 
         if (Object.keys(module.exports).length > 1) {
           throw new Error(
@@ -127,7 +147,11 @@ export const useRunTsx = (
       }
     }
     run()
-  }, [compiledJs, isStreaming])
+  }, [tsxRunTriggerCount])
 
-  return tsxResult
+  return {
+    ...tsxResult,
+    triggerRunTsx: incTsxRunTriggerCount,
+    tsxRunTriggerCount,
+  }
 }

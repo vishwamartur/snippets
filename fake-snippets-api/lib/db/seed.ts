@@ -16,7 +16,7 @@ import { A555Timer } from "@tsci/seveibar.a555timer"
 
 export default () => (
   <board width="10mm" height="10mm">
-    <A555Timer />
+    <A555Timer name="U1" />
   </board>
 )`.trim(),
     created_at: new Date().toISOString(),
