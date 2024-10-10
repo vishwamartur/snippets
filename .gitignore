@@ -27,4 +27,5 @@ dist-ssr
 .aider*
 
 .env
+.env.*
 package-lock.json

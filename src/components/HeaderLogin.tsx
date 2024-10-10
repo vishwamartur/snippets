@@ -28,41 +28,42 @@ export const HeaderLogin: React.FC<HeaderLoginProps> = () => {
   if (!isLoggedIn) {
     return (
       <div className="flex items-center space-x-2 justify-end">
-        <Button
-          onClick={() => {
-            if (!isUsingFakeApi) {
-              window.location.href = `${snippetsBaseApiUrl}/internal/oauth/github/authorize?next=${window.location.origin}/authorize`
-            } else {
+        {isUsingFakeApi ? (
+          <Button
+            onClick={() => {
               setSession({
                 account_id: "account-1234",
                 github_username: "testuser",
                 token: "1234",
                 session_id: "session-1234",
               })
-            }
-          }}
-          variant="ghost"
-          size="sm"
-        >
-          Login
-        </Button>
-        <Button
-          size="sm"
-          onClick={() => {
-            if (!isUsingFakeApi) {
-              window.location.href = `${snippetsBaseApiUrl}/internal/oauth/github/authorize?next=${window.location.origin}/authorize`
-            } else {
-              setSession({
-                account_id: "account-1234",
-                github_username: "testuser",
-                token: "1234",
-                session_id: "session-1234",
-              })
-            }
-          }}
-        >
-          Sign Up
-        </Button>
+            }}
+            variant="ghost"
+            size="sm"
+          >
+            Fake testuser Login
+          </Button>
+        ) : (
+          <div>
+            <Button
+              onClick={() => {
+                window.location.href = `${snippetsBaseApiUrl}/internal/oauth/github/authorize?next=${window.location.origin}/authorize`
+              }}
+              variant="ghost"
+              size="sm"
+            >
+              Login
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => {
+                window.location.href = `${snippetsBaseApiUrl}/internal/oauth/github/authorize?next=${window.location.origin}/authorize`
+              }}
+            >
+              Sign Up
+            </Button>
+          </div>
+        )}
       </div>
     )
   }
