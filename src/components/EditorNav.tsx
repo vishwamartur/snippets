@@ -24,6 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useRunTsx } from "@/hooks/use-run-tsx"
 import { OpenInNewWindowIcon } from "@radix-ui/react-icons"
 import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash"
 import { Snippet } from "fake-snippets-api/lib/db/schema"
@@ -34,6 +35,7 @@ import { TypeBadge } from "./TypeBadge"
 import { SnippetLink } from "./SnippetLink"
 
 export default function EditorNav({
+  circuitJson,
   snippet,
   code,
   hasUnsavedChanges,
@@ -42,6 +44,7 @@ export default function EditorNav({
   onSave,
   isSaving,
 }: {
+  circuitJson: any
   snippet: Snippet
   code: string
   hasUnsavedChanges: boolean
@@ -111,7 +114,11 @@ export default function EditorNav({
           <Sparkles className="mr-1 h-3 w-3" />
           Edit with AI
         </Button>
-        <DownloadButtonAndMenu className="hidden md:flex" />
+        <DownloadButtonAndMenu
+          snippetUnscopedName={snippet.unscoped_name}
+          circuitJson={circuitJson}
+          className="hidden md:flex"
+        />
         <Button
           variant="ghost"
           size="sm"

@@ -98,6 +98,7 @@ export function CodeAndPreview({ snippet }: Props) {
   return (
     <div className="flex flex-col">
       <EditorNav
+        circuitJson={circuitJson}
         snippet={snippet}
         code={code}
         isSaving={updateSnippetMutation.isLoading}
