@@ -24,7 +24,7 @@ import { PreviewContent } from "./PreviewContent"
 import { useGlobalStore } from "@/hooks/use-global-store"
 import { useUrlParams } from "@/hooks/use-url-params"
 import { getSnippetTemplate } from "@/lib/get-snippet-template"
-import "src/prettier"
+import "@/prettier"
 
 interface Props {
   snippet?: Snippet | null
