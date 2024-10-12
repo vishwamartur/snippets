@@ -89,7 +89,7 @@ export const CodeEditor = ({
     const ata = setupTypeAcquisition(ataConfig)
     ata(`
 import React from "@types/react/jsx-runtime"
-import { Circuit } from "@tscircuit/core"
+import { Circuit, createUseComponent } from "@tscircuit/core"
 import type { CommonLayoutProps } from "@tscircuit/props"
 ${code}
 `)
@@ -136,6 +136,17 @@ ${code}
       view.destroy()
     }
   }, [code !== "", !isStreaming])
+
+  useEffect(() => {
+    if (viewRef.current) {
+      const state = viewRef.current.state
+      if (state.doc.toString() !== code) {
+        viewRef.current.dispatch({
+          changes: { from: 0, to: state.doc.length, insert: code },
+        })
+      }
+    }
+  }, [code])
 
   if (isStreaming) {
     return <div className="font-mono whitespace-pre-wrap text-xs">{code}</div>

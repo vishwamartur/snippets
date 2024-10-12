@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useReducer, useState } from "react"
 import * as React from "react"
 import { safeCompileTsx, useCompiledTsx } from "../use-compiled-tsx"
-import { Circuit } from "@tscircuit/core"
+import * as tscircuitCore from "@tscircuit/core"
 import { createJSCADRenderer } from "jscad-fiber"
 import { jscadPlanner } from "jscad-planner"
 import { getImportsFromCode } from "@tscircuit/prompt-benchmarks/code-runner-utils"
@@ -88,6 +88,8 @@ export const useRunTsx = ({
           console.error("Error importing snippet", e)
         }
       }
+
+      preSuppliedImports["@tscircuit/core"] = tscircuitCore
 
       const __tscircuit_require = (name: string) => {
         if (!preSuppliedImports[name]) {
