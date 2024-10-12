@@ -24,6 +24,7 @@ import { PreviewContent } from "./PreviewContent"
 import { useGlobalStore } from "@/hooks/use-global-store"
 import { useUrlParams } from "@/hooks/use-url-params"
 import { getSnippetTemplate } from "@/lib/get-snippet-template"
+import "src/prettier"
 
 interface Props {
   snippet?: Snippet | null
@@ -127,10 +128,39 @@ export function CodeAndPreview({ snippet }: Props) {
       <div className={`flex ${showPreview ? "flex-col md:flex-row" : ""}`}>
         <div
           className={cn(
-            "hidden md:flex p-2 border-r border-gray-200 bg-gray-50",
+            "hidden flex-col md:flex border-r border-gray-200 bg-gray-50",
             showPreview ? "w-full md:w-1/2" : "w-full flex",
           )}
         >
+          <div className="flex items-center px-2 py-1 border-b border-gray-200">
+            <div className="font-mono text-xs">index.tsx</div>
+            <div className="flex-grow" />
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                if (window.prettier && window.prettierPlugins) {
+                  try {
+                    const formattedCode = window.prettier.format(code, {
+                      semi: false,
+                      parser: "typescript",
+                      plugins: window.prettierPlugins,
+                    })
+                    setCode(formattedCode)
+                  } catch (error) {
+                    toast({
+                      title: "Formatting error",
+                      description:
+                        "Failed to format the code. Please check for syntax errors.",
+                      variant: "destructive",
+                    })
+                  }
+                }
+              }}
+            >
+              Format
+            </Button>
+          </div>
           <CodeEditor
             code={code}
             onCodeChange={(newCode) => setCode(newCode)}
