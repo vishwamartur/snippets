@@ -33,6 +33,7 @@ import { cn } from "@/lib/utils"
 import { DownloadButtonAndMenu } from "./DownloadButtonAndMenu"
 import { TypeBadge } from "./TypeBadge"
 import { SnippetLink } from "./SnippetLink"
+import { useGlobalStore } from "@/hooks/use-global-store"
 
 export default function EditorNav({
   circuitJson,
@@ -42,11 +43,13 @@ export default function EditorNav({
   onTogglePreview,
   previewOpen,
   onSave,
+  snippetType,
   isSaving,
 }: {
+  snippet?: Snippet | null
   circuitJson: any
-  snippet: Snippet
   code: string
+  snippetType?: string
   hasUnsavedChanges: boolean
   previewOpen: boolean
   onTogglePreview: () => void
@@ -54,19 +57,30 @@ export default function EditorNav({
   onSave: () => void
 }) {
   const [, navigate] = useLocation()
+  const isLoggedIn = useGlobalStore((s) => Boolean(s.session))
   return (
     <nav className="flex items-center justify-between px-2 py-3 border-b border-gray-200 bg-white text-sm border-t">
       <div className="flex items-center space-x-1">
-        <SnippetLink snippet={snippet} />
-        <Link href={`/${snippet.name}`}>
-          <Button variant="ghost" size="icon" className="h-6 w-6 ml-1">
-            <OpenInNewWindowIcon className="h-3 w-3 text-gray-700" />
-          </Button>
-        </Link>
+        {snippet && (
+          <>
+            <SnippetLink snippet={snippet} />
+            <Link href={`/${snippet.name}`}>
+              <Button variant="ghost" size="icon" className="h-6 w-6 ml-1">
+                <OpenInNewWindowIcon className="h-3 w-3 text-gray-700" />
+              </Button>
+            </Link>
+          </>
+        )}
+        {!isLoggedIn && (
+          <div className="bg-orange-100 text-orange-700 py-1 px-2 text-xs opacity-70">
+            Not logged in, can't save
+          </div>
+        )}
         <Button
           variant="outline"
           size="sm"
           className={"h-6 px-2 text-xs"}
+          disabled={!snippet}
           onClick={onSave}
         >
           <Save className="mr-1 h-3 w-3" />
@@ -97,25 +111,25 @@ export default function EditorNav({
             Saving...
           </div>
         )}
-        {hasUnsavedChanges && !isSaving && (
+        {hasUnsavedChanges && !isSaving && isLoggedIn && (
           <div className="animate-fadeIn bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">
             unsaved changes
           </div>
         )}
       </div>
       <div className="flex items-center space-x-1">
-        {snippet && <TypeBadge type={snippet.snippet_type} />}
+        {snippet && <TypeBadge type={snippetType ?? snippet.snippet_type} />}
         <Button
           variant="ghost"
           size="sm"
-          disabled={hasUnsavedChanges || isSaving}
-          onClick={() => navigate(`/ai?snippet_id=${snippet.snippet_id}`)}
+          disabled={hasUnsavedChanges || isSaving || !snippet}
+          onClick={() => navigate(`/ai?snippet_id=${snippet!.snippet_id}`)}
         >
           <Sparkles className="mr-1 h-3 w-3" />
           Edit with AI
         </Button>
         <DownloadButtonAndMenu
-          snippetUnscopedName={snippet.unscoped_name}
+          snippetUnscopedName={snippet?.unscoped_name}
           circuitJson={circuitJson}
           className="hidden md:flex"
         />

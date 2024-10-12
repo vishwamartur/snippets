@@ -21,6 +21,9 @@ import { ErrorBoundary } from "react-error-boundary"
 import { ErrorTabContent } from "./ErrorTabContent"
 import { cn } from "@/lib/utils"
 import { PreviewContent } from "./PreviewContent"
+import { useGlobalStore } from "@/hooks/use-global-store"
+import { useUrlParams } from "@/hooks/use-url-params"
+import { getSnippetTemplate } from "@/lib/get-snippet-template"
 
 interface Props {
   snippet?: Snippet | null
@@ -28,18 +31,31 @@ interface Props {
 
 export function CodeAndPreview({ snippet }: Props) {
   const axios = useAxios()
+  const isLoggedIn = useGlobalStore((s) => Boolean(s.session))
+  const urlParams = useUrlParams()
+  const templateFromUrl = useMemo(
+    () => getSnippetTemplate(urlParams.template),
+    [],
+  )
   const defaultCode = useMemo(() => {
-    return decodeUrlHashToText(window.location.toString()) ?? snippet?.code
+    return (
+      decodeUrlHashToText(window.location.toString()) ??
+      snippet?.code ??
+      templateFromUrl.code
+    )
   }, [])
   const [code, setCode] = useState(defaultCode ?? "")
   const [dts, setDts] = useState("")
   const [showPreview, setShowPreview] = useState(true)
+  const snippetType: "board" | "package" | "model" | "footprint" =
+    snippet?.snippet_type ?? (templateFromUrl.type as any)
 
   useEffect(() => {
-    if (snippet?.code && !defaultCode) {
+    if (snippet?.code) {
       setCode(snippet.code)
     }
-  }, [snippet?.code])
+  }, [Boolean(snippet)])
+
   const { toast } = useToast()
 
   const {
@@ -50,7 +66,7 @@ export function CodeAndPreview({ snippet }: Props) {
     tsxRunTriggerCount,
   } = useRunTsx({
     code,
-    type: snippet?.snippet_type,
+    type: snippetType,
   })
   const qc = useQueryClient()
 
@@ -91,7 +107,7 @@ export function CodeAndPreview({ snippet }: Props) {
 
   const hasUnsavedChanges = snippet?.code !== code
 
-  if (!snippet) {
+  if (!snippet && isLoggedIn) {
     return <div>Loading...</div>
   }
 
@@ -100,6 +116,7 @@ export function CodeAndPreview({ snippet }: Props) {
       <EditorNav
         circuitJson={circuitJson}
         snippet={snippet}
+        snippetType={snippetType}
         code={code}
         isSaving={updateSnippetMutation.isLoading}
         hasUnsavedChanges={hasUnsavedChanges}
