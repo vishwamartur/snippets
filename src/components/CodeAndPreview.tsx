@@ -25,6 +25,7 @@ import { useGlobalStore } from "@/hooks/use-global-store"
 import { useUrlParams } from "@/hooks/use-url-params"
 import { getSnippetTemplate } from "@/lib/get-snippet-template"
 import "@/prettier"
+import { useImportSnippetDialog } from "./dialogs/import-snippet-dialog"
 
 interface Props {
   snippet?: Snippet | null
@@ -70,6 +71,8 @@ export function CodeAndPreview({ snippet }: Props) {
     type: snippetType,
   })
   const qc = useQueryClient()
+  const { Dialog: ImportSnippetDialog, openDialog: openImportDialog } =
+    useImportSnippetDialog()
 
   const updateSnippetMutation = useMutation({
     mutationFn: async () => {
@@ -138,6 +141,13 @@ export function CodeAndPreview({ snippet }: Props) {
             <Button
               size="sm"
               variant="ghost"
+              onClick={() => openImportDialog()}
+            >
+              Import
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
               onClick={() => {
                 if (window.prettier && window.prettierPlugins) {
                   try {
@@ -178,6 +188,13 @@ export function CodeAndPreview({ snippet }: Props) {
           />
         )}
       </div>
+      <ImportSnippetDialog
+        onSnippetSelected={(snippet) => {
+          setCode(
+            `import {} from "@tsci/${snippet.owner_name}.${snippet.unscoped_name}"\n${snippet.code}`,
+          )
+        }}
+      />
     </div>
   )
 }
