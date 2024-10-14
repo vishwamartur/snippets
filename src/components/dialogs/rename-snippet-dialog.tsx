@@ -18,7 +18,7 @@ export const RenameSnippetDialog = ({
   onOpenChange: (open: boolean) => void
   snippetId: string
   currentName: string
-  onRename: (newName: string) => void
+  onRename?: (newName: string) => void
 }) => {
   const [newName, setNewName] = useState(currentName)
   const axios = useAxios()
@@ -33,7 +33,7 @@ export const RenameSnippetDialog = ({
         snippet_id: snippetId,
         unscoped_name: newName,
       })
-      onRename(newName)
+      onRename?.(newName)
       onOpenChange(false)
       setPending(false)
       toast({

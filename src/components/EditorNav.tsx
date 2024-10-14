@@ -63,12 +63,6 @@ export default function EditorNav({
   const { Dialog: RenameDialog, openDialog: openRenameDialog } =
     useRenameSnippetDialog()
 
-  const handleRename = (newName: string) => {
-    // Update the snippet name in the UI or trigger a refetch
-    // This depends on how you're managing state in your application
-    console.log("Snippet renamed to:", newName)
-  }
-
   return (
     <nav className="flex items-center justify-between px-2 py-3 border-b border-gray-200 bg-white text-sm border-t">
       <div className="flex items-center space-x-1">
@@ -233,7 +227,6 @@ export default function EditorNav({
       <RenameDialog
         snippetId={snippet?.snippet_id ?? ""}
         currentName={snippet?.unscoped_name ?? ""}
-        onRename={handleRename}
       />
     </nav>
   )
