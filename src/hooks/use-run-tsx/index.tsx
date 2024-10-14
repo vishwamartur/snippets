@@ -81,9 +81,16 @@ export const useRunTsx = ({
         const fullSnippetName = importName
           .replace("@tsci/", "")
           .replace(".", "/")
-        const { snippet: importedSnippet } = await fetch(
+        const { snippet: importedSnippet, error } = await fetch(
           `${apiBaseUrl}/snippets/get?name=${fullSnippetName}`,
-        ).then((res) => res.json())
+        )
+          .then((res) => res.json())
+          .catch((e) => ({ error: e }))
+
+        if (error) {
+          console.error("Error fetching import", importName, error)
+          return
+        }
 
         const { compiled_js, code } = importedSnippet
 
@@ -98,9 +105,7 @@ export const useRunTsx = ({
         }
 
         try {
-          preSuppliedImports[importName] = evalCompiledJs(
-            importedSnippet.compiled_js,
-          ).exports
+          preSuppliedImports[importName] = evalCompiledJs(compiled_js).exports
         } catch (e) {
           console.error("Error importing snippet", e)
         }
