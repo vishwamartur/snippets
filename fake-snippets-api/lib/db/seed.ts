@@ -62,4 +62,27 @@ exports.A555Timer = A555Timer;
     snippet_type: "package",
     description: "A simple package with an A555 Timer component",
   })
+
+  // Add a snippet that outputs a square waveform using the a555timer
+
+  db.addSnippet({
+    name: "testuser/a555timer-square-wave",
+    unscoped_name: "a555timer-square-wave",
+    owner_name: "testuser",
+    code: `
+import { A555Timer } from "@tsci/seveibar.a555timer"
+
+export const SquareWaveModule = () => (
+  <A555Timer name="U1" />
+)
+`.trim(),
+    dts: 'export declare const SquareWaveModule: () => import("react/jsx-runtime").JSX.Element;\n',
+    compiled_js:
+      '"use strict";\n\nObject.defineProperty(exports, "__esModule", {\n  value: true\n});\nexports.SquareWaveModule = void 0;\nvar _seveibar = require("@tsci/seveibar.a555timer");\nconst SquareWaveModule = () => /*#__PURE__*/React.createElement(_seveibar.A555Timer, {\n  name: "U1"\n});\nexports.SquareWaveModule = SquareWaveModule;',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    snippet_type: "package",
+    description:
+      "A simple package that outputs a square waveform using the a555timer",
+  })
 }

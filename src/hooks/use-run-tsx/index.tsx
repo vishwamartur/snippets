@@ -72,22 +72,47 @@ export const useRunTsx = ({
 
       const preSuppliedImports: Record<string, any> = {}
 
-      for (const importName of imports) {
+      async function addImport(importName: string, depth: number = 0) {
+        if (depth > 5) {
+          console.log("Max depth for imports reached")
+          return
+        }
+
         const fullSnippetName = importName
           .replace("@tsci/", "")
           .replace(".", "/")
-        // Fetch compiled code from the server
-        const { snippet: importedSnippet } = await fetch(
+        const { snippet: importedSnippet, error } = await fetch(
           `${apiBaseUrl}/snippets/get?name=${fullSnippetName}`,
-        ).then((res) => res.json())
+        )
+          .then((res) => res.json())
+          .catch((e) => ({ error: e }))
+
+        if (error) {
+          console.error("Error fetching import", importName, error)
+          return
+        }
+
+        const { compiled_js, code } = importedSnippet
+
+        const importNames = getImportsFromCode(code!).filter(
+          (imp) => !preSuppliedImports[imp],
+        )
+
+        for (const importName of importNames) {
+          if (!preSuppliedImports[importName]) {
+            await addImport(importName, depth + 1)
+          }
+        }
 
         try {
-          preSuppliedImports[importName] = evalCompiledJs(
-            importedSnippet.compiled_js,
-          ).exports
+          preSuppliedImports[importName] = evalCompiledJs(compiled_js).exports
         } catch (e) {
           console.error("Error importing snippet", e)
         }
+      }
+
+      for (const importName of imports) {
+        await addImport(importName)
       }
 
       preSuppliedImports["@tscircuit/core"] = tscircuitCore
