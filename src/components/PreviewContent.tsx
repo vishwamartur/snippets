@@ -21,32 +21,24 @@ import { ErrorBoundary } from "react-error-boundary"
 import { ErrorTabContent } from "./ErrorTabContent"
 import { cn } from "@/lib/utils"
 import { useCallback } from "react"
+import { RunButton } from "./RunButton"
 
-export type PreviewContentProps =
-  | {
-      code: string
-      triggerRunTsx: () => void
-      tsxRunTriggerCount: number
-      errorMessage: string | null
-      circuitJson: any
-      className?: string
-      showCodeTab?: false
-      isStreaming?: boolean
-      onCodeChange?: (code: string) => void
-      onDtsChange?: (dts: string) => void
-    }
-  | {
-      code: string
-      triggerRunTsx: () => void
-      tsxRunTriggerCount: number
-      errorMessage: string | null
-      circuitJson: any
-      className?: string
-      showCodeTab: true
-      isStreaming: boolean
-      onCodeChange: (code: string) => void
-      onDtsChange: (dts: string) => void
-    }
+export interface PreviewContentProps {
+  code: string
+  readOnly?: boolean
+  triggerRunTsx: () => void
+  tsxRunTriggerCount: number
+  errorMessage: string | null
+  circuitJson: any
+  className?: string
+  showCodeTab?: boolean
+  showJsonTab?: boolean
+  headerClassName?: string
+  leftHeaderContent?: React.ReactNode
+  isStreaming?: boolean
+  onCodeChange?: (code: string) => void
+  onDtsChange?: (dts: string) => void
+}
 
 const PreviewEmptyState = ({
   triggerRunTsx,
@@ -67,7 +59,11 @@ export const PreviewContent = ({
   errorMessage,
   circuitJson,
   showCodeTab = false,
+  showJsonTab = true,
   className,
+  headerClassName,
+  leftHeaderContent,
+  readOnly,
   isStreaming,
   onCodeChange,
   onDtsChange,
@@ -93,18 +89,20 @@ export const PreviewContent = ({
   }, [circuitJson])
 
   return (
-    <div className={className}>
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <div className="flex items-center gap-2">
-          <Button
-            className="bg-blue-600 hover:bg-blue-500"
+    <div className={cn("flex flex-col h-full", className)}>
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="flex-grow flex flex-col"
+      >
+        <div className={cn("flex items-center gap-2", headerClassName)}>
+          {leftHeaderContent}
+          {leftHeaderContent && <div className="flex-grow" />}
+          <RunButton
             onClick={() => triggerRunTsx()}
             disabled={versionOfCodeLastRun === code && tsxRunTriggerCount !== 0}
-          >
-            Run
-            <PlayIcon className="w-3 h-3 ml-2" />
-          </Button>
-          <div className="flex-grow" />
+          />
+          {!leftHeaderContent && <div className="flex-grow" />}
           <TabsList>
             {showCodeTab && <TabsTrigger value="code">Code</TabsTrigger>}
             <TabsTrigger value="pcb">
@@ -133,7 +131,7 @@ export const PreviewContent = ({
               )}
               3D
             </TabsTrigger>
-            <TabsTrigger value="table">JSON</TabsTrigger>
+            {showJsonTab && <TabsTrigger value="table">JSON</TabsTrigger>}
             <TabsTrigger value="error">
               Errors
               {errorMessage && (
@@ -145,14 +143,16 @@ export const PreviewContent = ({
           </TabsList>
         </div>
         {showCodeTab && (
-          <TabsContent value="code">
-            <CodeEditor
-              code={code}
-              isStreaming={isStreaming}
-              onCodeChange={onCodeChange!}
-              onDtsChange={onDtsChange!}
-              readOnly={false}
-            />
+          <TabsContent value="code" className="flex-grow overflow-hidden">
+            <div className="h-full">
+              <CodeEditor
+                code={code}
+                isStreaming={isStreaming}
+                onCodeChange={onCodeChange!}
+                onDtsChange={onDtsChange!}
+                readOnly={readOnly}
+              />
+            </div>
           </TabsContent>
         )}
         <TabsContent value="pcb">

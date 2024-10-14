@@ -15,7 +15,14 @@ import { useAxios } from "@/hooks/use-axios"
 import { TypeBadge } from "./TypeBadge"
 import { useToast } from "@/hooks/use-toast"
 import { useMutation, useQueryClient } from "react-query"
-import { ClipboardIcon, Share, Eye, EyeOff, PlayIcon } from "lucide-react"
+import {
+  ClipboardIcon,
+  Share,
+  Eye,
+  EyeOff,
+  PlayIcon,
+  Loader2,
+} from "lucide-react"
 import { MagicWandIcon } from "@radix-ui/react-icons"
 import { ErrorBoundary } from "react-error-boundary"
 import { ErrorTabContent } from "./ErrorTabContent"
@@ -26,6 +33,7 @@ import { useUrlParams } from "@/hooks/use-url-params"
 import { getSnippetTemplate } from "@/lib/get-snippet-template"
 import "@/prettier"
 import { useImportSnippetDialog } from "./dialogs/import-snippet-dialog"
+import { useCreateSnippetMutation } from "@/hooks/use-create-snippet-mutation"
 
 interface Props {
   snippet?: Snippet | null
@@ -105,14 +113,27 @@ export function CodeAndPreview({ snippet }: Props) {
     },
   })
 
+  const createSnippetMutation = useCreateSnippetMutation()
+
   const handleSave = () => {
-    updateSnippetMutation.mutate()
+    if (snippet) {
+      updateSnippetMutation.mutate()
+    } else {
+      createSnippetMutation.mutate({ code })
+    }
   }
 
   const hasUnsavedChanges = snippet?.code !== code
 
-  if (!snippet && isLoggedIn) {
-    return <div>Loading...</div>
+  if (!snippet && (urlParams.snippet_id || urlParams.should_create_snippet)) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="flex flex-col items-center justify-center">
+          <div className="text-lg text-gray-500 mb-4">Loading</div>
+          <Loader2 className="w-16 h-16 animate-spin text-gray-400" />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -191,7 +212,7 @@ export function CodeAndPreview({ snippet }: Props) {
       <ImportSnippetDialog
         onSnippetSelected={(snippet) => {
           setCode(
-            `import {} from "@tsci/${snippet.owner_name}.${snippet.unscoped_name}"\n${snippet.code}`,
+            `import {} from "@tsci/${snippet.owner_name}.${snippet.unscoped_name}"\n${code}`,
           )
         }}
       />

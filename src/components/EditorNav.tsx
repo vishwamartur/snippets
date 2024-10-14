@@ -80,7 +80,7 @@ export default function EditorNav({
           variant="outline"
           size="sm"
           className={"h-6 px-2 text-xs"}
-          disabled={!snippet}
+          disabled={!isLoggedIn}
           onClick={onSave}
         >
           <Save className="mr-1 h-3 w-3" />
@@ -113,7 +113,7 @@ export default function EditorNav({
         )}
         {hasUnsavedChanges && !isSaving && isLoggedIn && (
           <div className="animate-fadeIn bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">
-            unsaved changes
+            {snippet ? "unsaved changes" : "unsaved"}
           </div>
         )}
       </div>
