@@ -16,6 +16,8 @@ import {
   Menu,
   Sparkles,
   Pencil,
+  Trash2,
+  MoreVertical,
 } from "lucide-react"
 import { Link, useLocation } from "wouter"
 import { Button } from "@/components/ui/button"
@@ -36,6 +38,7 @@ import { TypeBadge } from "./TypeBadge"
 import { SnippetLink } from "./SnippetLink"
 import { useGlobalStore } from "@/hooks/use-global-store"
 import { useRenameSnippetDialog } from "./dialogs/rename-snippet-dialog"
+import { useConfirmDeleteSnippetDialog } from "./dialogs/confirm-delete-snippet-dialog"
 
 export default function EditorNav({
   circuitJson,
@@ -62,6 +65,8 @@ export default function EditorNav({
   const isLoggedIn = useGlobalStore((s) => Boolean(s.session))
   const { Dialog: RenameDialog, openDialog: openRenameDialog } =
     useRenameSnippetDialog()
+  const { Dialog: DeleteDialog, openDialog: openDeleteDialog } =
+    useConfirmDeleteSnippetDialog()
 
   return (
     <nav className="flex items-center justify-between px-2 py-3 border-b border-gray-200 bg-white text-sm border-t">
@@ -167,6 +172,22 @@ export default function EditorNav({
           <Eye className="mr-1 h-3 w-3" />
           Public
         </Button>{" "}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="hidden md:flex">
+              <MoreVertical className="h-3 w-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              className="text-xs text-red-600"
+              onClick={() => openDeleteDialog()}
+            >
+              <Trash2 className="mr-2 h-3 w-3" />
+              Delete Snippet
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <Button
           variant="ghost"
           size="icon"
@@ -227,6 +248,10 @@ export default function EditorNav({
       <RenameDialog
         snippetId={snippet?.snippet_id ?? ""}
         currentName={snippet?.unscoped_name ?? ""}
+      />
+      <DeleteDialog
+        snippetId={snippet?.snippet_id ?? ""}
+        snippetName={snippet?.unscoped_name ?? ""}
       />
     </nav>
   )
