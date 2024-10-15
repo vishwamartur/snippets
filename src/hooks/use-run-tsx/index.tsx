@@ -56,23 +56,26 @@ export const useRunTsx = ({
     }
     if (!code) return
     async function run() {
-      const { success, compiledTsx: compiledJs, error } = safeCompileTsx(code!)
-
-      if (!success) {
-        setTsxResult({
-          compiledModule: null,
-          message: `Compile Error: ${error.message}`,
-          circuitJson: null,
-          isLoading: false,
-        })
-      }
-
       const userCodeTsciImports = getImportsFromCode(code!).filter((imp) =>
         imp.startsWith("@tsci/"),
       )
 
       const preSuppliedImports: Record<string, any> =
         preSuppliedImportsRef.current
+
+      const __tscircuit_require = (name: string) => {
+        if (!preSuppliedImports[name]) {
+          throw new Error(
+            `Import "${name}" not found (imports available: ${Object.keys(preSuppliedImports).join(",")})`,
+          )
+        }
+        return preSuppliedImports[name]
+      }
+      ;(globalThis as any).__tscircuit_require = __tscircuit_require
+      preSuppliedImports["@tscircuit/core"] = tscircuitCore
+      preSuppliedImports["react"] = React
+      preSuppliedImports["jscad-fiber"] = jscadFiber
+      globalThis.React = React
 
       async function addImport(importName: string, depth: number = 0) {
         if (!importName.startsWith("@tsci/")) return
@@ -98,9 +101,7 @@ export const useRunTsx = ({
 
         const { compiled_js, code } = importedSnippet
 
-        const importNames = getImportsFromCode(code!).filter(
-          (imp) => !preSuppliedImports[imp],
-        )
+        const importNames = getImportsFromCode(code!)
 
         for (const importName of importNames) {
           if (!preSuppliedImports[importName]) {
@@ -119,23 +120,18 @@ export const useRunTsx = ({
         await addImport(userCodeTsciImport)
       }
 
-      preSuppliedImports["@tscircuit/core"] = tscircuitCore
-      preSuppliedImports["react"] = React
-      preSuppliedImports["jscad-fiber"] = jscadFiber
+      const { success, compiledTsx: compiledJs, error } = safeCompileTsx(code!)
 
-      const __tscircuit_require = (name: string) => {
-        if (!preSuppliedImports[name]) {
-          throw new Error(
-            `Import "${name}" not found (imports available: ${Object.keys(preSuppliedImports).join(",")})`,
-          )
-        }
-        return preSuppliedImports[name]
+      if (!success) {
+        setTsxResult({
+          compiledModule: null,
+          message: `Compile Error: ${error.message}`,
+          circuitJson: null,
+          isLoading: false,
+        })
       }
-      ;(globalThis as any).__tscircuit_require = __tscircuit_require
 
       try {
-        globalThis.React = React
-
         const module = evalCompiledJs(compiledJs!)
 
         const componentExportKeys = Object.keys(module.exports).filter(
