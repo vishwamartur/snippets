@@ -56,17 +56,6 @@ export const useRunTsx = ({
     }
     if (!code) return
     async function run() {
-      const { success, compiledTsx: compiledJs, error } = safeCompileTsx(code!)
-
-      if (!success) {
-        setTsxResult({
-          compiledModule: null,
-          message: `Compile Error: ${error.message}`,
-          circuitJson: null,
-          isLoading: false,
-        })
-      }
-
       const userCodeTsciImports = getImportsFromCode(code!).filter((imp) =>
         imp.startsWith("@tsci/"),
       )
@@ -132,10 +121,20 @@ export const useRunTsx = ({
         return preSuppliedImports[name]
       }
       ;(globalThis as any).__tscircuit_require = __tscircuit_require
+      globalThis.React = React
+
+      const { success, compiledTsx: compiledJs, error } = safeCompileTsx(code!)
+
+      if (!success) {
+        setTsxResult({
+          compiledModule: null,
+          message: `Compile Error: ${error.message}`,
+          circuitJson: null,
+          isLoading: false,
+        })
+      }
 
       try {
-        globalThis.React = React
-
         const module = evalCompiledJs(compiledJs!)
 
         const componentExportKeys = Object.keys(module.exports).filter(
