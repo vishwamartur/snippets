@@ -1,7 +1,7 @@
 import type { DbClient } from "./db-client"
 
 export const seed = (db: DbClient) => {
-  const {account_id} =db.addAccount({
+  const { account_id } = db.addAccount({
     github_username: "testuser",
   })
   db.addAccount({

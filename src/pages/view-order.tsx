@@ -11,7 +11,11 @@ export const ViewOrderPage = () => {
   const { orderId } = useParams()
   const axios = useAxios()
 
-  const { data: order, isLoading, error } = useQuery<Order>(
+  const {
+    data: order,
+    isLoading,
+    error,
+  } = useQuery<Order>(
     ["order", orderId],
     async () => {
       const response = await axios.get(`/orders/get?order_id=${orderId}`)
@@ -57,9 +61,7 @@ export const ViewOrderPage = () => {
                 </dd>
               </div>
               <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">
-                  Is Draft
-                </dt>
+                <dt className="text-sm font-medium text-gray-500">Is Draft</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   {order.is_draft ? "Yes" : "No"}
                 </dd>
@@ -96,7 +98,7 @@ export const ViewOrderPage = () => {
             <Button variant="outline" onClick={() => window.history.back()}>
               Back to Orders
             </Button>
-          </Link >
+          </Link>
         </div>
       </div>
       <Footer />
