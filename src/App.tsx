@@ -18,6 +18,7 @@ import { Toaster } from "@/components/ui/toaster"
 import AuthenticatePage from "./pages/authorize"
 import { UserProfilePage } from "./pages/user-profile"
 import { MyOrdersPage } from "./pages/my-orders"
+import { ViewOrderPage } from "./pages/view-order"
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/search" component={SearchPage} />
         <Route path="/authorize" component={AuthenticatePage} />
         <Route path="/my-orders" component={MyOrdersPage} />
+        <Route path="/orders/:orderId" component={ViewOrderPage} />
         <Route path="/:username" component={UserProfilePage} />
         <Route path="/:author/:snippetName" component={ViewSnippetPage} />
       </Switch>
