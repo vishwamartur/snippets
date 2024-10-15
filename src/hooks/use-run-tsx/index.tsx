@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useState } from "react"
+import { useEffect, useMemo, useReducer, useRef, useState } from "react"
 import * as React from "react"
 import { safeCompileTsx, useCompiledTsx } from "../use-compiled-tsx"
 import * as tscircuitCore from "@tscircuit/core"
@@ -42,6 +42,7 @@ export const useRunTsx = ({
     isLoading: false,
   })
   const apiBaseUrl = useSnippetsBaseApiUrl()
+  const preSuppliedImportsRef = useRef<Record<string, any>>({})
 
   useEffect(() => {
     if (tsxRunTriggerCount === 0) return
@@ -66,13 +67,16 @@ export const useRunTsx = ({
         })
       }
 
-      const imports = getImportsFromCode(code!).filter((imp) =>
+      const userCodeTsciImports = getImportsFromCode(code!).filter((imp) =>
         imp.startsWith("@tsci/"),
       )
 
-      const preSuppliedImports: Record<string, any> = {}
+      const preSuppliedImports: Record<string, any> =
+        preSuppliedImportsRef.current
 
       async function addImport(importName: string, depth: number = 0) {
+        if (!importName.startsWith("@tsci/")) return
+        if (preSuppliedImports[importName]) return
         if (depth > 5) {
           console.log("Max depth for imports reached")
           return
@@ -111,8 +115,8 @@ export const useRunTsx = ({
         }
       }
 
-      for (const importName of imports) {
-        await addImport(importName)
+      for (const userCodeTsciImport of userCodeTsciImports) {
+        await addImport(userCodeTsciImport)
       }
 
       preSuppliedImports["@tscircuit/core"] = tscircuitCore
