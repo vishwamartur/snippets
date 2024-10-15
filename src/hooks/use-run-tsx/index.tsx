@@ -63,6 +63,20 @@ export const useRunTsx = ({
       const preSuppliedImports: Record<string, any> =
         preSuppliedImportsRef.current
 
+      const __tscircuit_require = (name: string) => {
+        if (!preSuppliedImports[name]) {
+          throw new Error(
+            `Import "${name}" not found (imports available: ${Object.keys(preSuppliedImports).join(",")})`,
+          )
+        }
+        return preSuppliedImports[name]
+      }
+      ;(globalThis as any).__tscircuit_require = __tscircuit_require
+      preSuppliedImports["@tscircuit/core"] = tscircuitCore
+      preSuppliedImports["react"] = React
+      preSuppliedImports["jscad-fiber"] = jscadFiber
+      globalThis.React = React
+
       async function addImport(importName: string, depth: number = 0) {
         if (!importName.startsWith("@tsci/")) return
         if (preSuppliedImports[importName]) return
@@ -87,9 +101,7 @@ export const useRunTsx = ({
 
         const { compiled_js, code } = importedSnippet
 
-        const importNames = getImportsFromCode(code!).filter(
-          (imp) => !preSuppliedImports[imp],
-        )
+        const importNames = getImportsFromCode(code!)
 
         for (const importName of importNames) {
           if (!preSuppliedImports[importName]) {
@@ -107,21 +119,6 @@ export const useRunTsx = ({
       for (const userCodeTsciImport of userCodeTsciImports) {
         await addImport(userCodeTsciImport)
       }
-
-      preSuppliedImports["@tscircuit/core"] = tscircuitCore
-      preSuppliedImports["react"] = React
-      preSuppliedImports["jscad-fiber"] = jscadFiber
-
-      const __tscircuit_require = (name: string) => {
-        if (!preSuppliedImports[name]) {
-          throw new Error(
-            `Import "${name}" not found (imports available: ${Object.keys(preSuppliedImports).join(",")})`,
-          )
-        }
-        return preSuppliedImports[name]
-      }
-      ;(globalThis as any).__tscircuit_require = __tscircuit_require
-      globalThis.React = React
 
       const { success, compiledTsx: compiledJs, error } = safeCompileTsx(code!)
 
