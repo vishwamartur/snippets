@@ -1,7 +1,7 @@
 import type { DbClient } from "./db-client"
 
 export const seed = (db: DbClient) => {
-  db.addAccount({
+  const {account_id} =db.addAccount({
     github_username: "testuser",
   })
   db.addAccount({
@@ -84,5 +84,30 @@ export const SquareWaveModule = () => (
     snippet_type: "package",
     description:
       "A simple package that outputs a square waveform using the a555timer",
+  })
+
+  db.addOrder({
+    account_id,
+    is_draft: true,
+    is_pending_validation_by_fab: false,
+    is_pending_review_by_fab: false,
+    is_validated_by_fab: false,
+    is_approved_by_fab_review: false,
+    is_approved_by_orderer: false,
+    is_in_production: false,
+    is_shipped: false,
+    is_cancelled: false,
+    should_be_blank_pcb: false,
+    should_include_stencil: false,
+    jlcpcb_order_params: {},
+    circuit_json: {
+      type: "source_component",
+      ftype: "simple_resistor",
+      source_component_id: "source_component_1",
+      name: "R1",
+      resistane: "1k",
+    },
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   })
 }
