@@ -39,6 +39,7 @@ import { SnippetLink } from "./SnippetLink"
 import { useGlobalStore } from "@/hooks/use-global-store"
 import { useRenameSnippetDialog } from "./dialogs/rename-snippet-dialog"
 import { useConfirmDeleteSnippetDialog } from "./dialogs/confirm-delete-snippet-dialog"
+import { useCreateOrderDialog } from "./dialogs/create-order-dialog"
 import { AnyCircuitElement } from "circuit-json"
 
 export default function EditorNav({
@@ -68,6 +69,8 @@ export default function EditorNav({
     useRenameSnippetDialog()
   const { Dialog: DeleteDialog, openDialog: openDeleteDialog } =
     useConfirmDeleteSnippetDialog()
+  const { Dialog: CreateOrderDialog, openDialog: openCreateOrderDialog } =
+    useCreateOrderDialog()
 
   return (
     <nav className="flex items-center justify-between px-2 py-3 border-b border-gray-200 bg-white text-sm border-t">
@@ -181,6 +184,13 @@ export default function EditorNav({
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem
+              className="text-xs"
+              onClick={() => openCreateOrderDialog()}
+            >
+              <Package className="mr-2 h-3 w-3" />
+              Submit Order
+            </DropdownMenuItem>
+            <DropdownMenuItem
               className="text-xs text-red-600"
               onClick={() => openDeleteDialog()}
             >
@@ -254,6 +264,7 @@ export default function EditorNav({
         snippetId={snippet?.snippet_id ?? ""}
         snippetName={snippet?.unscoped_name ?? ""}
       />
+      <CreateOrderDialog />
     </nav>
   )
 }
