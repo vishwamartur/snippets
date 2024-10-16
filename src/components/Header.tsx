@@ -1,13 +1,13 @@
 import { HeaderLogin } from "@/components/HeaderLogin"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Github, Menu, Search, X } from "lucide-react"
-import { Link, useLocation } from "wouter"
-import HeaderDropdown from "./HeaderDropdown"
-import { useState } from "react"
-import { DiscordLogoIcon, GitHubLogoIcon } from "@radix-ui/react-icons"
 import { useGlobalStore } from "@/hooks/use-global-store"
 import { cn } from "@/lib/utils"
+import { GitHubLogoIcon } from "@radix-ui/react-icons"
+import { Menu, X } from "lucide-react"
+import React, { useState } from "react"
+import { Link, useLocation } from "wouter"
+import HeaderDropdown from "./HeaderDropdown"
+import SearchComponent from "./SearchComponent"
 
 const HeaderButton = ({
   href,
@@ -94,17 +94,7 @@ export default function Header() {
           <DiscordLogoIcon className="text-gray-400 hover:text-gray-600 transition-colors" />
         </a> */}
         <div className="hidden md:flex items-center space-x-4">
-          <div className="relative">
-            <Search
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400"
-              size={18}
-            />
-            <Input
-              type="search"
-              placeholder="Search"
-              className="pl-8 focus:border-blue-500 placeholder-gray-400"
-            />
-          </div>
+          <SearchComponent />
           <HeaderDropdown />
           <HeaderLogin />
         </div>
@@ -159,17 +149,7 @@ export default function Header() {
             </ul>
           </nav>
           <div className="flex flex-col gap-4">
-            <div className="relative">
-              <Search
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={18}
-              />
-              <Input
-                type="search"
-                placeholder="Search"
-                className="pl-8 focus:border-blue-500 placeholder-gray-400"
-              />
-            </div>
+            <SearchComponent />
             <HeaderDropdown />
             <HeaderLogin />
           </div>
