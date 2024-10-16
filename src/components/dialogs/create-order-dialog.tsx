@@ -34,10 +34,10 @@ export const CreateOrderDialog = ({
     try {
       // Placeholder: Check if shipping information is in profile
       const hasShippingInfo = await checkShippingInfo()
-      
+
       // Placeholder: Check if PCB has no errors
       const hasNoErrors = await checkPCBErrors()
-      
+
       // Placeholder: Check if all parts are available at PCB fab
       const allPartsAvailable = await checkPartsAvailability()
 
