@@ -86,7 +86,10 @@ export const DashboardPage = () => {
             {mySnippets && (
               <ul className="space-y-1">
                 {mySnippets.slice(0, 10).map((snippet) => (
-                  <li key={snippet.snippet_id} className="flex items-center justify-between">
+                  <li
+                    key={snippet.snippet_id}
+                    className="flex items-center justify-between"
+                  >
                     <Link
                       href={`/${snippet.owner_name}/${snippet.unscoped_name}`}
                       className="text-blue-600 hover:underline text-sm"
@@ -101,7 +104,10 @@ export const DashboardPage = () => {
               </ul>
             )}
             {mySnippets && mySnippets.length > 10 && (
-              <Link href="/my-snippets" className="text-sm text-blue-600 hover:underline mt-2 inline-block">
+              <Link
+                href="/my-snippets"
+                className="text-sm text-blue-600 hover:underline mt-2 inline-block"
+              >
                 View all snippets
               </Link>
             )}
