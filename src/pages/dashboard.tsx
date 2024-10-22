@@ -79,31 +79,31 @@ export const DashboardPage = () => {
               </div>
             </div>
             <CreateNewSnippetHero />
-            <h2 className="text-sm font-bold mb-4 text-gray-700 border-b border-gray-200">
-              Your Snippets
+            <h2 className="text-sm font-bold mb-2 text-gray-700 border-b border-gray-200">
+              Your Recent Snippets
             </h2>
             {isLoading && <div>Loading...</div>}
             {mySnippets && (
-              <div className="space-y-4">
-                {mySnippets.map((snippet) => (
-                  <div
-                    key={snippet.snippet_id}
-                    className="border p-4 rounded-md"
-                  >
+              <ul className="space-y-1">
+                {mySnippets.slice(0, 10).map((snippet) => (
+                  <li key={snippet.snippet_id} className="flex items-center justify-between">
                     <Link
                       href={`/${snippet.owner_name}/${snippet.unscoped_name}`}
-                      className="text-blue-600 hover:underline"
+                      className="text-blue-600 hover:underline text-sm"
                     >
-                      <h3 className="text-lg font-semibold">
-                        {snippet.unscoped_name}
-                      </h3>
+                      {snippet.unscoped_name}
                     </Link>
-                    <p className="text-sm text-gray-500">
-                      Created: {new Date(snippet.created_at).toLocaleString()}
-                    </p>
-                  </div>
+                    <span className="text-xs text-gray-500">
+                      {new Date(snippet.created_at).toLocaleDateString()}
+                    </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
+            )}
+            {mySnippets && mySnippets.length > 10 && (
+              <Link href="/my-snippets" className="text-sm text-blue-600 hover:underline mt-2 inline-block">
+                View all snippets
+              </Link>
             )}
           </div>
           <div className="md:w-1/4">
