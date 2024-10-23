@@ -13,6 +13,7 @@ import {
   snippetSchema,
   Order,
   OrderFile,
+  AccountSnippet,
 } from "./schema.ts"
 import { combine } from "zustand/middleware"
 import { seed as seedFn } from "./seed"
@@ -83,21 +84,31 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
 
     return newAccount
   },
-  addSnippet: (snippet: Omit<z.input<typeof snippetSchema>, "snippet_id">) => {
-    let newSnippet
+  addSnippet: (
+    snippet: Omit<z.input<typeof snippetSchema>, "snippet_id">,
+  ): Snippet => {
+    const newSnippetId = `snippet_${get().idCounter + 1}`
+    const newSnippet = snippetSchema.parse({
+      ...snippet,
+      snippet_id: newSnippetId,
+    })
     set((state) => {
-      const newSnippetId = `snippet_${state.idCounter + 1}`
-      newSnippet = snippetSchema.parse({ ...snippet, snippet_id: newSnippetId })
       return {
         snippets: [...state.snippets, newSnippet],
         idCounter: state.idCounter + 1,
       }
     })
-    return newSnippet
+    return { ...newSnippet, snippet_id: newSnippetId }
   },
   getNewestSnippets: (limit: number): Snippet[] => {
     const state = get()
     return [...state.snippets]
+      .map((snippet) => ({
+        ...snippet,
+        star_count: state.accountSnippets.filter(
+          (as) => as.snippet_id === snippet.snippet_id && as.has_starred,
+        ).length,
+      }))
       .sort(
         (a, b) =>
           new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
@@ -106,12 +117,15 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
   },
   getSnippetsByAuthor: (authorName?: string): Snippet[] => {
     const state = get()
-    if (authorName) {
-      return state.snippets.filter(
-        (snippet) => snippet.owner_name === authorName,
-      )
-    }
-    return state.snippets
+    const snippets = authorName
+      ? state.snippets.filter((snippet) => snippet.owner_name === authorName)
+      : state.snippets
+    return snippets.map((snippet) => ({
+      ...snippet,
+      star_count: state.accountSnippets.filter(
+        (as) => as.snippet_id === snippet.snippet_id && as.has_starred,
+      ).length,
+    }))
   },
   updateSnippet: (
     snippet_id: string,
@@ -154,17 +168,33 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
   },
   getSnippetById: (snippet_id: string): Snippet | undefined => {
     const state = get()
-    return state.snippets.find((snippet) => snippet.snippet_id === snippet_id)
+    const snippet = state.snippets.find(
+      (snippet) => snippet.snippet_id === snippet_id,
+    )
+    if (!snippet) return undefined
+    return {
+      ...snippet,
+      star_count: state.accountSnippets.filter(
+        (as) => as.snippet_id === snippet_id && as.has_starred,
+      ).length,
+    }
   },
   searchSnippets: (query: string): Snippet[] => {
     const state = get()
     const lowercaseQuery = query.toLowerCase()
-    return state.snippets.filter(
-      (snippet) =>
-        snippet.name.toLowerCase().includes(lowercaseQuery) ||
-        snippet.description?.toLowerCase().includes(lowercaseQuery) ||
-        snippet.code.toLowerCase().includes(lowercaseQuery),
-    )
+    return state.snippets
+      .filter(
+        (snippet) =>
+          snippet.name.toLowerCase().includes(lowercaseQuery) ||
+          snippet.description?.toLowerCase().includes(lowercaseQuery) ||
+          snippet.code.toLowerCase().includes(lowercaseQuery),
+      )
+      .map((snippet) => ({
+        ...snippet,
+        star_count: state.accountSnippets.filter(
+          (as) => as.snippet_id === snippet.snippet_id && as.has_starred,
+        ).length,
+      }))
   },
   deleteSnippet: (snippet_id: string): boolean => {
     let deleted = false
@@ -262,5 +292,35 @@ const initializer = combine(databaseSchema.parse({}), (set, get) => ({
       sessions: [...state.sessions, newSession],
     }))
     return newSession
+  },
+  addStar: (account_id: string, snippet_id: string): AccountSnippet => {
+    const now = new Date().toISOString()
+    const accountSnippet = {
+      account_id,
+      snippet_id,
+      has_starred: true,
+      created_at: now,
+      updated_at: now,
+    }
+    set((state) => ({
+      accountSnippets: [...state.accountSnippets, accountSnippet],
+    }))
+    return accountSnippet
+  },
+  removeStar: (account_id: string, snippet_id: string): void => {
+    set((state) => ({
+      accountSnippets: state.accountSnippets.filter(
+        (as) => !(as.account_id === account_id && as.snippet_id === snippet_id),
+      ),
+    }))
+  },
+  hasStarred: (account_id: string, snippet_id: string): boolean => {
+    const state = get()
+    return state.accountSnippets.some(
+      (as) =>
+        as.account_id === account_id &&
+        as.snippet_id === snippet_id &&
+        as.has_starred,
+    )
   },
 }))
