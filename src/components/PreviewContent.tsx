@@ -1,27 +1,15 @@
-import { useEffect, useMemo, useState } from "react"
 import { CodeEditor } from "@/components/CodeEditor"
-import { PCBViewer } from "@tscircuit/pcb-viewer"
-import { CadViewer } from "@tscircuit/3d-viewer"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { defaultCodeForBlankPage } from "@/lib/defaultCodeForBlankCode"
-import { decodeUrlHashToText } from "@/lib/decodeUrlHashToText"
-import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash"
-import { Button } from "@/components/ui/button"
-import { useRunTsx } from "@/hooks/use-run-tsx"
-import EditorNav from "./EditorNav"
-import { CircuitJsonTableViewer } from "./TableViewer/CircuitJsonTableViewer"
-import { Snippet } from "fake-snippets-api/lib/db/schema"
-import { useAxios } from "@/hooks/use-axios"
-import { TypeBadge } from "./TypeBadge"
-import { useToast } from "@/hooks/use-toast"
-import { useMutation, useQueryClient } from "react-query"
-import { ClipboardIcon, Share, Eye, EyeOff, PlayIcon } from "lucide-react"
-import { MagicWandIcon } from "@radix-ui/react-icons"
+import { cn } from "@/lib/utils"
+import { CadViewer } from "@tscircuit/3d-viewer"
+import { PCBViewer } from "@tscircuit/pcb-viewer"
+import { Schematic } from "@tscircuit/schematic-viewer"
+import { useEffect, useState } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { ErrorTabContent } from "./ErrorTabContent"
-import { cn } from "@/lib/utils"
-import { useCallback } from "react"
+import PreviewEmptyState from "./PreviewEmptyState"
 import { RunButton } from "./RunButton"
+import { CircuitJsonTableViewer } from "./TableViewer/CircuitJsonTableViewer"
 
 export interface PreviewContentProps {
   code: string
@@ -39,18 +27,6 @@ export interface PreviewContentProps {
   onCodeChange?: (code: string) => void
   onDtsChange?: (dts: string) => void
 }
-
-const PreviewEmptyState = ({
-  triggerRunTsx,
-}: { triggerRunTsx: () => void }) => (
-  <div className="flex items-center gap-3 bg-gray-100 text-center justify-center py-10">
-    No circuit json loaded
-    <Button className="bg-blue-600 hover:bg-blue-500" onClick={triggerRunTsx}>
-      Run Code
-      <PlayIcon className="w-3 h-3 ml-2" />
-    </Button>
-  </div>
-)
 
 export const PreviewContent = ({
   code,
@@ -118,6 +94,19 @@ export const PreviewContent = ({
               )}
               PCB
             </TabsTrigger>
+            <TabsTrigger value="schematic">
+              {circuitJson && (
+                <span
+                  className={cn(
+                    "inline-flex items-center justify-center w-2 h-2 mr-1 text-xs font-bold text-white rounded-full",
+                    versionOfCodeLastRun === code
+                      ? "bg-blue-500"
+                      : "bg-gray-500",
+                  )}
+                />
+              )}
+              Schematic
+            </TabsTrigger>
             <TabsTrigger value="cad">
               {circuitJson && (
                 <span
@@ -160,6 +149,17 @@ export const PreviewContent = ({
             <ErrorBoundary fallback={<div>Error loading PCB viewer</div>}>
               {circuitJson ? (
                 <PCBViewer key={tsxRunTriggerCount} soup={circuitJson} />
+              ) : (
+                <PreviewEmptyState triggerRunTsx={triggerRunTsx} />
+              )}
+            </ErrorBoundary>
+          </div>
+        </TabsContent>
+        <TabsContent value="schematic">
+          <div className="mt-4 h-[500px]">
+            <ErrorBoundary fallback={<div>Error loading PCB viewer</div>}>
+              {circuitJson ? (
+                <Schematic key={tsxRunTriggerCount} soup={circuitJson} />
               ) : (
                 <PreviewEmptyState triggerRunTsx={triggerRunTsx} />
               )}
