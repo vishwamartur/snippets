@@ -1,16 +1,17 @@
-import React from "react"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { Download, ChevronDown } from "lucide-react"
-import { downloadCircuitJson } from "@/lib/download-fns/download-circuit-json-fn"
 import { toast, useNotImplementedToast } from "@/hooks/use-toast"
+import { downloadCircuitJson } from "@/lib/download-fns/download-circuit-json-fn"
 import { downloadFabricationFiles } from "@/lib/download-fns/download-fabrication-files"
+import { downloadSchematicSvg } from "@/lib/download-fns/download-schematic-svg"
 import { AnyCircuitElement } from "circuit-json"
+import { ChevronDown, Download } from "lucide-react"
+import React from "react"
 
 interface DownloadButtonAndMenuProps {
   className?: string
@@ -109,6 +110,21 @@ export function DownloadButtonAndMenu({
             <span className="flex-grow mr-6">Download KiCad Project</span>
             <span className="text-[0.6rem] bg-orange-500 opacity-80 text-white font-mono rounded-md px-1 text-center py-0.5 mr-1">
               kicad_*
+            </span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="text-xs"
+            onSelect={() => {
+              downloadSchematicSvg(
+                circuitJson,
+                snippetUnscopedName || "circuit",
+              )
+            }}
+          >
+            <Download className="mr-1 h-3 w-3" />
+            <span className="flex-grow mr-6">Download Schematic SVG</span>
+            <span className="text-[0.6rem] opacity-80 bg-blue-500 text-white font-mono rounded-md px-1 text-center py-0.5 mr-1">
+              svg
             </span>
           </DropdownMenuItem>
         </DropdownMenuContent>
