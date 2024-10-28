@@ -7,9 +7,9 @@ import { Schematic } from "@tscircuit/schematic-viewer"
 import { useEffect, useState } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { ErrorTabContent } from "./ErrorTabContent"
+import PreviewEmptyState from "./PreviewEmptyState"
 import { RunButton } from "./RunButton"
 import { CircuitJsonTableViewer } from "./TableViewer/CircuitJsonTableViewer"
-import PreviewEmptyState from "./PreviewEmptyState"
 
 export interface PreviewContentProps {
   code: string
@@ -27,8 +27,6 @@ export interface PreviewContentProps {
   onCodeChange?: (code: string) => void
   onDtsChange?: (dts: string) => void
 }
-
-
 
 export const PreviewContent = ({
   code,
