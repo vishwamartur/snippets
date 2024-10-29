@@ -34,12 +34,12 @@ export const CodeEditor = ({
   onCodeChange,
   onDtsChange,
   readOnly = false,
-  code: initialCode = "",
+  initialCode = "",
   isStreaming = false,
 }: {
   onCodeChange: (code: string, filename?: string) => void
   onDtsChange?: (dts: string) => void
-  code: string
+  initialCode: string
   readOnly?: boolean
   isStreaming?: boolean
 }) => {
@@ -276,7 +276,7 @@ export const CodeEditor = ({
     return () => {
       view.destroy()
     }
-  }, [currentFile, !isStreaming])
+  }, [code !== "", !isStreaming])
 
   useEffect(() => {
     if (viewRef.current) {
@@ -288,7 +288,7 @@ export const CodeEditor = ({
         })
       }
     }
-  }, [files[currentFile]])
+  }, [code])
 
   const codeImports = getImportsFromCode(code)
 
