@@ -1,6 +1,11 @@
 import type { ManualTraceHint } from "@tscircuit/layout"
 import { getManualTraceHintFromEvent } from "@tscircuit/layout"
 import type { EditEvent } from "@tscircuit/manual-edit-events"
+import {
+  type AnyCircuitElement,
+  type PcbComponent,
+  type SourceComponentBase,
+} from "circuit-json"
 
 export interface PCBPlacement {
   selector: string
@@ -23,7 +28,7 @@ export const createInitialManualEditState = (): ManualEditState => ({
 
 export const handlePcbEditEvents = (
   editEvents: EditEvent[],
-  soup: any,
+  circuitJson: AnyCircuitElement[],
   currentState: Partial<ManualEditState> | null | undefined,
 ): ManualEditState => {
   try {
@@ -65,33 +70,28 @@ export const handlePcbEditEvents = (
         editEvent.pcb_edit_event_type === "edit_component_location" &&
         editEvent.pcb_component_id
       ) {
-        // Find the component in the soup
-        const pcbComponent = soup.find(
-          (item: any) =>
-            item.id === editEvent.pcb_component_id &&
-            item.type === "pcb_component",
-        )
+        // Find the component in the circuitJson
+        const pcbComponent = circuitJson.find(
+          (item: AnyCircuitElement) =>
+            item.type === "pcb_component" &&
+            item.pcb_component_id === editEvent.pcb_component_id,
+        ) as PcbComponent
 
-        if (!pcbComponent?.schematic_component_id) continue
+        if (!pcbComponent?.pcb_component_id) continue
 
-        // Find the corresponding schematic component
-        const schematicComponent = soup.find(
-          (item: any) =>
-            item.type === "component" &&
-            item.id === pcbComponent.schematic_component_id,
-        )
-
-        if (!schematicComponent?.name) continue
-
-        const selector = schematicComponent.name
+        const nameofComponent = circuitJson.find(
+          (item: AnyCircuitElement) =>
+            item.type === "source_component" &&
+            item.source_component_id === pcbComponent.source_component_id
+        ) as SourceComponentBase
 
         // Update or add placement
         const existingPlacementIndex = newState.pcb_placements.findIndex(
-          (p) => p.selector === selector,
+          (p) => p.selector === nameofComponent.name,
         )
 
         const newPlacement: PCBPlacement = {
-          selector,
+          selector: nameofComponent.name,
           center: editEvent.new_center,
           relative_to: "group_center",
           _edit_event_id: editEvent.edit_event_id,
@@ -105,7 +105,7 @@ export const handlePcbEditEvents = (
           newState.pcb_placements.push(newPlacement)
         }
       } else if (editEvent.pcb_edit_event_type === "edit_trace_hint") {
-        const newTraceHint = getManualTraceHintFromEvent(soup, editEvent)
+        const newTraceHint = getManualTraceHintFromEvent(circuitJson, editEvent)
         if (newTraceHint) {
           newState.manual_trace_hints = [
             ...newState.manual_trace_hints.filter(
