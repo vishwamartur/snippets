@@ -156,6 +156,10 @@ export function CodeAndPreview({ snippet }: Props) {
             tsxRunTriggerCount={tsxRunTriggerCount}
             errorMessage={message}
             circuitJson={circuitJson}
+            manualEditsText={manualEditsText}
+            onManualEditsTextChange={(newManualEditsText) => {
+              setManualEditsText(newManualEditsText)
+            }}
           />
         )}
       </div>
