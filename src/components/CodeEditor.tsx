@@ -319,7 +319,7 @@ export const CodeEditor = ({
       }
     }
   }, [files[currentFile], currentFile])
-
+        
   const codeImports = getImportsFromCode(code)
 
   useEffect(() => {
