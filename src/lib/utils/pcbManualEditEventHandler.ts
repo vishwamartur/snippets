@@ -1,10 +1,10 @@
 import type { ManualTraceHint } from "@tscircuit/layout"
 import { getManualTraceHintFromEvent } from "@tscircuit/layout"
 import type { EditEvent } from "@tscircuit/manual-edit-events"
-import {
-  type AnyCircuitElement,
-  type PcbComponent,
-  type SourceComponentBase,
+import type {
+  AnyCircuitElement,
+  PcbComponent,
+  SourceComponentBase,
 } from "circuit-json"
 
 export interface PCBPlacement {
@@ -26,7 +26,7 @@ export const createInitialManualEditState = (): ManualEditState => ({
   manual_trace_hints: [],
 })
 
-export const handlePcbEditEvents = (
+export const applyPcbEditEvents = (
   editEvents: EditEvent[],
   circuitJson: AnyCircuitElement[],
   currentState: Partial<ManualEditState> | null | undefined,
@@ -82,7 +82,7 @@ export const handlePcbEditEvents = (
         const nameofComponent = circuitJson.find(
           (item: AnyCircuitElement) =>
             item.type === "source_component" &&
-            item.source_component_id === pcbComponent.source_component_id
+            item.source_component_id === pcbComponent.source_component_id,
         ) as SourceComponentBase
 
         // Update or add placement

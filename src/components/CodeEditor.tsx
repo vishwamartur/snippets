@@ -306,7 +306,7 @@ export const CodeEditor = ({
     return () => {
       view.destroy()
     }
-  }, [!isStreaming, currentFile])
+  }, [!isStreaming, currentFile, code !== ""])
 
   useEffect(() => {
     if (viewRef.current) {

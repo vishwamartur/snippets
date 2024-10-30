@@ -35,7 +35,7 @@ export function CodeAndPreview({ snippet }: Props) {
       templateFromUrl.code
     )
   }, [])
-  const [manualEditsJson, setmanualEditsJson] = useState("")
+  const [manualEditsJson, setManualEditsJson] = useState("")
   const [code, setCode] = useState(defaultCode ?? "")
   const [dts, setDts] = useState("")
   const [showPreview, setShowPreview] = useState(true)
@@ -143,7 +143,7 @@ export function CodeAndPreview({ snippet }: Props) {
               if (filename === "index.tsx") {
                 setCode(newCode)
               } else if (filename === "manual-edits.json") {
-                setmanualEditsJson(newCode)
+                setManualEditsJson(newCode)
               }
             }}
             onDtsChange={(newDts) => setDts(newDts)}
@@ -158,8 +158,8 @@ export function CodeAndPreview({ snippet }: Props) {
             errorMessage={message}
             circuitJson={circuitJson}
             manualEditsJson={manualEditsJson}
-            onmanualEditsJsonChange={(newmanualEditsJson) => {
-              setmanualEditsJson(newmanualEditsJson)
+            onManualEditsJsonChange={(newManualEditsJson) => {
+              setManualEditsJson(newManualEditsJson)
             }}
           />
         )}
