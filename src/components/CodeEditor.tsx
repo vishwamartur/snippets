@@ -35,6 +35,7 @@ export const CodeEditor = ({
   onDtsChange,
   readOnly = false,
   initialCode = "",
+  manualEditsJson,
   isStreaming = false,
 }: {
   onCodeChange: (code: string, filename?: string) => void
@@ -42,6 +43,7 @@ export const CodeEditor = ({
   initialCode: string
   readOnly?: boolean
   isStreaming?: boolean
+  manualEditsJson: string
 }) => {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
@@ -50,7 +52,15 @@ export const CodeEditor = ({
 
   const [files, setFiles] = useState<Record<string, string>>({
     "index.tsx": initialCode,
-    "manual-edits.json": "",
+    "manual-edits.json": JSON.stringify(
+      {
+        pcb_placements: [],
+        edit_events: [],
+        manual_trace_hints: [],
+      },
+      null,
+      2,
+    ),
   })
   const [currentFile, setCurrentFile] = useState("index.tsx")
 
@@ -64,6 +74,26 @@ export const CodeEditor = ({
       }))
     }
   }, [initialCode])
+
+  useEffect(() => {
+    if (manualEditsJson) {
+      setFiles((prev) => ({
+        ...prev,
+        "manual-edits.json": manualEditsJson,
+      }))
+
+      // If currently viewing manual-edits.json, update editor content
+      if (currentFile === "manual-edits.json" && viewRef.current) {
+        viewRef.current.dispatch({
+          changes: {
+            from: 0,
+            to: viewRef.current.state.doc.length,
+            insert: manualEditsJson,
+          },
+        })
+      }
+    }
+  }, [manualEditsJson])
 
   const handleImportClick = (importName: string) => {
     const [owner, name] = importName.replace("@tsci/", "").split(".")
@@ -276,7 +306,7 @@ export const CodeEditor = ({
     return () => {
       view.destroy()
     }
-  }, [code !== "", !isStreaming, currentFile])
+  }, [!isStreaming, currentFile, code !== ""])
 
   useEffect(() => {
     if (viewRef.current) {
@@ -288,8 +318,7 @@ export const CodeEditor = ({
         })
       }
     }
-  }, [code, currentFile])
-
+  }, [files[currentFile], currentFile])
   const codeImports = getImportsFromCode(code)
 
   useEffect(() => {
@@ -308,9 +337,7 @@ export const CodeEditor = ({
       [filename]: newContent,
     }))
 
-    if (filename === "index.tsx") {
-      onCodeChange(newContent, filename)
-    }
+    onCodeChange(newContent, filename)
 
     if (viewRef.current && currentFile === filename) {
       viewRef.current.dispatch({

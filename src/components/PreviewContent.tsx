@@ -1,6 +1,7 @@
 import { CodeEditor } from "@/components/CodeEditor"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
+import { applyPcbEditEvents } from "@/lib/utils/pcbManualEditEventHandler"
 import { CadViewer } from "@tscircuit/3d-viewer"
 import { PCBViewer } from "@tscircuit/pcb-viewer"
 import { Schematic } from "@tscircuit/schematic-viewer"
@@ -26,6 +27,8 @@ export interface PreviewContentProps {
   isStreaming?: boolean
   onCodeChange?: (code: string) => void
   onDtsChange?: (dts: string) => void
+  manualEditsJson?: string
+  onManualEditsJsonChange?: (newManualEditsJson: string) => void
 }
 
 export const PreviewContent = ({
@@ -43,6 +46,8 @@ export const PreviewContent = ({
   isStreaming,
   onCodeChange,
   onDtsChange,
+  manualEditsJson,
+  onManualEditsJsonChange,
 }: PreviewContentProps) => {
   const [activeTab, setActiveTab] = useState(showCodeTab ? "code" : "pcb")
   const [versionOfCodeLastRun, setVersionOfCodeLastRun] = useState("")
@@ -136,6 +141,7 @@ export const PreviewContent = ({
             <div className="h-full">
               <CodeEditor
                 initialCode={code}
+                manualEditsJson={manualEditsJson ?? ""}
                 isStreaming={isStreaming}
                 onCodeChange={onCodeChange!}
                 onDtsChange={onDtsChange!}
@@ -148,7 +154,19 @@ export const PreviewContent = ({
           <div className="mt-4 h-[500px]">
             <ErrorBoundary fallback={<div>Error loading PCB viewer</div>}>
               {circuitJson ? (
-                <PCBViewer key={tsxRunTriggerCount} soup={circuitJson} />
+                <PCBViewer
+                  key={tsxRunTriggerCount}
+                  soup={circuitJson}
+                  onEditEventsChanged={(changedEditEvents) => {
+                    // Update state with new edit events
+                    const newState = applyPcbEditEvents(
+                      changedEditEvents,
+                      circuitJson,
+                      manualEditsJson as any,
+                    )
+                    onManualEditsJsonChange?.(JSON.stringify(newState, null, 2))
+                  }}
+                />
               ) : (
                 <PreviewEmptyState triggerRunTsx={triggerRunTsx} />
               )}
