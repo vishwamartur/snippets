@@ -1,20 +1,20 @@
-import { useEffect, useMemo, useState } from "react"
 import { CodeEditor } from "@/components/CodeEditor"
-import { decodeUrlHashToText } from "@/lib/decodeUrlHashToText"
-import { useRunTsx } from "@/hooks/use-run-tsx"
-import EditorNav from "./EditorNav"
-import { Snippet } from "fake-snippets-api/lib/db/schema"
 import { useAxios } from "@/hooks/use-axios"
-import { useToast } from "@/hooks/use-toast"
-import { useMutation, useQueryClient } from "react-query"
-import { Loader2 } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { PreviewContent } from "./PreviewContent"
-import { useGlobalStore } from "@/hooks/use-global-store"
-import { useUrlParams } from "@/hooks/use-url-params"
-import { getSnippetTemplate } from "@/lib/get-snippet-template"
-import "@/prettier"
 import { useCreateSnippetMutation } from "@/hooks/use-create-snippet-mutation"
+import { useGlobalStore } from "@/hooks/use-global-store"
+import { useRunTsx } from "@/hooks/use-run-tsx"
+import { useToast } from "@/hooks/use-toast"
+import { useUrlParams } from "@/hooks/use-url-params"
+import { decodeUrlHashToText } from "@/lib/decodeUrlHashToText"
+import { getSnippetTemplate } from "@/lib/get-snippet-template"
+import { cn } from "@/lib/utils"
+import "@/prettier"
+import type { Snippet } from "fake-snippets-api/lib/db/schema"
+import { Loader2 } from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
+import { useMutation, useQueryClient } from "react-query"
+import EditorNav from "./EditorNav"
+import { PreviewContent } from "./PreviewContent"
 
 interface Props {
   snippet?: Snippet | null
@@ -35,7 +35,7 @@ export function CodeAndPreview({ snippet }: Props) {
       templateFromUrl.code
     )
   }, [])
-  const [manualEditsText, setManualEditsText] = useState("")
+  const [manualEditsJson, setmanualEditsJson] = useState("")
   const [code, setCode] = useState(defaultCode ?? "")
   const [dts, setDts] = useState("")
   const [showPreview, setShowPreview] = useState(true)
@@ -138,11 +138,12 @@ export function CodeAndPreview({ snippet }: Props) {
         >
           <CodeEditor
             initialCode={code}
+            manualEditsJson={manualEditsJson}
             onCodeChange={(newCode, filename) => {
               if (filename === "index.tsx") {
                 setCode(newCode)
               } else if (filename === "manual-edits.json") {
-                setManualEditsText(newCode)
+                setmanualEditsJson(newCode)
               }
             }}
             onDtsChange={(newDts) => setDts(newDts)}
@@ -156,9 +157,9 @@ export function CodeAndPreview({ snippet }: Props) {
             tsxRunTriggerCount={tsxRunTriggerCount}
             errorMessage={message}
             circuitJson={circuitJson}
-            manualEditsText={manualEditsText}
-            onManualEditsTextChange={(newManualEditsText) => {
-              setManualEditsText(newManualEditsText)
+            manualEditsJson={manualEditsJson}
+            onmanualEditsJsonChange={(newmanualEditsJson) => {
+              setmanualEditsJson(newmanualEditsJson)
             }}
           />
         )}
