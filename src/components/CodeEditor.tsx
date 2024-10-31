@@ -251,7 +251,7 @@ export const CodeEditor = ({
                 if (pos) {
                   const { from, to, text } = view.state.doc.lineAt(pos)
                   const line = text.slice(from, to)
-                  const match = line.match(/@tsci\/[\w.]+/)
+                  const match = line.match(/@tsci\/[\w.\-]+/)
                   if (match) {
                     const importName = match[0]
                     const start = line.indexOf(importName)
