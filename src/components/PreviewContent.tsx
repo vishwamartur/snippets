@@ -165,13 +165,13 @@ export const PreviewContent = ({
                     soup={circuitJson}
                     onEditEventsChanged={(changedEditEvents) => {
                       // Update state with new edit events
-                      const newState = applyPcbEditEvents(
+                      const newManualEditsFileContent = applyPcbEditEvents(
                         changedEditEvents,
                         circuitJson,
                         manualEditsFileContent as any,
                       )
                       onManualEditsFileContentChange?.(
-                        JSON.stringify(newState, null, 2),
+                        JSON.stringify(newManualEditsFileContent, null, 2),
                       )
                     }}
                   />
