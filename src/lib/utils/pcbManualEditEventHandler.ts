@@ -61,8 +61,7 @@ export const applyPcbEditEvents = (
     // Process new edit events
     for (const editEvent of changedEditEvents) {
       if (
-        editEvent.in_progress &&
-        !editEvent.edit_event_id ||
+        (editEvent.in_progress && !editEvent.edit_event_id) ||
         handledEventIds.has(editEvent.edit_event_id)
       )
         continue
