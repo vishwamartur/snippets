@@ -1,4 +1,6 @@
 import { useSnippetsBaseApiUrl } from "@/hooks/use-snippets-base-api-url"
+import { basicSetup } from "@/lib/codemirror/basic-setup"
+import manualEditsTemplate from "@/lib/templates/manual-edits-template"
 import { autocompletion } from "@codemirror/autocomplete"
 import { indentWithTab } from "@codemirror/commands"
 import { javascript } from "@codemirror/lang-javascript"
@@ -24,8 +26,6 @@ import { EditorView } from "codemirror"
 import { useEffect, useRef, useState } from "react"
 import ts from "typescript"
 import CodeEditorHeader from "./CodeEditorHeader"
-import { basicSetup } from "@/lib/codemirror/basic-setup"
-import manualEditsTemplate from "@/lib/templates/manual-edits-template"
 
 const defaultImports = `
 import React from "@types/react/jsx-runtime"
@@ -37,7 +37,7 @@ export const CodeEditor = ({
   onDtsChange,
   readOnly = false,
   initialCode = "",
-  manualEditsJson,
+  manualEditsFileContent,
   isStreaming = false,
   showImportAndFormatButtons = true,
 }: {
@@ -46,7 +46,7 @@ export const CodeEditor = ({
   initialCode: string
   readOnly?: boolean
   isStreaming?: boolean
-  manualEditsJson: string
+  manualEditsFileContent: string
   showImportAndFormatButtons?: boolean
 }) => {
   const editorRef = useRef<HTMLDivElement>(null)
@@ -72,10 +72,10 @@ export const CodeEditor = ({
   }, [initialCode])
 
   useEffect(() => {
-    if (manualEditsJson) {
+    if (manualEditsFileContent) {
       setFiles((prev) => ({
         ...prev,
-        "manual-edits.json": manualEditsJson,
+        "manual-edits.json": manualEditsFileContent,
       }))
 
       // If currently viewing manual-edits.json, update editor content
@@ -84,12 +84,12 @@ export const CodeEditor = ({
           changes: {
             from: 0,
             to: viewRef.current.state.doc.length,
-            insert: manualEditsJson,
+            insert: manualEditsFileContent,
           },
         })
       }
     }
-  }, [manualEditsJson])
+  }, [manualEditsFileContent])
 
   const handleImportClick = (importName: string) => {
     const [owner, name] = importName.replace("@tsci/", "").split(".")

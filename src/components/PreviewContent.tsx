@@ -28,8 +28,8 @@ export interface PreviewContentProps {
   isStreaming?: boolean
   onCodeChange?: (code: string) => void
   onDtsChange?: (dts: string) => void
-  manualEditsJson?: string
-  onManualEditsJsonChange?: (newManualEditsJson: string) => void
+  manualEditsFileContent?: string
+  onManualEditsFileContentChange?: (newmanualEditsFileContent: string) => void
 }
 
 export const PreviewContent = ({
@@ -48,8 +48,8 @@ export const PreviewContent = ({
   isStreaming,
   onCodeChange,
   onDtsChange,
-  manualEditsJson,
-  onManualEditsJsonChange,
+  manualEditsFileContent,
+  onManualEditsFileContentChange,
 }: PreviewContentProps) => {
   const [activeTab, setActiveTab] = useState(showCodeTab ? "code" : "pcb")
   const [versionOfCodeLastRun, setVersionOfCodeLastRun] = useState("")
@@ -146,7 +146,7 @@ export const PreviewContent = ({
               <div className="h-full">
                 <CodeEditor
                   initialCode={code}
-                  manualEditsJson={manualEditsJson ?? ""}
+                  manualEditsFileContent={manualEditsFileContent ?? ""}
                   isStreaming={isStreaming}
                   onCodeChange={onCodeChange!}
                   onDtsChange={onDtsChange!}
@@ -168,9 +168,9 @@ export const PreviewContent = ({
                       const newState = applyPcbEditEvents(
                         changedEditEvents,
                         circuitJson,
-                        manualEditsJson as any,
+                        manualEditsFileContent as any,
                       )
-                      onManualEditsJsonChange?.(
+                      onManualEditsFileContentChange?.(
                         JSON.stringify(newState, null, 2),
                       )
                     }}
