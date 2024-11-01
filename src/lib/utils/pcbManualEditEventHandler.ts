@@ -27,13 +27,13 @@ export const createInitialManualEditState = (): ManualEditState => ({
 })
 
 export const applyPcbEditEvents = (
-  editEvents: EditEvent[],
+  changedEditEvents: EditEvent[],
   circuitJson: AnyCircuitElement[],
-  currentState: Partial<ManualEditState> | null | undefined,
+  manualEditsFileContent: Partial<ManualEditState> | null | undefined,
 ): ManualEditState => {
   try {
     // Ensure we have a valid state to work with
-    const validState = ensureValidState(currentState)
+    const validState = ensureValidState(manualEditsFileContent)
 
     // Create a new state object with properly initialized arrays
     const newState: ManualEditState = {
@@ -59,8 +59,9 @@ export const applyPcbEditEvents = (
     })
 
     // Process new edit events
-    for (const editEvent of editEvents) {
+    for (const editEvent of changedEditEvents) {
       if (
+        editEvent.in_progress &&
         !editEvent.edit_event_id ||
         handledEventIds.has(editEvent.edit_event_id)
       )

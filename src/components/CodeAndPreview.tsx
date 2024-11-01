@@ -9,13 +9,13 @@ import { decodeUrlHashToText } from "@/lib/decodeUrlHashToText"
 import { getSnippetTemplate } from "@/lib/get-snippet-template"
 import { cn } from "@/lib/utils"
 import "@/prettier"
+import manualEditsTemplate from "@/lib/templates/manual-edits-template"
 import type { Snippet } from "fake-snippets-api/lib/db/schema"
 import { Loader2 } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { useMutation, useQueryClient } from "react-query"
 import EditorNav from "./EditorNav"
 import { PreviewContent } from "./PreviewContent"
-import manualEditsTemplate from "@/lib/templates/manual-edits-template"
 
 interface Props {
   snippet?: Snippet | null
@@ -36,7 +36,7 @@ export function CodeAndPreview({ snippet }: Props) {
       templateFromUrl.code
     )
   }, [])
-  const [manualEditsFileContent, setmanualEditsFileContent] = useState(
+  const [manualEditsFileContent, setManualEditsFileContent] = useState(
     JSON.stringify(manualEditsTemplate, null, 2) ?? "",
   )
   const [code, setCode] = useState(defaultCode ?? "")
@@ -154,7 +154,7 @@ export function CodeAndPreview({ snippet }: Props) {
               if (filename === "index.tsx") {
                 setCode(newCode)
               } else if (filename === "manual-edits.json") {
-                setmanualEditsFileContent(newCode)
+                setManualEditsFileContent(newCode)
               }
             }}
             onDtsChange={(newDts) => setDts(newDts)}
@@ -170,7 +170,7 @@ export function CodeAndPreview({ snippet }: Props) {
             circuitJson={circuitJson}
             manualEditsFileContent={manualEditsFileContent}
             onManualEditsFileContentChange={(newManualEditsFileContent) => {
-              setmanualEditsFileContent(newManualEditsFileContent)
+              setManualEditsFileContent(newManualEditsFileContent)
             }}
           />
         )}
