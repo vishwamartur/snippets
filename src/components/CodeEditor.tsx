@@ -25,6 +25,7 @@ import { useEffect, useRef, useState } from "react"
 import ts from "typescript"
 import CodeEditorHeader from "./CodeEditorHeader"
 import { basicSetup } from "@/lib/codemirror/basic-setup"
+import manualEditsTemplate from "@/lib/templates/manual-edits-template"
 
 const defaultImports = `
 import React from "@types/react/jsx-runtime"
@@ -55,15 +56,7 @@ export const CodeEditor = ({
 
   const [files, setFiles] = useState<Record<string, string>>({
     "index.tsx": initialCode,
-    "manual-edits.json": JSON.stringify(
-      {
-        pcb_placements: [],
-        edit_events: [],
-        manual_trace_hints: [],
-      },
-      null,
-      2,
-    ),
+    "manual-edits.json": JSON.stringify(manualEditsTemplate, null, 2),
   })
   const [currentFile, setCurrentFile] = useState("index.tsx")
 

@@ -3,10 +3,12 @@ import { useAxios } from "@/hooks/use-axios"
 import { useCreateSnippetMutation } from "@/hooks/use-create-snippet-mutation"
 import { useGlobalStore } from "@/hooks/use-global-store"
 import { useRunTsx } from "@/hooks/use-run-tsx"
+import { importManualEditsCheck } from "@/hooks/use-run-tsx/process-code"
 import { useToast } from "@/hooks/use-toast"
 import { useUrlParams } from "@/hooks/use-url-params"
 import { decodeUrlHashToText } from "@/lib/decodeUrlHashToText"
 import { getSnippetTemplate } from "@/lib/get-snippet-template"
+import manualEditsTemplate from "@/lib/templates/manual-edits-template"
 import { cn } from "@/lib/utils"
 import "@/prettier"
 import type { Snippet } from "fake-snippets-api/lib/db/schema"
@@ -35,7 +37,9 @@ export function CodeAndPreview({ snippet }: Props) {
       templateFromUrl.code
     )
   }, [])
-  const [manualEditsJson, setManualEditsJson] = useState("")
+  const [manualEditsJson, setManualEditsJson] = useState(
+    JSON.stringify(manualEditsTemplate, null, 2) ?? "",
+  )
   const [code, setCode] = useState(defaultCode ?? "")
   const [dts, setDts] = useState("")
   const [showPreview, setShowPreview] = useState(true)
@@ -57,7 +61,7 @@ export function CodeAndPreview({ snippet }: Props) {
     triggerRunTsx,
     tsxRunTriggerCount,
   } = useRunTsx({
-    code,
+    code: importManualEditsCheck(code, manualEditsJson),
     type: snippetType,
   })
   const qc = useQueryClient()
