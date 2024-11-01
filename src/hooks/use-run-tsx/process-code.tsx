@@ -13,11 +13,17 @@ export const importManualEditsCheck = (
     const codeWithoutImport = code.replace(manualEditsImportRegex, "")
 
     // Find the board component usage
-    const boardRegex = new RegExp(`(<board[^>]*manualEdits={${importVariableName}}[^>]*>)`, 'g')
+    const boardRegex = new RegExp(
+      `(<board[^>]*manualEdits={${importVariableName}}[^>]*>)`,
+      "g",
+    )
 
     // Replace the manualEdits prop with manualEditsJson
     const modifiedCode = codeWithoutImport.replace(boardRegex, (match) => {
-      return match.replace(`manualEdits={${importVariableName}}`, `manualEdits={${manualEditsJson}}`)
+      return match.replace(
+        `manualEdits={${importVariableName}}`,
+        `manualEdits={${manualEditsJson}}`,
+      )
     })
     return modifiedCode
   }
