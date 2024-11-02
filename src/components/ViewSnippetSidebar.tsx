@@ -32,6 +32,7 @@ export default function ViewSnippetSidebar({
     <div
       className={cn(
         "w-64 h-full bg-gray-100 text-gray-700 flex flex-col flex-shrink-0",
+        "hidden sm:block h-screen sticky top-0",
         className,
       )}
     >

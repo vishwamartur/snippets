@@ -42,8 +42,8 @@ export const ViewSnippetPage = () => {
         {snippet && (
           <>
             <ViewSnippetHeader />
-            <div className="flex h-[calc(100vh-120px)]">
-              <div className="flex-grow overflow-hidden">
+            <div className="flex flex-row min-h-full">
+              <div className="flex-grow overflow-auto">
                 <PreviewContent
                   className="h-full"
                   code={snippet?.code ?? ""}
