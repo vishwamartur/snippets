@@ -80,7 +80,7 @@ export const PreviewContent = ({
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
-          className="flex-grow flex flex-col"
+          className="flex-grow flex flex-col sticky top-0 h-screen"
         >
           <div className={cn("flex items-center gap-2", headerClassName)}>
             {leftHeaderContent}
