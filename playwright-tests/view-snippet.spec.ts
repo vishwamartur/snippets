@@ -12,7 +12,9 @@ for (const [size, viewport] of Object.entries(viewports)) {
     await page.waitForTimeout(5000)
     await expect(page).toHaveScreenshot(`view-snippet-after-${size}.png`)
 
-    await page.click('span:has-text("Files")')
+    if (size !== "xs") {
+      await page.click('span:has-text("Files")')
+    }
   })
 }
 
