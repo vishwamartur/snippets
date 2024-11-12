@@ -1,25 +1,25 @@
-import { getTestServer } from "fake-snippets-api/tests/fixtures/get-test-server"
+import { getTestServer } from "bun-tests/fake-snippets-api/fixtures/get-test-server"
 import { test, expect } from "bun:test"
 
-test("add star to snippet", async () => {
+test("delete snippet", async () => {
   const { axios, db } = await getTestServer()
 
   // Add a test snippet
   const snippet = {
     unscoped_name: "TestSnippet",
-    owner_name: "otheruser",
+    owner_name: "testuser",
     code: "Test Content",
     created_at: "2023-01-01T00:00:00Z",
     updated_at: "2023-01-01T00:00:00Z",
-    name: "otheruser/TestSnippet",
+    name: "testuser/TestSnippet",
     snippet_type: "package",
     description: "Test Description",
   }
-  const addedSnippet = db.addSnippet(snippet as any)!
+  const addedSnippet: any = db.addSnippet(snippet as any)
 
-  // Star the snippet
+  // Delete the snippet
   const response = await axios.post(
-    "/api/snippets/add_star",
+    "/api/snippets/delete",
     {
       snippet_id: addedSnippet.snippet_id,
     },
@@ -32,20 +32,24 @@ test("add star to snippet", async () => {
 
   expect(response.status).toBe(200)
   expect(response.data.ok).toBe(true)
-  expect(response.data.account_snippet).toBeDefined()
-  expect(response.data.account_snippet.snippet_id).toBe(addedSnippet.snippet_id)
-  expect(response.data.account_snippet.has_starred).toBe(true)
 
-  // Verify star was added in database
-  expect(db.hasStarred("account-1234", addedSnippet.snippet_id)).toBe(true)
+  // Verify the snippet was deleted from the database
+  const deletedSnippet = db.getSnippetById(addedSnippet.snippet_id)
+  expect(deletedSnippet).toBeUndefined()
+
+  // List all the snippets and verify the deleted snippet is not in the list
+  const listResponse = await axios.get("/api/snippets/list")
+
+  expect(listResponse.status).toBe(200)
+  expect(listResponse.data.snippets).toHaveLength(0)
 })
 
-test("add star to non-existent snippet", async () => {
+test("delete non-existent snippet", async () => {
   const { axios } = await getTestServer()
 
   try {
     await axios.post(
-      "/api/snippets/add_star",
+      "/api/snippets/delete",
       {
         snippet_id: "non-existent-id",
       },
@@ -55,17 +59,18 @@ test("add star to non-existent snippet", async () => {
         },
       },
     )
-    expect(true).toBe(false) // Should not reach here
+    // If the request doesn't throw an error, fail the test
+    expect(true).toBe(false)
   } catch (error: any) {
     expect(error.status).toBe(404)
     expect(error.data.error.message).toBe("Snippet not found")
   }
 })
 
-test("add star to already starred snippet", async () => {
+test("delete snippet without permission", async () => {
   const { axios, db } = await getTestServer()
 
-  // Add a test snippet
+  // Add a test snippet with a different owner
   const snippet = {
     unscoped_name: "TestSnippet",
     owner_name: "otheruser",
@@ -76,25 +81,11 @@ test("add star to already starred snippet", async () => {
     snippet_type: "package",
     description: "Test Description",
   }
-  const addedSnippet = db.addSnippet(snippet as any)
+  const addedSnippet: any = db.addSnippet(snippet as any)
 
-  // Star the snippet first time
-  await axios.post(
-    "/api/snippets/add_star",
-    {
-      snippet_id: addedSnippet.snippet_id,
-    },
-    {
-      headers: {
-        Authorization: "Bearer 1234",
-      },
-    },
-  )
-
-  // Try to star again
   try {
     await axios.post(
-      "/api/snippets/add_star",
+      "/api/snippets/delete",
       {
         snippet_id: addedSnippet.snippet_id,
       },
@@ -104,11 +95,12 @@ test("add star to already starred snippet", async () => {
         },
       },
     )
-    expect(true).toBe(false) // Should not reach here
+    // If the request doesn't throw an error, fail the test
+    expect(true).toBe(false)
   } catch (error: any) {
-    expect(error.status).toBe(400)
+    expect(error.status).toBe(403)
     expect(error.data.error.message).toBe(
-      "You have already starred this snippet",
+      "You don't have permission to delete this snippet",
     )
   }
 })

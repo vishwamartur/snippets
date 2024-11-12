@@ -4,6 +4,7 @@ import * as React from "react"
 import { useCompiledTsx } from "../use-compiled-tsx"
 import { createJSCADRenderer } from "jscad-fiber"
 import { jscadPlanner } from "jscad-planner"
+import { jlcPartsEngine } from "@/lib/jlc-parts-engine"
 
 export const constructCircuit = (
   UserElm: any,
@@ -13,6 +14,12 @@ export const constructCircuit = (
 
   if (type === "board") {
     circuit.add(<UserElm />)
+    const board = circuit.selectOne("board")
+    if (board) {
+      board.setProps({
+        partsEngine: jlcPartsEngine,
+      })
+    }
   } else if (type === "package") {
     circuit.add(
       <board width="50mm" height="50mm">
