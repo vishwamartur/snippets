@@ -4,7 +4,11 @@
   "packageRules": [
     {
       "packagePatterns": ["*"],
-      "excludePackagePatterns": ["@tscircuit/*", "circuit-to-svg", "jscad-electronics"],
+      "excludePackagePatterns": [
+        "@tscircuit/*",
+        "circuit-to-svg",
+        "jscad-electronics"
+      ],
       "enabled": false
     },
     {
