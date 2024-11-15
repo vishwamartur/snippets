@@ -26,3 +26,23 @@ test("files dialog", async ({ page }) => {
   await page.click('span:has-text("Files")')
   await expect(page).toHaveScreenshot(`view-snippet-files.png`)
 })
+
+test("SVG image generation and retrieval", async ({ page }) => {
+  await page.goto("http://127.0.0.1:5177/testuser/my-test-board")
+
+  await page.waitForSelector(".run-button")
+  await page.click(".run-button")
+  await page.waitForTimeout(5000)
+
+  const response = await page.request.get("/snippets/get_image", {
+    params: {
+      snippet_id: "test_snippet_id",
+      image_of: "pcb",
+      format: "svg",
+    },
+  })
+
+  expect(response.status()).toBe(200)
+  const responseBody = await response.body()
+  expect(responseBody.toString()).toContain("<svg")
+})
