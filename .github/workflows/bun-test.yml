@@ -26,3 +26,6 @@ jobs:
 
       - name: Run tests
         run: bun test
+
+      - name: Run new route tests
+        run: bun test bun-tests/fake-snippets-api/routes/snippets/get_image.test.ts

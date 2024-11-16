@@ -27,6 +27,9 @@ jobs:
       - name: Run tests
         run: bun run playwright
 
+      - name: Run new route tests
+        run: bun run playwright-tests/view-snippet.spec.ts
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
