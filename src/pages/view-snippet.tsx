@@ -1,20 +1,20 @@
-import { DownloadButtonAndMenu } from "@/components/DownloadButtonAndMenu";
-import Header from "@/components/Header";
-import { Button } from "@/components/ui/button";
-import ViewSnippetHeader from "@/components/ViewSnippetHeader";
-import ViewSnippetSidebar from "@/components/ViewSnippetSidebar";
-import { useCurrentSnippet } from "@/hooks/use-current-snippet";
-import { useRunTsx } from "@/hooks/use-run-tsx";
-import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash";
-import { Share } from "lucide-react";
-import { useParams } from "wouter";
-import { PreviewContent } from "@/components/PreviewContent";
-import Footer from "@/components/Footer";
-import { Helmet } from "react-helmet";
+import { DownloadButtonAndMenu } from "@/components/DownloadButtonAndMenu"
+import Header from "@/components/Header"
+import { Button } from "@/components/ui/button"
+import ViewSnippetHeader from "@/components/ViewSnippetHeader"
+import ViewSnippetSidebar from "@/components/ViewSnippetSidebar"
+import { useCurrentSnippet } from "@/hooks/use-current-snippet"
+import { useRunTsx } from "@/hooks/use-run-tsx"
+import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash"
+import { Share } from "lucide-react"
+import { useParams } from "wouter"
+import { PreviewContent } from "@/components/PreviewContent"
+import Footer from "@/components/Footer"
+import { Helmet } from "react-helmet"
 
 export const ViewSnippetPage = () => {
-  const { author, snippetName } = useParams();
-  const { snippet, error: snippetError, isLoading } = useCurrentSnippet();
+  const { author, snippetName } = useParams()
+  const { snippet, error: snippetError, isLoading } = useCurrentSnippet()
 
   const {
     circuitJson,
@@ -25,7 +25,7 @@ export const ViewSnippetPage = () => {
   } = useRunTsx({
     code: snippet?.code ?? "",
     type: snippet?.snippet_type,
-  });
+  })
 
   return (
     <>
@@ -68,10 +68,10 @@ export const ViewSnippetPage = () => {
                         size="sm"
                         className="h-6 px-2 text-xs"
                         onClick={() => {
-                          if (!snippet) return;
-                          const url = encodeTextToUrlHash(snippet.code);
-                          navigator.clipboard.writeText(url);
-                          alert("URL copied to clipboard!");
+                          if (!snippet) return
+                          const url = encodeTextToUrlHash(snippet.code)
+                          navigator.clipboard.writeText(url)
+                          alert("URL copied to clipboard!")
                         }}
                       >
                         <Share className="mr-1 h-3 w-3" />
@@ -96,5 +96,5 @@ export const ViewSnippetPage = () => {
         <Footer />
       </div>
     </>
-  );
-};
+  )
+}

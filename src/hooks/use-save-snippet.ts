@@ -1,13 +1,13 @@
-import { Snippet } from "fake-snippets-api/lib/db/schema";
-import { useMutation } from "react-query";
-import { useAxios } from "./use-axios";
-import { safeCompileTsx } from "./use-compiled-tsx";
-import { useCurrentSnippetId } from "./use-current-snippet-id";
+import { Snippet } from "fake-snippets-api/lib/db/schema"
+import { useMutation } from "react-query"
+import { useAxios } from "./use-axios"
+import { safeCompileTsx } from "./use-compiled-tsx"
+import { useCurrentSnippetId } from "./use-current-snippet-id"
 
 export const useSaveSnippet = () => {
-  const axios = useAxios();
+  const axios = useAxios()
 
-  const { snippetId } = useCurrentSnippetId();
+  const { snippetId } = useCurrentSnippetId()
 
   const saveSnippetMutation = useMutation<
     Snippet,
@@ -15,7 +15,7 @@ export const useSaveSnippet = () => {
     { code: string; snippet_type: string; dts?: string; circuit_json?: any[] }
   >({
     mutationFn: async ({ code, snippet_type, dts, circuit_json }) => {
-      const compileResult = safeCompileTsx(code);
+      const compileResult = safeCompileTsx(code)
 
       if (snippetId) {
         const response = await axios.post("/snippets/update", {
@@ -27,8 +27,8 @@ export const useSaveSnippet = () => {
             : undefined,
           circuit_json: circuit_json,
           dts,
-        });
-        return response.data.snippet;
+        })
+        return response.data.snippet
       } else {
         const response = await axios.post("/snippets/create", {
           code,
@@ -38,11 +38,11 @@ export const useSaveSnippet = () => {
             ? compileResult.compiledTsx
             : undefined,
           dts,
-        });
-        return response.data.snippet;
+        })
+        return response.data.snippet
       }
     },
-  });
+  })
 
   const saveSnippet = async (
     code: string,
@@ -55,12 +55,12 @@ export const useSaveSnippet = () => {
       snippet_type,
       dts,
       circuit_json,
-    });
-  };
+    })
+  }
 
   return {
     saveSnippet,
     isLoading: saveSnippetMutation.isLoading,
     error: saveSnippetMutation.error,
-  };
-};
+  }
+}

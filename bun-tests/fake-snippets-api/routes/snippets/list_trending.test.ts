@@ -1,8 +1,8 @@
-import { getTestServer } from "bun-tests/fake-snippets-api/fixtures/get-test-server";
-import { test, expect } from "bun:test";
+import { getTestServer } from "bun-tests/fake-snippets-api/fixtures/get-test-server"
+import { test, expect } from "bun:test"
 
 test("list trending snippets", async () => {
-  const { axios, db } = await getTestServer();
+  const { axios, db } = await getTestServer()
 
   // Add some test snippets
   const snippets = [
@@ -33,37 +33,37 @@ test("list trending snippets", async () => {
       name: "User3/Snippet3",
       snippet_type: "model",
     },
-  ];
+  ]
 
   for (const snippet of snippets) {
-    db.addSnippet(snippet as any);
+    db.addSnippet(snippet as any)
   }
 
-  const now = new Date();
-  const recentDate = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000); // 3 days ago
-  const oldDate = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000); // 10 days ago
+  const now = new Date()
+  const recentDate = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000) // 3 days ago
+  const oldDate = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000) // 10 days ago
 
   // Add stars with different dates
-  const snippet1 = db.snippets[0];
-  const snippet2 = db.snippets[1];
-  const snippet3 = db.snippets[2];
+  const snippet1 = db.snippets[0]
+  const snippet2 = db.snippets[1]
+  const snippet3 = db.snippets[2]
 
   // Snippet2 should be most trending (3 recent stars)
-  db.addStar("user1", snippet2.snippet_id);
-  db.addStar("user2", snippet2.snippet_id);
-  db.addStar("user3", snippet2.snippet_id);
+  db.addStar("user1", snippet2.snippet_id)
+  db.addStar("user2", snippet2.snippet_id)
+  db.addStar("user3", snippet2.snippet_id)
 
   // Snippet3 second (2 recent stars)
-  db.addStar("user1", snippet3.snippet_id);
-  db.addStar("user2", snippet3.snippet_id);
+  db.addStar("user1", snippet3.snippet_id)
+  db.addStar("user2", snippet3.snippet_id)
 
   // Snippet1 least trending (1 recent star, 1 old star)
-  db.addStar("user1", snippet1.snippet_id);
+  db.addStar("user1", snippet1.snippet_id)
 
-  const { data } = await axios.get("/api/snippets/list_trending");
+  const { data } = await axios.get("/api/snippets/list_trending")
 
-  expect(data.snippets).toHaveLength(3);
-  expect(data.snippets[0].unscoped_name).toBe("Snippet2"); // Most stars
-  expect(data.snippets[1].unscoped_name).toBe("Snippet3"); // Second most
-  expect(data.snippets[2].unscoped_name).toBe("Snippet1"); // Least stars
-});
+  expect(data.snippets).toHaveLength(3)
+  expect(data.snippets[0].unscoped_name).toBe("Snippet2") // Most stars
+  expect(data.snippets[1].unscoped_name).toBe("Snippet3") // Second most
+  expect(data.snippets[2].unscoped_name).toBe("Snippet1") // Least stars
+})

@@ -1,6 +1,6 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ShippingInformationForm from "@/components/ShippingInformationForm";
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import ShippingInformationForm from "@/components/ShippingInformationForm"
 
 export const SettingsPage = () => {
   return (
@@ -21,5 +21,5 @@ export const SettingsPage = () => {
       </div>
       <Footer />
     </div>
-  );
-};
+  )
+}

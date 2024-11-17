@@ -1,21 +1,21 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useImportSnippetDialog } from "./dialogs/import-snippet-dialog";
-import { useToast } from "@/hooks/use-toast";
+} from "@/components/ui/select"
+import { useImportSnippetDialog } from "./dialogs/import-snippet-dialog"
+import { useToast } from "@/hooks/use-toast"
 
-type FileName = "index.tsx" | "manual-edits.json";
+type FileName = "index.tsx" | "manual-edits.json"
 
 interface CodeEditorHeaderProps {
-  currentFile: FileName;
-  files: Record<FileName, string>;
-  handleFileChange: (filename: FileName) => void;
-  updateFileContent: (filename: FileName, content: string) => void;
+  currentFile: FileName
+  files: Record<FileName, string>
+  handleFileChange: (filename: FileName) => void
+  updateFileContent: (filename: FileName, content: string) => void
 }
 
 export const CodeEditorHeader = ({
@@ -25,35 +25,35 @@ export const CodeEditorHeader = ({
   updateFileContent,
 }: CodeEditorHeaderProps) => {
   const { Dialog: ImportSnippetDialog, openDialog: openImportDialog } =
-    useImportSnippetDialog();
-  const { toast } = useToast();
+    useImportSnippetDialog()
+  const { toast } = useToast()
 
   const formatCurrentFile = () => {
-    if (!window.prettier || !window.prettierPlugins) return;
+    if (!window.prettier || !window.prettierPlugins) return
 
     try {
-      const currentContent = files[currentFile];
+      const currentContent = files[currentFile]
 
       if (currentFile.endsWith(".json")) {
         try {
-          const jsonObj = JSON.parse(currentContent);
-          const formattedJson = JSON.stringify(jsonObj, null, 2);
-          updateFileContent(currentFile, formattedJson);
+          const jsonObj = JSON.parse(currentContent)
+          const formattedJson = JSON.stringify(jsonObj, null, 2)
+          updateFileContent(currentFile, formattedJson)
         } catch (jsonError) {
-          throw new Error("Invalid JSON content");
+          throw new Error("Invalid JSON content")
         }
-        return;
+        return
       }
 
       const formattedCode = window.prettier.format(currentContent, {
         semi: false,
         parser: "typescript",
         plugins: window.prettierPlugins,
-      });
+      })
 
-      updateFileContent(currentFile, formattedCode);
+      updateFileContent(currentFile, formattedCode)
     } catch (error) {
-      console.error("Formatting error:", error);
+      console.error("Formatting error:", error)
       toast({
         title: "Formatting error",
         description:
@@ -61,9 +61,9 @@ export const CodeEditorHeader = ({
             ? error.message
             : "Failed to format the code. Please check for syntax errors.",
         variant: "destructive",
-      });
+      })
     }
-  };
+  }
   return (
     <div className="flex items-center gap-2 px-2 border-b border-gray-200">
       <div>
@@ -90,12 +90,12 @@ export const CodeEditorHeader = ({
       </div>
       <ImportSnippetDialog
         onSnippetSelected={(snippet) => {
-          const newContent = `import {} from "@tsci/${snippet.owner_name}.${snippet.unscoped_name}"\n${files[currentFile]}`;
-          updateFileContent(currentFile, newContent);
+          const newContent = `import {} from "@tsci/${snippet.owner_name}.${snippet.unscoped_name}"\n${files[currentFile]}`
+          updateFileContent(currentFile, newContent)
         }}
       />
     </div>
-  );
-};
+  )
+}
 
-export default CodeEditorHeader;
+export default CodeEditorHeader

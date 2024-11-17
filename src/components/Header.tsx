@@ -1,18 +1,18 @@
-import { HeaderLogin } from "@/components/HeaderLogin";
-import { Button } from "@/components/ui/button";
-import { useGlobalStore } from "@/hooks/use-global-store";
-import { cn } from "@/lib/utils";
+import { HeaderLogin } from "@/components/HeaderLogin"
+import { Button } from "@/components/ui/button"
+import { useGlobalStore } from "@/hooks/use-global-store"
+import { cn } from "@/lib/utils"
 import {
   GitHubLogoIcon,
   OpenInNewWindowIcon,
   ChatBubbleIcon,
-} from "@radix-ui/react-icons";
-import { Menu, MessageCircleMoreIcon, X } from "lucide-react";
-import React, { useState } from "react";
-import { Link, useLocation } from "wouter";
-import CmdKMenu from "./CmdKMenu";
-import HeaderDropdown from "./HeaderDropdown";
-import SearchComponent from "./SearchComponent";
+} from "@radix-ui/react-icons"
+import { Menu, MessageCircleMoreIcon, X } from "lucide-react"
+import React, { useState } from "react"
+import { Link, useLocation } from "wouter"
+import CmdKMenu from "./CmdKMenu"
+import HeaderDropdown from "./HeaderDropdown"
+import SearchComponent from "./SearchComponent"
 
 const HeaderButton = ({
   href,
@@ -20,12 +20,12 @@ const HeaderButton = ({
   className,
   alsoHighlightForUrl,
 }: {
-  href: string;
-  children: React.ReactNode;
-  className?: string;
-  alsoHighlightForUrl?: string;
+  href: string
+  children: React.ReactNode
+  className?: string
+  alsoHighlightForUrl?: string
 }) => {
-  const [location] = useLocation();
+  const [location] = useLocation()
 
   if (location === href || location === alsoHighlightForUrl) {
     return (
@@ -35,7 +35,7 @@ const HeaderButton = ({
       >
         {children}
       </Button>
-    );
+    )
   }
 
   return (
@@ -44,12 +44,12 @@ const HeaderButton = ({
         {children}
       </Button>
     </Link>
-  );
-};
+  )
+}
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isLoggedIn = useGlobalStore((s) => Boolean(s.session));
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const isLoggedIn = useGlobalStore((s) => Boolean(s.session))
 
   return (
     <header className="px-4 py-3">
@@ -168,5 +168,5 @@ export default function Header() {
       )}
       <CmdKMenu />
     </header>
-  );
+  )
 }

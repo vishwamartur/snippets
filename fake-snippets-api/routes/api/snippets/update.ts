@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { snippetSchema } from "../../../lib/db/schema";
-import { withRouteSpec } from "../../../lib/middleware/with-winter-spec";
+import { z } from "zod"
+import { snippetSchema } from "../../../lib/db/schema"
+import { withRouteSpec } from "../../../lib/middleware/with-winter-spec"
 
 export default withRouteSpec({
   methods: ["POST"],
@@ -29,26 +29,26 @@ export default withRouteSpec({
     compiled_js,
     circuit_json,
     snippet_type,
-  } = req.jsonBody;
+  } = req.jsonBody
 
   const snippetIndex = ctx.db.snippets.findIndex(
     (s) => s.snippet_id === snippet_id,
-  );
+  )
 
   if (snippetIndex === -1) {
     return ctx.error(404, {
       error_code: "snippet_not_found",
       message: "Snippet not found",
-    });
+    })
   }
 
-  const snippet = ctx.db.snippets[snippetIndex];
+  const snippet = ctx.db.snippets[snippetIndex]
 
   if (snippet.owner_name !== ctx.auth.github_username) {
     return ctx.error(403, {
       error_code: "forbidden",
       message: "You don't have permission to update this snippet",
-    });
+    })
   }
 
   const updatedSnippet = ctx.db.updateSnippet(snippet_id, {
@@ -64,17 +64,17 @@ export default withRouteSpec({
       circuit_json !== undefined ? circuit_json : snippet.circuit_json,
     snippet_type: snippet_type ?? snippet.snippet_type,
     updated_at: new Date().toISOString(),
-  });
+  })
 
   if (!updatedSnippet) {
     return ctx.error(500, {
       error_code: "update_failed",
       message: "Failed to update snippet",
-    });
+    })
   }
 
   return ctx.json({
     ok: true,
     snippet: updatedSnippet,
-  });
-});
+  })
+})

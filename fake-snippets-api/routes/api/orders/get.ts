@@ -1,6 +1,6 @@
-import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec";
-import { z } from "zod";
-import { orderSchema } from "fake-snippets-api/lib/db/schema";
+import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec"
+import { z } from "zod"
+import { orderSchema } from "fake-snippets-api/lib/db/schema"
 
 export default withRouteSpec({
   methods: ["GET"],
@@ -12,17 +12,17 @@ export default withRouteSpec({
     order: orderSchema,
   }),
 })(async (req, ctx) => {
-  const { order_id } = req.query;
+  const { order_id } = req.query
 
-  const order = ctx.db.getOrderById(order_id);
+  const order = ctx.db.getOrderById(order_id)
   if (!order) {
     return ctx.error(404, {
       error_code: "order_not_found",
       message: "Order not found",
-    });
+    })
   }
 
   return ctx.json({
     order,
-  });
-});
+  })
+})

@@ -1,9 +1,9 @@
-import { useGlobalStore } from "@/hooks/use-global-store";
-import { Link } from "wouter";
+import { useGlobalStore } from "@/hooks/use-global-store"
+import { Link } from "wouter"
 
 export default function Footer() {
-  const session = useGlobalStore((s) => s.session);
-  const isLoggedIn = Boolean(session);
+  const session = useGlobalStore((s) => s.session)
+  const isLoggedIn = Boolean(session)
 
   return (
     <footer className="bg-white text-black py-12 border-t mt-8">
@@ -122,5 +122,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  );
+  )
 }

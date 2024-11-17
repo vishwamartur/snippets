@@ -1,5 +1,5 @@
-import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec";
-import { z } from "zod";
+import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec"
+import { z } from "zod"
 
 export default withRouteSpec({
   methods: ["GET"],
@@ -13,23 +13,23 @@ export default withRouteSpec({
   }),
   jsonResponse: z.any(),
 })(async (req, ctx) => {
-  const { jsdelivr_path, jsdelivr_resolve } = req.query;
+  const { jsdelivr_path, jsdelivr_resolve } = req.query
 
   // Parse the file path
-  const [owner, packageWithVersion, ...rest] = jsdelivr_path.split("/");
-  const [packageName, version] = packageWithVersion.split("@");
-  const fileName = rest.join("/");
+  const [owner, packageWithVersion, ...rest] = jsdelivr_path.split("/")
+  const [packageName, version] = packageWithVersion.split("@")
+  const fileName = rest.join("/")
 
   // Find the snippet
   const snippet = ctx.db.snippets.find(
     (s) => s.owner_name === owner && s.unscoped_name === packageName,
-  );
+  )
 
   if (!snippet) {
     return ctx.error(404, {
       error_code: "snippet_not_found",
       message: "Snippet not found",
-    });
+    })
   }
 
   if (!fileName && !jsdelivr_resolve) {
@@ -44,7 +44,7 @@ export default withRouteSpec({
         status: 200,
         headers: { "Content-Type": "application/json" },
       },
-    );
+    )
   } else if (!fileName && jsdelivr_resolve) {
     return new Response(
       JSON.stringify({
@@ -54,7 +54,7 @@ export default withRouteSpec({
         status: 200,
         headers: { "Content-Type": "application/json" },
       },
-    );
+    )
   }
 
   // If no fileName is provided, return the directory listing
@@ -86,7 +86,7 @@ export default withRouteSpec({
           types: "index.d.ts",
         }).length,
       },
-    ];
+    ]
 
     const response = {
       default: "/index.ts",
@@ -105,23 +105,23 @@ export default withRouteSpec({
                 files: files,
               },
             ],
-    };
+    }
 
     return new Response(JSON.stringify(response, null, 2), {
       status: 200,
       headers: { "Content-Type": "application/json" },
-    });
+    })
   }
 
   // Handle file downloads
-  let content: string;
+  let content: string
   switch (fileName) {
     case "index.ts":
-      content = snippet.code;
-      break;
+      content = snippet.code
+      break
     case "index.d.ts":
-      content = snippet.dts || "";
-      break;
+      content = snippet.dts || ""
+      break
     case "package.json":
       content = JSON.stringify(
         {
@@ -132,17 +132,17 @@ export default withRouteSpec({
         },
         null,
         2,
-      );
-      break;
+      )
+      break
     default:
       return ctx.error(404, {
         error_code: "file_not_found",
         message: "Requested file not found",
-      });
+      })
   }
 
   return new Response(content, {
     status: 200,
     headers: { "Content-Type": "text/plain" },
-  });
-});
+  })
+})

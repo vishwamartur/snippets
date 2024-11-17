@@ -1,25 +1,25 @@
-import { BotIcon, ChevronDown, Eye, RotateCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Avatar } from "@/components/ui/avatar";
+import { BotIcon, ChevronDown, Eye, RotateCcw } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Avatar } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 
 export interface AiChatMessage {
-  sender: "user" | "bot";
-  content: string;
-  codeVersion?: number;
+  sender: "user" | "bot"
+  content: string
+  codeVersion?: number
 }
 
 export const AiChatMessage = ({ message }: { message: AiChatMessage }) => {
   const renderContent = (content: string) => {
-    const parts = content.split(/(```[\s\S]*?(?:```|$))/g);
+    const parts = content.split(/(```[\s\S]*?(?:```|$))/g)
     return parts.map((part, index) => {
       if (part.startsWith("```")) {
-        const isComplete = part.endsWith("```");
+        const isComplete = part.endsWith("```")
         return (
           <div
             key={index}
@@ -29,15 +29,15 @@ export const AiChatMessage = ({ message }: { message: AiChatMessage }) => {
               ? `Code Version ${message.codeVersion ?? "??"}`
               : "generating..."}
           </div>
-        );
+        )
       }
       return (
         <p key={index} className="text-xs font-mono whitespace-pre-wrap">
           {part}
         </p>
-      );
-    });
-  };
+      )
+    })
+  }
 
   return (
     <div
@@ -82,5 +82,5 @@ export const AiChatMessage = ({ message }: { message: AiChatMessage }) => {
         {renderContent(message.content)}
       </div>
     </div>
-  );
-};
+  )
+}

@@ -1,6 +1,6 @@
-import { snippetSchema } from "fake-snippets-api/lib/db/schema";
-import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec";
-import { z } from "zod";
+import { snippetSchema } from "fake-snippets-api/lib/db/schema"
+import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec"
+import { z } from "zod"
 
 export default withRouteSpec({
   methods: ["POST"],
@@ -27,9 +27,9 @@ export default withRouteSpec({
     compiled_js,
     circuit_json,
     dts,
-  } = req.jsonBody;
+  } = req.jsonBody
   if (!unscoped_name) {
-    unscoped_name = `untitled-${snippet_type}-${ctx.db.idCounter + 1}`;
+    unscoped_name = `untitled-${snippet_type}-${ctx.db.idCounter + 1}`
   }
   const newSnippet: z.input<typeof snippetSchema> = {
     snippet_id: `snippet_${ctx.db.idCounter + 1}`,
@@ -44,12 +44,12 @@ export default withRouteSpec({
     compiled_js,
     circuit_json,
     dts,
-  };
+  }
 
-  ctx.db.addSnippet(newSnippet);
+  ctx.db.addSnippet(newSnippet)
 
   return ctx.json({
     ok: true,
     snippet: newSnippet as any,
-  });
-});
+  })
+})

@@ -1,17 +1,17 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 export type Store = {
   session: {
-    token: string;
-    account_id: string;
-    session_id: string;
-    github_username: string;
-  } | null;
-  setSession: (session: Store["session"]) => any;
-  should_onboarding_tips_be_closed: boolean;
-  setOnboardingTipsClosed: (closed: boolean) => any;
-};
+    token: string
+    account_id: string
+    session_id: string
+    github_username: string
+  } | null
+  setSession: (session: Store["session"]) => any
+  should_onboarding_tips_be_closed: boolean
+  setOnboardingTipsClosed: (closed: boolean) => any
+}
 
 export const useGlobalStore = create<Store>()(
   persist(
@@ -26,8 +26,8 @@ export const useGlobalStore = create<Store>()(
       name: "session_store",
     },
   ),
-);
+)
 
 useGlobalStore.subscribe((state, prevState) => {
-  (window as any).globalStore = state;
-});
+  ;(window as any).globalStore = state
+})

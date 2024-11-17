@@ -1,10 +1,10 @@
 // HeaderCell.tsx
-import React from "react";
+import React from "react"
 
 interface HeaderCellProps {
-  column: { name: string };
-  field?: () => React.ReactNode;
-  onTextChange?: (value: string) => void;
+  column: { name: string }
+  field?: () => React.ReactNode
+  onTextChange?: (value: string) => void
 }
 
 export const HeaderCell: React.FC<HeaderCellProps> = (p) => {
@@ -17,11 +17,11 @@ export const HeaderCell: React.FC<HeaderCellProps> = (p) => {
             type="text"
             className="border rounded p-1 w-full"
             onChange={(e) => {
-              p.onTextChange?.(e.target.value);
+              p.onTextChange?.(e.target.value)
             }}
           />
         )}
       </div>
     </div>
-  );
-};
+  )
+}

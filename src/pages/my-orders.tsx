@@ -1,22 +1,22 @@
-import React from "react";
-import { useQuery } from "react-query";
-import { useAxios } from "@/hooks/use-axios";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { Order } from "fake-snippets-api/lib/db/schema";
-import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
+import React from "react"
+import { useQuery } from "react-query"
+import { useAxios } from "@/hooks/use-axios"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import { Order } from "fake-snippets-api/lib/db/schema"
+import { Link } from "wouter"
+import { Button } from "@/components/ui/button"
 
 export const MyOrdersPage = () => {
-  const axios = useAxios();
+  const axios = useAxios()
 
   const { data: orders, isLoading } = useQuery<Order[]>(
     "userOrders",
     async () => {
-      const response = await axios.get("/orders/list");
-      return response.data.orders;
+      const response = await axios.get("/orders/list")
+      return response.data.orders
     },
-  );
+  )
 
   return (
     <div>
@@ -50,5 +50,5 @@ export const MyOrdersPage = () => {
       </div>
       <Footer />
     </div>
-  );
-};
+  )
+}

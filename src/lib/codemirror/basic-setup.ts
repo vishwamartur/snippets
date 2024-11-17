@@ -8,8 +8,8 @@ import {
   crosshairCursor,
   lineNumbers,
   highlightActiveLineGutter,
-} from "@codemirror/view";
-import { Extension, EditorState } from "@codemirror/state";
+} from "@codemirror/view"
+import { Extension, EditorState } from "@codemirror/state"
 import {
   defaultHighlightStyle,
   syntaxHighlighting,
@@ -17,11 +17,11 @@ import {
   bracketMatching,
   foldGutter,
   foldKeymap,
-} from "@codemirror/language";
-import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
-import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
-import { autocompletion, completionKeymap } from "@codemirror/autocomplete";
-import { lintKeymap } from "@codemirror/lint";
+} from "@codemirror/language"
+import { defaultKeymap, history, historyKeymap } from "@codemirror/commands"
+import { searchKeymap, highlightSelectionMatches } from "@codemirror/search"
+import { autocompletion, completionKeymap } from "@codemirror/autocomplete"
+import { lintKeymap } from "@codemirror/lint"
 
 export const basicSetup: Extension = (() => [
   lineNumbers(),
@@ -48,4 +48,4 @@ export const basicSetup: Extension = (() => [
     ...completionKeymap,
     ...lintKeymap,
   ]),
-])();
+])()

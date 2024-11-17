@@ -1,2 +1,2 @@
-import ai from "./ai/[...anyroute]";
-export default ai;
+import ai from "./ai/[...anyroute]"
+export default ai

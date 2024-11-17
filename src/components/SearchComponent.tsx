@@ -1,40 +1,40 @@
-import { Input } from "@/components/ui/input";
-import { useAxios } from "@/hooks/use-axios";
-import React, { useEffect, useRef, useState } from "react";
-import { useQuery } from "react-query";
-import { Alert } from "./ui/alert";
+import { Input } from "@/components/ui/input"
+import { useAxios } from "@/hooks/use-axios"
+import React, { useEffect, useRef, useState } from "react"
+import { useQuery } from "react-query"
+import { Alert } from "./ui/alert"
 
 interface SearchComponentProps {
-  onResultsFetched?: (results: any[]) => void; // optional
+  onResultsFetched?: (results: any[]) => void // optional
 }
 
 const SearchComponent: React.FC<SearchComponentProps> = ({
   onResultsFetched,
 }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showResults, setShowResults] = useState(false);
-  const axios = useAxios();
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const [searchQuery, setSearchQuery] = useState("")
+  const [showResults, setShowResults] = useState(false)
+  const axios = useAxios()
+  const resultsRef = useRef<HTMLDivElement>(null)
 
   const { data: searchResults, isLoading } = useQuery(
     ["snippetSearch", searchQuery],
     async () => {
-      if (!searchQuery) return [];
+      if (!searchQuery) return []
       const { data } = await axios.get("/snippets/search", {
         params: { q: searchQuery },
-      });
+      })
       if (onResultsFetched) {
-        onResultsFetched(data.snippets);
+        onResultsFetched(data.snippets)
       }
-      return data.snippets;
+      return data.snippets
     },
     { enabled: Boolean(searchQuery) },
-  );
+  )
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setShowResults(!!searchQuery);
-  };
+    e.preventDefault()
+    setShowResults(!!searchQuery)
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -42,15 +42,15 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
         resultsRef.current &&
         !resultsRef.current.contains(event.target as Node)
       ) {
-        setShowResults(false);
+        setShowResults(false)
       }
-    };
+    }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   return (
     <form onSubmit={handleSearch} className="relative">
@@ -60,8 +60,8 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
         className="pl-4 focus:border-blue-500 placeholder-gray-400 text-sm"
         value={searchQuery}
         onChange={(e) => {
-          setSearchQuery(e.target.value);
-          setShowResults(!!e.target.value);
+          setSearchQuery(e.target.value)
+          setShowResults(!!e.target.value)
         }}
       />
       {isLoading && (
@@ -103,7 +103,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
         </div>
       )}
     </form>
-  );
-};
+  )
+}
 
-export default SearchComponent;
+export default SearchComponent

@@ -1,50 +1,48 @@
-import React from "react";
-import { useQuery } from "react-query";
-import { useAxios } from "@/hooks/use-axios";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { Snippet } from "fake-snippets-api/lib/db/schema";
-import { Link } from "wouter";
-import { CreateNewSnippetWithAiHero } from "@/components/CreateNewSnippetWithAiHero";
-import { Edit2, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useGlobalStore } from "@/hooks/use-global-store";
+import React from "react"
+import { useQuery } from "react-query"
+import { useAxios } from "@/hooks/use-axios"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import { Snippet } from "fake-snippets-api/lib/db/schema"
+import { Link } from "wouter"
+import { CreateNewSnippetWithAiHero } from "@/components/CreateNewSnippetWithAiHero"
+import { Edit2, Star } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useGlobalStore } from "@/hooks/use-global-store"
 
 export const DashboardPage = () => {
-  const axios = useAxios();
+  const axios = useAxios()
 
-  const currentUser = useGlobalStore((s) => s.session?.github_username);
+  const currentUser = useGlobalStore((s) => s.session?.github_username)
 
   const {
     data: mySnippets,
     isLoading,
     error,
   } = useQuery<Snippet[]>("userSnippets", async () => {
-    const response = await axios.get(
-      `/snippets/list?owner_name=${currentUser}`,
-    );
+    const response = await axios.get(`/snippets/list?owner_name=${currentUser}`)
     return response.data.snippets.sort(
       (a: any, b: any) =>
         new Date(b.updated_at || b.created_at).getTime() -
         new Date(a.updated_at || a.created_at).getTime(),
-    );
-  });
+    )
+  })
 
   const { data: trendingSnippets } = useQuery<Snippet[]>(
     "trendingSnippets",
     async () => {
-      const response = await axios.get("/snippets/list_trending");
-      return response.data.snippets;
+      const response = await axios.get("/snippets/list_trending")
+      return response.data.snippets
     },
-  );
+  )
 
   const { data: newestSnippets } = useQuery<Snippet[]>(
     "newestSnippets",
     async () => {
-      const response = await axios.get("/snippets/list_newest");
-      return response.data.snippets;
+      const response = await axios.get("/snippets/list_newest")
+      return response.data.snippets
     },
-  );
+  )
 
   return (
     <div>
@@ -162,5 +160,5 @@ export const DashboardPage = () => {
       </div>
       <Footer />
     </div>
-  );
-};
+  )
+}

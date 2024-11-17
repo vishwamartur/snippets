@@ -1,6 +1,6 @@
-import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec";
-import { z } from "zod";
-import { orderFileSchema } from "fake-snippets-api/lib/db/schema";
+import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec"
+import { z } from "zod"
+import { orderFileSchema } from "fake-snippets-api/lib/db/schema"
 
 export default withRouteSpec({
   methods: ["POST"],
@@ -16,14 +16,14 @@ export default withRouteSpec({
   }),
 })(async (req, ctx) => {
   const { order_id, content_base64, is_gerbers_zip, for_provider } =
-    req.jsonBody;
+    req.jsonBody
 
-  const order = ctx.db.getOrderById(order_id);
+  const order = ctx.db.getOrderById(order_id)
   if (!order) {
     return ctx.error(404, {
       error_code: "order_not_found",
       message: "Order not found",
-    });
+    })
   }
 
   const newOrderFile = {
@@ -33,11 +33,11 @@ export default withRouteSpec({
     content_type: "base64",
     for_provider: for_provider || null,
     uploaded_at: new Date().toISOString(),
-  };
+  }
 
-  const orderFile = ctx.db.addOrderFile(newOrderFile);
+  const orderFile = ctx.db.addOrderFile(newOrderFile)
 
   return ctx.json({
     order_file: orderFile,
-  });
-});
+  })
+})

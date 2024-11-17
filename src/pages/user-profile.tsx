@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import { useParams } from "wouter";
-import { useQuery } from "react-query";
-import { useAxios } from "@/hooks/use-axios";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { Snippet } from "fake-snippets-api/lib/db/schema";
-import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { Input } from "@/components/ui/input";
-import { useGlobalStore } from "@/hooks/use-global-store";
+import React, { useState } from "react"
+import { useParams } from "wouter"
+import { useQuery } from "react-query"
+import { useAxios } from "@/hooks/use-axios"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import { Snippet } from "fake-snippets-api/lib/db/schema"
+import { Link } from "wouter"
+import { Button } from "@/components/ui/button"
+import { GitHubLogoIcon } from "@radix-ui/react-icons"
+import { Input } from "@/components/ui/input"
+import { useGlobalStore } from "@/hooks/use-global-store"
 
 export const UserProfilePage = () => {
-  const { username } = useParams();
-  const axios = useAxios();
-  const [searchQuery, setSearchQuery] = useState("");
-  const session = useGlobalStore((s) => s.session);
-  const isCurrentUserProfile = username === session?.github_username;
+  const { username } = useParams()
+  const axios = useAxios()
+  const [searchQuery, setSearchQuery] = useState("")
+  const session = useGlobalStore((s) => s.session)
+  const isCurrentUserProfile = username === session?.github_username
 
   const { data: userSnippets, isLoading } = useQuery<Snippet[]>(
     ["userSnippets", username],
     async () => {
-      const response = await axios.get(`/snippets/list?owner_name=${username}`);
-      return response.data.snippets;
+      const response = await axios.get(`/snippets/list?owner_name=${username}`)
+      return response.data.snippets
     },
-  );
+  )
 
   const filteredSnippets = userSnippets?.filter(
     (snippet) =>
       !searchQuery ||
       snippet.unscoped_name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  )
 
   return (
     <div>
@@ -84,5 +84,5 @@ export const UserProfilePage = () => {
       </div>
       <Footer />
     </div>
-  );
-};
+  )
+}

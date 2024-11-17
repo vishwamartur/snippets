@@ -1,8 +1,8 @@
 // CircuitJsonTableViewer.tsx
-import React, { useReducer, useState } from "react";
-import { ClickableText } from "./ClickableText";
-import { HeaderCell } from "./HeaderCell";
-import Modal from "./Modal";
+import React, { useReducer, useState } from "react"
+import { ClickableText } from "./ClickableText"
+import { HeaderCell } from "./HeaderCell"
+import Modal from "./Modal"
 
 type Filters = {
   component_type_filter?:
@@ -10,108 +10,108 @@ type Filters = {
     | "source"
     | "source/pcb"
     | "source/schematic"
-    | string;
-  id_search?: string;
-  name_search?: string;
-  selector_search?: string;
-  focused_id?: string;
-};
+    | string
+  id_search?: string
+  name_search?: string
+  selector_search?: string
+  focused_id?: string
+}
 
-type CommonProps = { name?: string; type: string };
+type CommonProps = { name?: string; type: string }
 
 type ModalState =
   | { open: false; element?: never }
-  | { open: true; element: Element; title: string };
+  | { open: true; element: Element; title: string }
 
 interface Element {
-  [key: string]: any;
-  type: string;
-  name?: string;
+  [key: string]: any
+  type: string
+  name?: string
 }
 
 interface ProcessedElement extends CommonProps {
-  primary_id: string;
-  other_ids: { [key: string]: string };
-  selector_path?: string;
-  _og_elm: Element;
+  primary_id: string
+  other_ids: { [key: string]: string }
+  selector_path?: string
+  _og_elm: Element
 }
 
 interface Column {
-  key: string;
-  name: string;
-  renderCell?: (row: ProcessedElement) => React.ReactNode;
-  renderHeaderCell?: (col: Column) => React.ReactNode;
+  key: string
+  name: string
+  renderCell?: (row: ProcessedElement) => React.ReactNode
+  renderHeaderCell?: (col: Column) => React.ReactNode
 }
 
 export const CircuitJsonTableViewer: React.FC<{ elements: Element[] }> = ({
   elements,
 }) => {
-  const [modal, setModal] = useState<ModalState>({ open: false });
+  const [modal, setModal] = useState<ModalState>({ open: false })
   const [filters, setFilter] = useReducer(
     (s: Filters, a: Filters) => ({
       ...s,
       ...a,
     }),
     {},
-  );
+  )
 
-  const element_types = [...new Set(elements.map((e) => e.type))];
+  const element_types = [...new Set(elements.map((e) => e.type))]
 
   // Process elements to separate primary and non-primary ids
   const elements2: ProcessedElement[] = elements.map((e) => {
-    const primary_id = e[`${e.type}_id`];
+    const primary_id = e[`${e.type}_id`]
 
     const other_ids = Object.fromEntries(
       Object.entries(e).filter(([k]) => {
-        if (k === `${e.type}_id`) return false;
-        if (!k.endsWith("_id")) return false;
-        return true;
+        if (k === `${e.type}_id`) return false
+        if (!k.endsWith("_id")) return false
+        return true
       }),
-    ) as { [key: string]: string };
+    ) as { [key: string]: string }
 
     const other_props: CommonProps = Object.fromEntries(
       Object.entries(e).filter(([k]) => !k.endsWith("_id")),
-    ) as CommonProps;
+    ) as CommonProps
 
     return {
       primary_id,
       other_ids,
       ...other_props,
       _og_elm: e,
-    };
-  });
+    }
+  })
 
   const elements3 = elements2.map((e) => {
-    let selector_path = "";
+    let selector_path = ""
 
     const getSelectorPath = (e2: ProcessedElement): string => {
       const parent_key = Object.keys(e2.other_ids).find((k) =>
         k.startsWith("source_"),
-      );
-      if (!parent_key) return `.${e2.name}`;
-      const parent_type = parent_key.slice(0, -3); // trim "_id"
+      )
+      if (!parent_key) return `.${e2.name}`
+      const parent_type = parent_key.slice(0, -3) // trim "_id"
 
       const parent = elements2.find(
         (p) =>
           p.type === parent_type && p.primary_id === e2.other_ids[parent_key],
-      );
+      )
 
-      if (!parent) return `??? > .${e2.name}`;
+      if (!parent) return `??? > .${e2.name}`
 
-      if (!("name" in parent)) return `#${parent.primary_id} > .${e2.name}`;
+      if (!("name" in parent)) return `#${parent.primary_id} > .${e2.name}`
 
-      return `${getSelectorPath(parent)} > .${e2.name}`;
-    };
+      return `${getSelectorPath(parent)} > .${e2.name}`
+    }
 
     if ("name" in e) {
-      selector_path = getSelectorPath(e);
+      selector_path = getSelectorPath(e)
     }
 
     return {
       ...e,
       selector_path,
-    };
-  });
+    }
+  })
 
   const columns: Column[] = [
     {
@@ -233,44 +233,44 @@ export const CircuitJsonTableViewer: React.FC<{ elements: Element[] }> = ({
         </div>
       ),
     },
-  ];
+  ]
 
   const elements4 = elements3
     .filter((e) => {
-      if (!filters.name_search) return true;
-      return e.name?.toLowerCase()?.includes(filters.name_search.toLowerCase());
+      if (!filters.name_search) return true
+      return e.name?.toLowerCase()?.includes(filters.name_search.toLowerCase())
     })
     .filter((e) => {
-      if (!filters.component_type_filter) return true;
-      if (filters.component_type_filter === "any") return true;
+      if (!filters.component_type_filter) return true
+      if (filters.component_type_filter === "any") return true
       if (filters.component_type_filter === "source") {
-        return e.type.startsWith("source_");
+        return e.type.startsWith("source_")
       }
       if (filters.component_type_filter === "source/pcb") {
-        return e.type.startsWith("source_") || e.type.startsWith("pcb_");
+        return e.type.startsWith("source_") || e.type.startsWith("pcb_")
       }
       if (filters.component_type_filter === "source/schematic") {
-        return e.type.startsWith("source_") || e.type.startsWith("schematic_");
+        return e.type.startsWith("source_") || e.type.startsWith("schematic_")
       }
-      return e.type?.includes(filters.component_type_filter);
+      return e.type?.includes(filters.component_type_filter)
     })
     .filter((e) => {
-      if (!filters.selector_search) return true;
+      if (!filters.selector_search) return true
       const parts = filters.selector_search
         .split(" ")
-        .filter((p) => p.length > 0);
-      return parts.every((part) => e.selector_path?.includes(part));
+        .filter((p) => p.length > 0)
+      return parts.every((part) => e.selector_path?.includes(part))
     })
     .filter((e) => {
-      if (!filters.id_search) return true;
-      return e.primary_id?.includes(filters.id_search);
+      if (!filters.id_search) return true
+      return e.primary_id?.includes(filters.id_search)
     })
     .filter((e) => {
-      if (!filters.focused_id) return true;
-      if (e.primary_id === filters.focused_id) return true;
-      if (Object.values(e.other_ids).includes(filters.focused_id)) return true;
-      return false;
-    });
+      if (!filters.focused_id) return true
+      if (e.primary_id === filters.focused_id) return true
+      if (Object.values(e.other_ids).includes(filters.focused_id)) return true
+      return false
+    })
 
   return (
     <div className="font-mono text-xs">
@@ -312,5 +312,5 @@ export const CircuitJsonTableViewer: React.FC<{ elements: Element[] }> = ({
         </div>
       </Modal>
     </div>
-  );
-};
+  )
+}

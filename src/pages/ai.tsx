@@ -1,18 +1,18 @@
-import AIChatInterface from "@/components/AiChatInterface";
-import Header from "@/components/Header";
-import { PreviewContent } from "@/components/PreviewContent";
-import { useRunTsx } from "@/hooks/use-run-tsx";
-import { useSaveSnippet } from "@/hooks/use-save-snippet";
-import { useSnippet } from "@/hooks/use-snippet";
-import { useToast } from "@/hooks/use-toast";
-import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
+import AIChatInterface from "@/components/AiChatInterface"
+import Header from "@/components/Header"
+import { PreviewContent } from "@/components/PreviewContent"
+import { useRunTsx } from "@/hooks/use-run-tsx"
+import { useSaveSnippet } from "@/hooks/use-save-snippet"
+import { useSnippet } from "@/hooks/use-snippet"
+import { useToast } from "@/hooks/use-toast"
+import { useEffect, useState } from "react"
+import { useLocation } from "wouter"
 
 export const AiPage = () => {
-  const [code, setCode] = useState("");
-  const [manualEditsFileContent, setManualEditsFileContent] = useState("");
-  const [dts, setDts] = useState("");
-  const [isStreaming, setIsStreaming] = useState(false);
+  const [code, setCode] = useState("")
+  const [manualEditsFileContent, setManualEditsFileContent] = useState("")
+  const [dts, setDts] = useState("")
+  const [isStreaming, setIsStreaming] = useState(false)
   const {
     message: errorMessage,
     circuitJson,
@@ -23,23 +23,23 @@ export const AiPage = () => {
     code,
     type: "board",
     isStreaming,
-  });
-  const { saveSnippet, isLoading: isSaving } = useSaveSnippet();
+  })
+  const { saveSnippet, isLoading: isSaving } = useSaveSnippet()
   const snippetIdFromUrl = new URLSearchParams(window.location.search).get(
     "snippet_id",
-  );
-  const [snippetId, setSnippetId] = useState<string | null>(snippetIdFromUrl);
-  const { data: snippet } = useSnippet(snippetId);
-  const { toast } = useToast();
-  const [, navigate] = useLocation();
+  )
+  const [snippetId, setSnippetId] = useState<string | null>(snippetIdFromUrl)
+  const { data: snippet } = useSnippet(snippetId)
+  const { toast } = useToast()
+  const [, navigate] = useLocation()
 
   useEffect(() => {
     if (!code && snippet && snippetIdFromUrl) {
-      setCode(snippet.code);
+      setCode(snippet.code)
     }
-  }, [code, snippet]);
+  }, [code, snippet])
 
-  const hasUnsavedChanges = snippet?.code !== code;
+  const hasUnsavedChanges = snippet?.code !== code
 
   return (
     <div>
@@ -53,10 +53,10 @@ export const AiPage = () => {
             onCodeChange={setCode}
             errorMessage={errorMessage}
             onStartStreaming={() => {
-              setIsStreaming(true);
+              setIsStreaming(true)
             }}
             onStopStreaming={() => {
-              setIsStreaming(false);
+              setIsStreaming(false)
             }}
           />
         </div>
@@ -77,7 +77,7 @@ export const AiPage = () => {
               onManualEditsFileContentChange={(
                 newManualEditsFileContent: string,
               ) => {
-                setManualEditsFileContent(newManualEditsFileContent);
+                setManualEditsFileContent(newManualEditsFileContent)
               }}
               tsxRunTriggerCount={tsxRunTriggerCount}
             />
@@ -85,5 +85,5 @@ export const AiPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

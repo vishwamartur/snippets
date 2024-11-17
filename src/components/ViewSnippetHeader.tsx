@@ -1,66 +1,66 @@
-import { TypeBadge } from "@/components/TypeBadge";
-import { Button } from "@/components/ui/button";
-import { useAxios } from "@/hooks/use-axios";
-import { useCurrentSnippet } from "@/hooks/use-current-snippet";
-import { useGlobalStore } from "@/hooks/use-global-store";
-import { toast, useToast } from "@/hooks/use-toast";
-import { Snippet } from "fake-snippets-api/lib/db/schema";
-import { ChevronLeft, Eye, GitFork, Star } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
-import { Link } from "wouter";
-import { navigate } from "wouter/use-browser-location";
+import { TypeBadge } from "@/components/TypeBadge"
+import { Button } from "@/components/ui/button"
+import { useAxios } from "@/hooks/use-axios"
+import { useCurrentSnippet } from "@/hooks/use-current-snippet"
+import { useGlobalStore } from "@/hooks/use-global-store"
+import { toast, useToast } from "@/hooks/use-toast"
+import { Snippet } from "fake-snippets-api/lib/db/schema"
+import { ChevronLeft, Eye, GitFork, Star } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useMutation, useQueryClient } from "react-query"
+import { Link } from "wouter"
+import { navigate } from "wouter/use-browser-location"
 
 export default function ViewSnippetHeader() {
-  const { snippet } = useCurrentSnippet();
-  const axios = useAxios();
-  const qc = useQueryClient();
+  const { snippet } = useCurrentSnippet()
+  const axios = useAxios()
+  const qc = useQueryClient()
 
   const useForkSnippetMutation = ({
     snippet,
     onSuccess,
   }: {
-    snippet: Snippet;
-    onSuccess?: (forkedSnippet: Snippet) => void;
+    snippet: Snippet
+    onSuccess?: (forkedSnippet: Snippet) => void
   }) => {
-    const axios = useAxios();
-    const session = useGlobalStore((s) => s.session);
+    const axios = useAxios()
+    const session = useGlobalStore((s) => s.session)
 
     return useMutation(
       ["createForkSnippet"],
       async () => {
-        if (!session) throw new Error("No session");
-        if (!snippet) throw new Error("No snippet to fork");
+        if (!session) throw new Error("No session")
+        if (!snippet) throw new Error("No snippet to fork")
 
         const { data } = await axios.post("/snippets/create", {
           unscoped_name: snippet.unscoped_name,
           snippet_type: snippet.snippet_type,
           owner_name: session.github_username,
           code: snippet.code,
-        });
-        return data.snippet;
+        })
+        return data.snippet
       },
       {
         onSuccess: (forkedSnippet: Snippet) => {
           toast({
             title: `Forked snippet`,
             description: `You have successfully forked the snippet. Redirecting...`,
-          });
-          onSuccess?.(forkedSnippet);
+          })
+          onSuccess?.(forkedSnippet)
         },
         onError: (error: any) => {
-          console.error("Error forking snippet:", error);
+          console.error("Error forking snippet:", error)
         },
       },
-    );
-  };
+    )
+  }
 
   const { mutate: forkSnippet, isLoading: isForking } = useForkSnippetMutation({
     snippet: snippet!,
     onSuccess: (forkedSnippet) => {
-      navigate("/editor?snippet_id=" + forkedSnippet.snippet_id);
+      navigate("/editor?snippet_id=" + forkedSnippet.snippet_id)
     },
-  });
+  })
 
   return (
     <header className="bg-white border-b border-gray-200 py-4 px-6">
@@ -88,25 +88,25 @@ export default function ViewSnippetHeader() {
               try {
                 await axios.post("/snippets/add_star", {
                   snippet_id: snippet!.snippet_id,
-                });
+                })
                 toast({
                   title: "Starred!",
                   description: "You've starred this snippet",
-                });
-                qc.invalidateQueries(["snippets", snippet!.snippet_id]);
+                })
+                qc.invalidateQueries(["snippets", snippet!.snippet_id])
               } catch (error: any) {
                 if (error?.status === 400) {
                   toast({
                     title: "Already starred",
                     description: "You've already starred this snippet",
                     variant: "destructive",
-                  });
+                  })
                 } else {
                   toast({
                     title: "Error",
                     description: "Failed to star snippet",
                     variant: "destructive",
-                  });
+                  })
                 }
               }
             }}
@@ -135,5 +135,5 @@ export default function ViewSnippetHeader() {
         <span>Version: 1.0.0</span>
       </div> */}
     </header>
-  );
+  )
 }

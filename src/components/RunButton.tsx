@@ -1,12 +1,12 @@
-import { PlayIcon } from "lucide-react";
-import { Button } from "./ui/button";
+import { PlayIcon } from "lucide-react"
+import { Button } from "./ui/button"
 
 export const RunButton = ({
   onClick,
   disabled,
 }: {
-  onClick: () => void;
-  disabled: boolean;
+  onClick: () => void
+  disabled: boolean
 }) => {
   return (
     <Button
@@ -17,5 +17,5 @@ export const RunButton = ({
       Run
       <PlayIcon className="w-3 h-3 ml-2" />
     </Button>
-  );
-};
+  )
+}

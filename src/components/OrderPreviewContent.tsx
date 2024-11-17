@@ -1,13 +1,13 @@
-import React from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PCBViewer } from "@tscircuit/pcb-viewer";
-import { CadViewer } from "@tscircuit/3d-viewer";
-import { CircuitJsonTableViewer } from "./TableViewer/CircuitJsonTableViewer";
-import { AnyCircuitElement } from "circuit-json";
+import React from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { PCBViewer } from "@tscircuit/pcb-viewer"
+import { CadViewer } from "@tscircuit/3d-viewer"
+import { CircuitJsonTableViewer } from "./TableViewer/CircuitJsonTableViewer"
+import { AnyCircuitElement } from "circuit-json"
 
 interface OrderPreviewContentProps {
-  circuitJson: AnyCircuitElement[] | null;
-  className?: string;
+  circuitJson: AnyCircuitElement[] | null
+  className?: string
 }
 
 export const OrderPreviewContent: React.FC<OrderPreviewContentProps> = ({
@@ -57,5 +57,5 @@ export const OrderPreviewContent: React.FC<OrderPreviewContentProps> = ({
         </TabsContent>
       </Tabs>
     </div>
-  );
-};
+  )
+}

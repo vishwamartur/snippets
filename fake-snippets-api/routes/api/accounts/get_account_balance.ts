@@ -1,5 +1,5 @@
-import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec";
-import { z } from "zod";
+import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec"
+import { z } from "zod"
 
 export default withRouteSpec({
   methods: ["GET"],
@@ -14,9 +14,9 @@ export default withRouteSpec({
   // In a real implementation, you would fetch this from a database or external service
   const mockBalance = {
     monthly_ai_budget_used_usd: 2.5,
-  };
+  }
 
   return ctx.json({
     account_balance: mockBalance,
-  });
-});
+  })
+})

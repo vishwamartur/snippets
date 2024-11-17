@@ -1,17 +1,17 @@
-import React from "react";
-import { useQuery } from "react-query";
-import { useAxios } from "@/hooks/use-axios";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { Order } from "fake-snippets-api/lib/db/schema";
-import { Link, useParams } from "wouter";
-import { Button } from "@/components/ui/button";
-import { OrderPreviewContent } from "@/components/OrderPreviewContent";
-import { AnyCircuitElement } from "circuit-json";
+import React from "react"
+import { useQuery } from "react-query"
+import { useAxios } from "@/hooks/use-axios"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import { Order } from "fake-snippets-api/lib/db/schema"
+import { Link, useParams } from "wouter"
+import { Button } from "@/components/ui/button"
+import { OrderPreviewContent } from "@/components/OrderPreviewContent"
+import { AnyCircuitElement } from "circuit-json"
 
 export const ViewOrderPage = () => {
-  const { orderId } = useParams();
-  const axios = useAxios();
+  const { orderId } = useParams()
+  const axios = useAxios()
 
   const {
     data: order,
@@ -20,24 +20,24 @@ export const ViewOrderPage = () => {
   } = useQuery<Order>(
     ["order", orderId],
     async () => {
-      const response = await axios.get(`/orders/get?order_id=${orderId}`);
-      return response.data.order;
+      const response = await axios.get(`/orders/get?order_id=${orderId}`)
+      return response.data.order
     },
     {
       enabled: !!orderId,
     },
-  );
+  )
 
   if (isLoading) {
-    return <div>Loading order...</div>;
+    return <div>Loading order...</div>
   }
 
   if (error) {
-    return <div>Error loading order: {(error as Error).message}</div>;
+    return <div>Error loading order: {(error as Error).message}</div>
   }
 
   if (!order) {
-    return <div>Order not found</div>;
+    return <div>Order not found</div>
   }
 
   return (
@@ -119,5 +119,5 @@ export const ViewOrderPage = () => {
       </div>
       <Footer />
     </div>
-  );
-};
+  )
+}

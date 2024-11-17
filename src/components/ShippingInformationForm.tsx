@@ -1,33 +1,33 @@
-import React, { useReducer, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { useAxios } from "@/hooks/use-axios";
-import { useQuery, useMutation, useQueryClient } from "react-query";
-import { Loader2 } from "lucide-react";
-import { getNames } from "country-list";
-import states from "states-us";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { SearchableSelect } from "@/components/ui/searchable-select";
+import React, { useReducer, useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useToast } from "@/hooks/use-toast"
+import { useAxios } from "@/hooks/use-axios"
+import { useQuery, useMutation, useQueryClient } from "react-query"
+import { Loader2 } from "lucide-react"
+import { getNames } from "country-list"
+import states from "states-us"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { SearchableSelect } from "@/components/ui/searchable-select"
 
-const USA = "United States of America";
+const USA = "United States of America"
 
 type ShippingInfo = {
-  firstName: string;
-  lastName: string;
-  companyName: string;
-  address: string;
-  apartment: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-  phone: string;
-};
+  firstName: string
+  lastName: string
+  companyName: string
+  address: string
+  apartment: string
+  city: string
+  state: string
+  zipCode: string
+  country: string
+  phone: string
+}
 
 type Action =
   | { type: "SET_FIELD"; field: keyof ShippingInfo; value: string }
-  | { type: "SET_ALL"; payload: ShippingInfo };
+  | { type: "SET_ALL"; payload: ShippingInfo }
 
 const initialState: ShippingInfo = {
   firstName: "",
@@ -40,7 +40,7 @@ const initialState: ShippingInfo = {
   city: "",
   state: "",
   phone: "",
-};
+}
 
 const shippingPlaceholders: ShippingInfo = {
   firstName: "Enter your first name",
@@ -53,56 +53,56 @@ const shippingPlaceholders: ShippingInfo = {
   city: "Enter your city",
   state: "Enter your state",
   phone: "Enter your phone number",
-};
+}
 
 const ShippingInformationForm: React.FC = () => {
   const [form, setField] = useReducer(
     (state: ShippingInfo, action: Action): ShippingInfo => {
       switch (action.type) {
         case "SET_FIELD":
-          return { ...state, [action.field]: action.value };
+          return { ...state, [action.field]: action.value }
         case "SET_ALL":
-          return action.payload;
+          return action.payload
         default:
-          return state;
+          return state
       }
     },
     initialState,
-  );
-  const { toast } = useToast();
-  const axios = useAxios();
-  const queryClient = useQueryClient();
-  const [countries] = useState(getNames());
-  const [isPhoneValid, setIsPhoneValid] = useState(true);
+  )
+  const { toast } = useToast()
+  const axios = useAxios()
+  const queryClient = useQueryClient()
+  const [countries] = useState(getNames())
+  const [isPhoneValid, setIsPhoneValid] = useState(true)
 
   const { data: account, isLoading: isLoadingAccount } = useQuery(
     "account",
     async () => {
-      const response = await axios.get("/accounts/get");
-      return response.data.account;
+      const response = await axios.get("/accounts/get")
+      return response.data.account
     },
-  );
+  )
 
   const updateShippingMutation = useMutation(
     (shippingInfo: ShippingInfo) =>
       axios.post("/accounts/update", { shippingInfo }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("account");
+        queryClient.invalidateQueries("account")
         toast({
           title: "Success",
           description: "Shipping information updated successfully",
-        });
+        })
       },
       onError: () => {
         toast({
           title: "Error",
           description: "Failed to update shipping information",
           variant: "destructive",
-        });
+        })
       },
     },
-  );
+  )
 
   useEffect(() => {
     if (account?.shippingInfo) {
@@ -112,21 +112,21 @@ const ShippingInformationForm: React.FC = () => {
           ...account.shippingInfo,
           country: account.shippingInfo.country || USA,
         },
-      });
+      })
     }
-  }, [account]);
+  }, [account])
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    updateShippingMutation.mutate(form);
-  };
+    e.preventDefault()
+    updateShippingMutation.mutate(form)
+  }
 
   if (isLoadingAccount) {
     return (
       <div className="flex justify-center items-center h-64">
         <Loader2 className="w-8 h-8 animate-spin" />
       </div>
-    );
+    )
   }
 
   return (
@@ -370,17 +370,17 @@ const ShippingInformationForm: React.FC = () => {
             type="tel"
             value={form.phone}
             onChange={(e) => {
-              setIsPhoneValid(true);
+              setIsPhoneValid(true)
               setField({
                 type: "SET_FIELD",
                 field: "phone",
                 value: e.target.value,
-              });
+              })
             }}
             onBlur={() => {
               const phoneRegex =
-                /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
-              setIsPhoneValid(phoneRegex.test(form.phone));
+                /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/
+              setIsPhoneValid(phoneRegex.test(form.phone))
             }}
             placeholder={shippingPlaceholders.phone}
             disabled={updateShippingMutation.isLoading}
@@ -417,7 +417,7 @@ const ShippingInformationForm: React.FC = () => {
         )}
       </Button>
     </div>
-  );
-};
+  )
+}
 
-export default ShippingInformationForm;
+export default ShippingInformationForm

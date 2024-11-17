@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,13 +7,13 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useGlobalStore } from "@/hooks/use-global-store";
-import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash";
-import { cn } from "@/lib/utils";
-import { OpenInNewWindowIcon } from "@radix-ui/react-icons";
-import { AnyCircuitElement } from "circuit-json";
-import { Snippet } from "fake-snippets-api/lib/db/schema";
+} from "@/components/ui/dropdown-menu"
+import { useGlobalStore } from "@/hooks/use-global-store"
+import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash"
+import { cn } from "@/lib/utils"
+import { OpenInNewWindowIcon } from "@radix-ui/react-icons"
+import { AnyCircuitElement } from "circuit-json"
+import { Snippet } from "fake-snippets-api/lib/db/schema"
 import {
   ChevronDown,
   CodeIcon,
@@ -30,19 +30,19 @@ import {
   Sidebar,
   Sparkles,
   Trash2,
-} from "lucide-react";
-import { useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
-import { Link, useLocation } from "wouter";
-import { useAxios } from "../hooks/use-axios";
-import { useToast } from "../hooks/use-toast";
-import { useConfirmDeleteSnippetDialog } from "./dialogs/confirm-delete-snippet-dialog";
-import { useCreateOrderDialog } from "./dialogs/create-order-dialog";
-import { useFilesDialog } from "./dialogs/files-dialog";
-import { useRenameSnippetDialog } from "./dialogs/rename-snippet-dialog";
-import { DownloadButtonAndMenu } from "./DownloadButtonAndMenu";
-import { SnippetLink } from "./SnippetLink";
-import { TypeBadge } from "./TypeBadge";
+} from "lucide-react"
+import { useEffect, useState } from "react"
+import { useQueryClient } from "react-query"
+import { Link, useLocation } from "wouter"
+import { useAxios } from "../hooks/use-axios"
+import { useToast } from "../hooks/use-toast"
+import { useConfirmDeleteSnippetDialog } from "./dialogs/confirm-delete-snippet-dialog"
+import { useCreateOrderDialog } from "./dialogs/create-order-dialog"
+import { useFilesDialog } from "./dialogs/files-dialog"
+import { useRenameSnippetDialog } from "./dialogs/rename-snippet-dialog"
+import { DownloadButtonAndMenu } from "./DownloadButtonAndMenu"
+import { SnippetLink } from "./SnippetLink"
+import { TypeBadge } from "./TypeBadge"
 
 export default function EditorNav({
   circuitJson,
@@ -56,84 +56,84 @@ export default function EditorNav({
   isSaving,
   canSave,
 }: {
-  snippet?: Snippet | null;
-  circuitJson?: AnyCircuitElement[] | null;
-  code: string;
-  snippetType?: string;
-  hasUnsavedChanges: boolean;
-  previewOpen: boolean;
-  onTogglePreview: () => void;
-  isSaving: boolean;
-  onSave: () => void;
-  canSave: boolean;
+  snippet?: Snippet | null
+  circuitJson?: AnyCircuitElement[] | null
+  code: string
+  snippetType?: string
+  hasUnsavedChanges: boolean
+  previewOpen: boolean
+  onTogglePreview: () => void
+  isSaving: boolean
+  onSave: () => void
+  canSave: boolean
 }) {
-  const [, navigate] = useLocation();
-  const isLoggedIn = useGlobalStore((s) => Boolean(s.session));
+  const [, navigate] = useLocation()
+  const isLoggedIn = useGlobalStore((s) => Boolean(s.session))
   const { Dialog: RenameDialog, openDialog: openRenameDialog } =
-    useRenameSnippetDialog();
+    useRenameSnippetDialog()
   const { Dialog: DeleteDialog, openDialog: openDeleteDialog } =
-    useConfirmDeleteSnippetDialog();
+    useConfirmDeleteSnippetDialog()
   const { Dialog: CreateOrderDialog, openDialog: openCreateOrderDialog } =
-    useCreateOrderDialog();
-  const { Dialog: FilesDialog, openDialog: openFilesDialog } = useFilesDialog();
+    useCreateOrderDialog()
+  const { Dialog: FilesDialog, openDialog: openFilesDialog } = useFilesDialog()
 
-  const [isChangingType, setIsChangingType] = useState(false);
+  const [isChangingType, setIsChangingType] = useState(false)
   const [currentType, setCurrentType] = useState(
     snippetType ?? snippet?.snippet_type,
-  );
-  const axios = useAxios();
-  const { toast } = useToast();
-  const qc = useQueryClient();
+  )
+  const axios = useAxios()
+  const { toast } = useToast()
+  const qc = useQueryClient()
 
   // Update currentType when snippet or snippetType changes
   useEffect(() => {
-    setCurrentType(snippetType ?? snippet?.snippet_type);
-  }, [snippetType, snippet?.snippet_type]);
+    setCurrentType(snippetType ?? snippet?.snippet_type)
+  }, [snippetType, snippet?.snippet_type])
 
   const handleTypeChange = async (newType: string) => {
-    if (!snippet || newType === currentType) return;
+    if (!snippet || newType === currentType) return
 
     try {
-      setIsChangingType(true);
+      setIsChangingType(true)
 
       const response = await axios.post("/snippets/update", {
         snippet_id: snippet.snippet_id,
         snippet_type: newType,
-      });
+      })
 
       if (response.status === 200) {
-        setCurrentType(newType);
+        setCurrentType(newType)
         toast({
           title: "Snippet type changed",
           description: `Successfully changed type to "${newType}"`,
-        });
+        })
 
         // Invalidate queries to refetch data
         await Promise.all([
           qc.invalidateQueries({ queryKey: ["snippets"] }),
           qc.invalidateQueries({ queryKey: ["snippets", snippet.snippet_id] }),
-        ]);
+        ])
 
         // Reload the page to ensure all components reflect the new type
         // window.location.reload()
       } else {
-        throw new Error("Failed to update snippet type");
+        throw new Error("Failed to update snippet type")
       }
     } catch (error: any) {
-      console.error("Error changing snippet type:", error);
+      console.error("Error changing snippet type:", error)
       toast({
         title: "Error",
         description:
           error.response?.data?.error?.message ||
           "Failed to change the snippet type. Please try again.",
         variant: "destructive",
-      });
+      })
       // Reset to previous type on error
-      setCurrentType(snippet.snippet_type);
+      setCurrentType(snippet.snippet_type)
     } finally {
-      setIsChangingType(false);
+      setIsChangingType(false)
     }
-  };
+  }
 
   return (
     <nav className="flex items-center justify-between px-2 py-3 border-b border-gray-200 bg-white text-sm border-t">
@@ -223,9 +223,9 @@ export default function EditorNav({
           size="sm"
           className="hidden md:flex px-2 text-xs"
           onClick={() => {
-            const url = encodeTextToUrlHash(code, snippetType);
-            navigator.clipboard.writeText(url);
-            alert("URL copied to clipboard!");
+            const url = encodeTextToUrlHash(code, snippetType)
+            navigator.clipboard.writeText(url)
+            alert("URL copied to clipboard!")
           }}
         >
           <Share className="mr-1 h-3 w-3" />
@@ -362,5 +362,5 @@ export default function EditorNav({
       <CreateOrderDialog />
       <FilesDialog snippetId={snippet?.snippet_id ?? ""} />
     </nav>
-  );
+  )
 }

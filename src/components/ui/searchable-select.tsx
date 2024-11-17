@@ -1,7 +1,7 @@
-import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import * as React from "react"
+import { Check, ChevronsUpDown } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 import {
   Command,
   CommandEmpty,
@@ -9,19 +9,19 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from "@/components/ui/command"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/ui/popover"
 
 interface SearchableSelectProps {
-  options: { value: string; label: string }[];
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  resourceType?: "state" | "country";
+  options: { value: string; label: string }[]
+  value: string
+  onChange: (value: string) => void
+  placeholder?: string
+  resourceType?: "state" | "country"
 }
 
 export const SearchableSelect: React.FC<SearchableSelectProps> = ({
@@ -30,20 +30,20 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
   onChange,
   resourceType,
 }) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
 
   const getPlaceholder = () => {
-    if (resourceType === "state") return "Select a state...";
-    if (resourceType === "country") return "Select a country...";
-    return "Select an option...";
-  };
-  const placeholder = getPlaceholder();
+    if (resourceType === "state") return "Select a state..."
+    if (resourceType === "country") return "Select a country..."
+    return "Select an option..."
+  }
+  const placeholder = getPlaceholder()
 
   const getEmptyMessage = () => {
-    if (resourceType === "state") return "No state found.";
-    if (resourceType === "country") return "No country found.";
-    return "No option found.";
-  };
+    if (resourceType === "state") return "No state found."
+    if (resourceType === "country") return "No country found."
+    return "No option found."
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -72,8 +72,8 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
                   key={option.value}
                   value={option.value}
                   onSelect={(currentValue) => {
-                    onChange(currentValue === value ? "" : currentValue);
-                    setOpen(false);
+                    onChange(currentValue === value ? "" : currentValue)
+                    setOpen(false)
                   }}
                 >
                   <Check
@@ -90,5 +90,5 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
         </Command>
       </PopoverContent>
     </Popover>
-  );
-};
+  )
+}

@@ -1,31 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 
 const getUrlParams = () => {
-  const searchParams = new URLSearchParams(window.location.search);
-  const newParams: Record<string, string> = {};
+  const searchParams = new URLSearchParams(window.location.search)
+  const newParams: Record<string, string> = {}
 
   for (const [key, value] of searchParams.entries()) {
-    newParams[key] = value;
+    newParams[key] = value
   }
-  return newParams;
-};
+  return newParams
+}
 
 export const useUrlParams = () => {
-  const [params, setParams] = useState<Record<string, string>>(getUrlParams());
+  const [params, setParams] = useState<Record<string, string>>(getUrlParams())
 
   useEffect(() => {
     const updateParams = () => {
-      setParams(getUrlParams());
-    };
+      setParams(getUrlParams())
+    }
 
-    updateParams();
+    updateParams()
 
-    window.addEventListener("popstate", updateParams);
+    window.addEventListener("popstate", updateParams)
 
     return () => {
-      window.removeEventListener("popstate", updateParams);
-    };
-  }, []);
+      window.removeEventListener("popstate", updateParams)
+    }
+  }, [])
 
-  return params;
-};
+  return params
+}

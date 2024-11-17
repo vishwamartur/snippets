@@ -1,35 +1,35 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useAxios } from "@/hooks/use-axios";
-import { useToast } from "@/hooks/use-toast";
-import { Link, useLocation } from "wouter";
-import { useGlobalStore } from "@/hooks/use-global-store";
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useAxios } from "@/hooks/use-axios"
+import { useToast } from "@/hooks/use-toast"
+import { Link, useLocation } from "wouter"
+import { useGlobalStore } from "@/hooks/use-global-store"
 
 interface JLCPCBImportDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 export function JLCPCBImportDialog({
   open,
   onOpenChange,
 }: JLCPCBImportDialogProps) {
-  const [partNumber, setPartNumber] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const axios = useAxios();
-  const { toast } = useToast();
-  const [, navigate] = useLocation();
-  const isLoggedIn = useGlobalStore((s) => Boolean(s.session));
-  const session = useGlobalStore((s) => s.session);
+  const [partNumber, setPartNumber] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const axios = useAxios()
+  const { toast } = useToast()
+  const [, navigate] = useLocation()
+  const isLoggedIn = useGlobalStore((s) => Boolean(s.session))
+  const session = useGlobalStore((s) => s.session)
 
   const handleImport = async () => {
     if (!partNumber.startsWith("C")) {
@@ -37,12 +37,12 @@ export function JLCPCBImportDialog({
         title: "Invalid Part Number",
         description: "JLCPCB part numbers should start with 'C'.",
         variant: "destructive",
-      });
-      return;
+      })
+      return
     }
 
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
     try {
       // Check that module doesn't already exist
       const existingSnippetRes = await axios.get(
@@ -50,7 +50,7 @@ export function JLCPCBImportDialog({
         {
           validateStatus: (status) => true,
         },
-      );
+      )
 
       if (existingSnippetRes.status !== 404) {
         toast({
@@ -65,38 +65,38 @@ export function JLCPCBImportDialog({
               </Link>
             </div>
           ),
-        });
-        return;
+        })
+        return
       }
 
       const response = await axios
         .post("/snippets/generate_from_jlcpcb", {
           jlcpcb_part_number: partNumber,
         })
-        .catch((e) => e);
-      const { snippet, error } = response.data;
+        .catch((e) => e)
+      const { snippet, error } = response.data
       if (error) {
-        setError(error.message);
-        setIsLoading(false);
-        return;
+        setError(error.message)
+        setIsLoading(false)
+        return
       }
       toast({
         title: "Import Successful",
         description: "JLCPCB component has been imported successfully.",
-      });
-      onOpenChange(false);
-      navigate(`/editor?snippet_id=${snippet.snippet_id}`);
+      })
+      onOpenChange(false)
+      navigate(`/editor?snippet_id=${snippet.snippet_id}`)
     } catch (error) {
-      console.error("Error importing JLCPCB component:", error);
+      console.error("Error importing JLCPCB component:", error)
       toast({
         title: "Import Failed",
         description: "Failed to import the JLCPCB component. Please try again.",
         variant: "destructive",
-      });
+      })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -125,13 +125,13 @@ export function JLCPCBImportDialog({
               <Button
                 variant="default"
                 onClick={() => {
-                  const issueTitle = `[${partNumber}] Failed to import from JLCPCB`;
-                  const issueBody = `I tried to import the part number ${partNumber} from JLCPCB, but it failed. Here's the error I got:\n\`\`\`\n${error}\n\`\`\`\n\nCould be an issue in \`fetchEasyEDAComponent\` or \`convertRawEasyEdaToTs\``;
-                  const issueLabels = "snippets,good first issue";
-                  const url = `https://github.com/tscircuit/easyeda-converter/issues/new?title=${encodeURIComponent(issueTitle)}&body=${encodeURIComponent(issueBody)}&labels=${encodeURIComponent(issueLabels)}`;
+                  const issueTitle = `[${partNumber}] Failed to import from JLCPCB`
+                  const issueBody = `I tried to import the part number ${partNumber} from JLCPCB, but it failed. Here's the error I got:\n\`\`\`\n${error}\n\`\`\`\n\nCould be an issue in \`fetchEasyEDAComponent\` or \`convertRawEasyEdaToTs\``
+                  const issueLabels = "snippets,good first issue"
+                  const url = `https://github.com/tscircuit/easyeda-converter/issues/new?title=${encodeURIComponent(issueTitle)}&body=${encodeURIComponent(issueBody)}&labels=${encodeURIComponent(issueLabels)}`
 
                   // Open the issue in a new tab
-                  window.open(url, "_blank");
+                  window.open(url, "_blank")
                 }}
               >
                 File Issue on Github (prefilled)
@@ -150,5 +150,5 @@ export function JLCPCBImportDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

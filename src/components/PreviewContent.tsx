@@ -1,45 +1,45 @@
-import { CodeEditor } from "@/components/CodeEditor";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
-import { applyPcbEditEvents } from "@/lib/utils/pcbManualEditEventHandler";
-import { CadViewer } from "@tscircuit/3d-viewer";
-import { PCBViewer } from "@tscircuit/pcb-viewer";
-import { Schematic } from "@tscircuit/schematic-viewer";
-import { useEffect, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import { ErrorTabContent } from "./ErrorTabContent";
-import PreviewEmptyState from "./PreviewEmptyState";
-import { RunButton } from "./RunButton";
-import { CircuitJsonTableViewer } from "./TableViewer/CircuitJsonTableViewer";
-import { CircuitToSvgWithMouseControl } from "./CircuitToSvgWithMouseControl";
-import { BomTable } from "./BomTable";
-import { CheckIcon, EllipsisIcon, EllipsisVerticalIcon } from "lucide-react";
+import { CodeEditor } from "@/components/CodeEditor"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { cn } from "@/lib/utils"
+import { applyPcbEditEvents } from "@/lib/utils/pcbManualEditEventHandler"
+import { CadViewer } from "@tscircuit/3d-viewer"
+import { PCBViewer } from "@tscircuit/pcb-viewer"
+import { Schematic } from "@tscircuit/schematic-viewer"
+import { useEffect, useState } from "react"
+import { ErrorBoundary } from "react-error-boundary"
+import { ErrorTabContent } from "./ErrorTabContent"
+import PreviewEmptyState from "./PreviewEmptyState"
+import { RunButton } from "./RunButton"
+import { CircuitJsonTableViewer } from "./TableViewer/CircuitJsonTableViewer"
+import { CircuitToSvgWithMouseControl } from "./CircuitToSvgWithMouseControl"
+import { BomTable } from "./BomTable"
+import { CheckIcon, EllipsisIcon, EllipsisVerticalIcon } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "./ui/dropdown-menu"
 
 export interface PreviewContentProps {
-  code: string;
-  readOnly?: boolean;
-  triggerRunTsx: () => void;
-  tsxRunTriggerCount: number;
-  errorMessage: string | null;
-  circuitJson: any;
-  circuitJsonKey?: string;
-  className?: string;
-  showCodeTab?: boolean;
-  showJsonTab?: boolean;
-  showImportAndFormatButtons?: boolean;
-  headerClassName?: string;
-  leftHeaderContent?: React.ReactNode;
-  isStreaming?: boolean;
-  onCodeChange?: (code: string) => void;
-  onDtsChange?: (dts: string) => void;
-  manualEditsFileContent?: string;
-  onManualEditsFileContentChange?: (newmanualEditsFileContent: string) => void;
+  code: string
+  readOnly?: boolean
+  triggerRunTsx: () => void
+  tsxRunTriggerCount: number
+  errorMessage: string | null
+  circuitJson: any
+  circuitJsonKey?: string
+  className?: string
+  showCodeTab?: boolean
+  showJsonTab?: boolean
+  showImportAndFormatButtons?: boolean
+  headerClassName?: string
+  leftHeaderContent?: React.ReactNode
+  isStreaming?: boolean
+  onCodeChange?: (code: string) => void
+  onDtsChange?: (dts: string) => void
+  manualEditsFileContent?: string
+  onManualEditsFileContentChange?: (newmanualEditsFileContent: string) => void
 }
 
 export const PreviewContent = ({
@@ -62,28 +62,28 @@ export const PreviewContent = ({
   manualEditsFileContent,
   onManualEditsFileContentChange,
 }: PreviewContentProps) => {
-  const [activeTab, setActiveTab] = useState(showCodeTab ? "code" : "pcb");
-  const [lastRunHash, setLastRunHash] = useState("");
+  const [activeTab, setActiveTab] = useState(showCodeTab ? "code" : "pcb")
+  const [lastRunHash, setLastRunHash] = useState("")
 
-  const currentCodeHash = code + "\n" + manualEditsFileContent;
-  const hasCodeChangedSinceLastRun = lastRunHash !== currentCodeHash;
+  const currentCodeHash = code + "\n" + manualEditsFileContent
+  const hasCodeChangedSinceLastRun = lastRunHash !== currentCodeHash
 
   useEffect(() => {
-    if (tsxRunTriggerCount === 0) return;
-    setLastRunHash(currentCodeHash);
-  }, [tsxRunTriggerCount]);
+    if (tsxRunTriggerCount === 0) return
+    setLastRunHash(currentCodeHash)
+  }, [tsxRunTriggerCount])
 
   useEffect(() => {
     if (errorMessage) {
-      setActiveTab("error");
+      setActiveTab("error")
     }
-  }, [errorMessage]);
+  }, [errorMessage])
 
   useEffect(() => {
     if (activeTab === "code" && circuitJson && !errorMessage) {
-      setActiveTab("pcb");
+      setActiveTab("pcb")
     }
-  }, [circuitJson]);
+  }, [circuitJson])
 
   return (
     <div className={cn("flex flex-col relative", className)}>
@@ -217,16 +217,16 @@ export const PreviewContent = ({
                     soup={circuitJson}
                     onEditEventsChanged={(editEvents) => {
                       if (editEvents.some((editEvent) => editEvent.in_progress))
-                        return;
+                        return
                       // Update state with new edit events
                       const newManualEditsFileContent = applyPcbEditEvents({
                         editEvents,
                         circuitJson,
                         manualEditsFileContent,
-                      });
+                      })
                       onManualEditsFileContentChange?.(
                         JSON.stringify(newManualEditsFileContent, null, 2),
-                      );
+                      )
                     }}
                   />
                 ) : (
@@ -298,5 +298,5 @@ export const PreviewContent = ({
         </Tabs>
       </div>
     </div>
-  );
-};
+  )
+}
