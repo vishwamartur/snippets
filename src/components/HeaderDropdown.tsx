@@ -1,13 +1,13 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { cn } from "@/lib/utils"
-import { ChevronDown, FileUp, Upload, Zap } from "lucide-react"
-import { Link } from "wouter"
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import { ChevronDown, FileUp, Upload, Zap } from "lucide-react";
+import { Link } from "wouter";
 
 export default function HeaderDropdown() {
   const blankTemplates = [
@@ -29,7 +29,7 @@ export default function HeaderDropdown() {
       badgeColor: "bg-pink-500 ",
       disabled: true,
     },
-  ]
+  ];
 
   return (
     <DropdownMenu>
@@ -73,5 +73,5 @@ export default function HeaderDropdown() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

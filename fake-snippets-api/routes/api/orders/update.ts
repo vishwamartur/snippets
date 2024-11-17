@@ -1,6 +1,6 @@
-import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec"
-import { z } from "zod"
-import { orderSchema } from "fake-snippets-api/lib/db/schema"
+import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec";
+import { z } from "zod";
+import { orderSchema } from "fake-snippets-api/lib/db/schema";
 
 export default withRouteSpec({
   methods: ["PATCH"],
@@ -27,24 +27,24 @@ export default withRouteSpec({
     order: orderSchema,
   }),
 })(async (req, ctx) => {
-  const { order_id, updates } = req.jsonBody
+  const { order_id, updates } = req.jsonBody;
 
-  const existingOrder = ctx.db.getOrderById(order_id)
+  const existingOrder = ctx.db.getOrderById(order_id);
   if (!existingOrder) {
     return ctx.error(404, {
       error_code: "order_not_found",
       message: "Order not found",
-    })
+    });
   }
 
   ctx.db.updateOrder(order_id, {
     ...updates,
     updated_at: new Date().toISOString(),
-  })
+  });
 
-  const updatedOrder = ctx.db.getOrderById(order_id)!
+  const updatedOrder = ctx.db.getOrderById(order_id)!;
 
   return ctx.json({
     order: updatedOrder,
-  })
-})
+  });
+});

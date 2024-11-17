@@ -1,91 +1,91 @@
-import { JLCPCBImportDialog } from "@/components/JLCPCBImportDialog"
-import { useAxios } from "@/hooks/use-axios"
-import { useGlobalStore } from "@/hooks/use-global-store"
-import { useNotImplementedToast } from "@/hooks/use-toast"
-import { Command } from "cmdk"
-import { Snippet } from "fake-snippets-api/lib/db/schema"
-import React from "react"
-import { useQuery } from "react-query"
+import { JLCPCBImportDialog } from "@/components/JLCPCBImportDialog";
+import { useAxios } from "@/hooks/use-axios";
+import { useGlobalStore } from "@/hooks/use-global-store";
+import { useNotImplementedToast } from "@/hooks/use-toast";
+import { Command } from "cmdk";
+import { Snippet } from "fake-snippets-api/lib/db/schema";
+import React from "react";
+import { useQuery } from "react-query";
 
-type SnippetType = "board" | "package" | "model" | "footprint" | "snippet"
+type SnippetType = "board" | "package" | "model" | "footprint" | "snippet";
 
 interface Template {
-  name: string
-  type: SnippetType
-  disabled?: boolean
+  name: string;
+  type: SnippetType;
+  disabled?: boolean;
 }
 
 interface ImportOption {
-  name: string
-  type: SnippetType
-  special?: boolean
+  name: string;
+  type: SnippetType;
+  special?: boolean;
 }
 
 const CmdKMenu = () => {
-  const [open, setOpen] = React.useState(false)
-  const [searchQuery, setSearchQuery] = React.useState("")
-  const [isJLCPCBDialogOpen, setIsJLCPCBDialogOpen] = React.useState(false)
-  const toastNotImplemented = useNotImplementedToast()
-  const axios = useAxios()
-  const currentUser = useGlobalStore((s) => s.session?.github_username)
+  const [open, setOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [isJLCPCBDialogOpen, setIsJLCPCBDialogOpen] = React.useState(false);
+  const toastNotImplemented = useNotImplementedToast();
+  const axios = useAxios();
+  const currentUser = useGlobalStore((s) => s.session?.github_username);
 
   // Search results query
   const { data: searchResults = [], isLoading: isSearching } = useQuery(
     ["snippetSearch", searchQuery],
     async () => {
-      if (!searchQuery) return []
+      if (!searchQuery) return [];
       const { data } = await axios.get("/snippets/search", {
         params: { q: searchQuery },
-      })
-      return data.snippets || []
+      });
+      return data.snippets || [];
     },
     {
       enabled: Boolean(searchQuery),
     },
-  )
+  );
 
   // Recent snippets query
   const { data: recentSnippets = [] } = useQuery<Snippet[]>(
     ["userSnippets", currentUser],
     async () => {
-      if (!currentUser) return []
+      if (!currentUser) return [];
       const response = await axios.get<{ snippets: Snippet[] }>(
         `/snippets/list?owner_name=${currentUser}`,
-      )
-      return response.data.snippets || []
+      );
+      return response.data.snippets || [];
     },
     {
       enabled: !!currentUser && !searchQuery,
     },
-  )
+  );
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault()
-        setOpen((prev) => !prev)
+        e.preventDefault();
+        setOpen((prev) => !prev);
       }
-    }
+    };
 
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
-  }, [])
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   const blankTemplates: Template[] = [
     { name: "New Circuit Board", type: "board" },
     { name: "New Circuit Module", type: "package" },
     { name: "New 3D Model", type: "model", disabled: true },
     { name: "New Footprint", type: "footprint", disabled: true },
-  ]
+  ];
 
-  const templates: Template[] = [{ name: "Blinking LED Board", type: "board" }]
+  const templates: Template[] = [{ name: "Blinking LED Board", type: "board" }];
 
   const importOptions: ImportOption[] = [
     { name: "KiCad Footprint", type: "footprint" },
     { name: "KiCad Project", type: "board" },
     { name: "KiCad Module", type: "package" },
     { name: "JLCPCB Component", type: "package", special: true },
-  ]
+  ];
 
   return (
     <>
@@ -135,8 +135,8 @@ const CmdKMenu = () => {
                       key={snippet.snippet_id}
                       value={snippet.name || snippet.unscoped_name}
                       onSelect={() => {
-                        window.location.href = `/editor?snippet_id=${snippet.snippet_id}`
-                        setOpen(false)
+                        window.location.href = `/editor?snippet_id=${snippet.snippet_id}`;
+                        setOpen(false);
                       }}
                       className="flex items-center justify-between px-2 py-1.5 rounded-sm text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-default aria-selected:bg-gray-100 dark:aria-selected:bg-gray-700"
                     >
@@ -166,8 +166,8 @@ const CmdKMenu = () => {
                       key={snippet.snippet_id}
                       value={snippet.unscoped_name}
                       onSelect={() => {
-                        window.location.href = `/editor?snippet_id=${snippet.snippet_id}`
-                        setOpen(false)
+                        window.location.href = `/editor?snippet_id=${snippet.snippet_id}`;
+                        setOpen(false);
                       }}
                       className="flex items-center justify-between px-2 py-1.5 rounded-sm text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-default aria-selected:bg-gray-100 dark:aria-selected:bg-gray-700"
                     >
@@ -197,8 +197,8 @@ const CmdKMenu = () => {
                     disabled={template.disabled}
                     onSelect={() => {
                       if (!template.disabled) {
-                        window.location.href = `/editor?template=${template.name.toLowerCase().replace(/ /g, "-")}`
-                        setOpen(false)
+                        window.location.href = `/editor?template=${template.name.toLowerCase().replace(/ /g, "-")}`;
+                        setOpen(false);
                       }
                     }}
                     className="flex items-center justify-between px-2 py-1.5 rounded-sm text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-default disabled:opacity-50 aria-selected:bg-gray-100 dark:aria-selected:bg-gray-700"
@@ -222,8 +222,8 @@ const CmdKMenu = () => {
                     key={template.name}
                     value={template.name}
                     onSelect={() => {
-                      window.location.href = `/editor?template=${template.name.toLowerCase().replace(/ /g, "-")}`
-                      setOpen(false)
+                      window.location.href = `/editor?template=${template.name.toLowerCase().replace(/ /g, "-")}`;
+                      setOpen(false);
                     }}
                     className="flex items-center justify-between px-2 py-1.5 rounded-sm text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-default aria-selected:bg-gray-100 dark:aria-selected:bg-gray-700"
                   >
@@ -247,11 +247,11 @@ const CmdKMenu = () => {
                     value={option.name}
                     onSelect={() => {
                       if (option.special) {
-                        setOpen(false)
-                        setIsJLCPCBDialogOpen(true)
+                        setOpen(false);
+                        setIsJLCPCBDialogOpen(true);
                       } else {
-                        setOpen(false)
-                        toastNotImplemented(`${option.name} Import`)
+                        setOpen(false);
+                        toastNotImplemented(`${option.name} Import`);
                       }
                     }}
                     className="flex items-center justify-between px-2 py-1.5 rounded-sm text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-default aria-selected:bg-gray-100 dark:aria-selected:bg-gray-700"
@@ -292,7 +292,7 @@ const CmdKMenu = () => {
         onOpenChange={setIsJLCPCBDialogOpen}
       />
     </>
-  )
-}
+  );
+};
 
-export default CmdKMenu
+export default CmdKMenu;

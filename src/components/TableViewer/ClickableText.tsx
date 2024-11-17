@@ -1,9 +1,9 @@
 // ClickableText.tsx
-import React from "react"
+import React from "react";
 
 interface ClickableTextProps {
-  text: string
-  onClick: () => void
+  text: string;
+  onClick: () => void;
 }
 
 export const ClickableText: React.FC<ClickableTextProps> = ({
@@ -17,5 +17,5 @@ export const ClickableText: React.FC<ClickableTextProps> = ({
     >
       {text}
     </span>
-  )
-}
+  );
+};

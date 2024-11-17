@@ -1,4 +1,4 @@
-import type { DbClient } from "./db-client"
+import type { DbClient } from "./db-client";
 
 export const seed = (db: DbClient) => {
   const { account_id } = db.addAccount({
@@ -16,10 +16,10 @@ export const seed = (db: DbClient) => {
       country: "United States of America",
       phone: "555-123-4567",
     },
-  })
+  });
   db.addAccount({
     github_username: "seveibar",
-  })
+  });
   db.addSnippet({
     snippet_id: "snippet-1234",
     name: "testuser/my-test-board",
@@ -529,7 +529,7 @@ export default () => (
         footprinter_string: "dip8",
       },
     ],
-  })
+  });
 
   // Define the @tsci/seveibar.a555timer package
   db.addSnippet({
@@ -1059,7 +1059,7 @@ exports.A555Timer = A555Timer;
         footprinter_string: "dip8",
       },
     ],
-  })
+  });
 
   // Add a snippet that outputs a square waveform using the a555timer
 
@@ -1574,7 +1574,7 @@ export const SquareWaveModule = () => (
         footprinter_string: "dip8",
       },
     ],
-  })
+  });
 
   db.addOrder({
     account_id,
@@ -1601,5 +1601,5 @@ export const SquareWaveModule = () => (
     ],
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
-  })
-}
+  });
+};

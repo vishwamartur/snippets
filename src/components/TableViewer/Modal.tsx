@@ -1,15 +1,15 @@
 // Modal.tsx
-import React from "react"
+import React from "react";
 
 interface ModalProps {
-  open: boolean
-  children: React.ReactNode
-  title: string
-  onClose: () => void
+  open: boolean;
+  children: React.ReactNode;
+  title: string;
+  onClose: () => void;
 }
 
 const Modal: React.FC<ModalProps> = ({ open, children, title, onClose }) => {
-  if (!open) return null
+  if (!open) return null;
 
   return (
     <div
@@ -19,8 +19,8 @@ const Modal: React.FC<ModalProps> = ({ open, children, title, onClose }) => {
       <div
         className="bg-white p-5 rounded-lg relative w-11/12 max-w-2xl"
         onClick={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
+          e.preventDefault();
+          e.stopPropagation();
         }}
       >
         <h2 className="mt-0 text-xl">{title}</h2>
@@ -33,7 +33,7 @@ const Modal: React.FC<ModalProps> = ({ open, children, title, onClose }) => {
         {children}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Modal
+export default Modal;

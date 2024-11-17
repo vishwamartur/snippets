@@ -175,38 +175,38 @@ export const exportPnpCsvToBuffer = async (
 
 */
 
-import { AnyCircuitElement } from "circuit-json"
-import { saveAs } from "file-saver"
-import JSZip from "jszip"
+import { AnyCircuitElement } from "circuit-json";
+import { saveAs } from "file-saver";
+import JSZip from "jszip";
 import {
   stringifyGerberCommandLayers,
   convertSoupToGerberCommands,
   convertSoupToExcellonDrillCommands,
   stringifyExcellonDrill,
-} from "circuit-json-to-gerber"
+} from "circuit-json-to-gerber";
 import {
   convertCircuitJsonToBomRows,
   convertBomRowsToCsv,
-} from "circuit-json-to-bom-csv"
-import { convertCircuitJsonToPickAndPlaceCsv } from "circuit-json-to-pnp-csv"
+} from "circuit-json-to-bom-csv";
+import { convertCircuitJsonToPickAndPlaceCsv } from "circuit-json-to-pnp-csv";
 
 export const downloadFabricationFiles = async ({
   circuitJson,
   snippetUnscopedName,
 }: {
-  circuitJson: AnyCircuitElement[]
-  snippetUnscopedName: string
+  circuitJson: AnyCircuitElement[];
+  snippetUnscopedName: string;
 }) => {
-  const zip = new JSZip()
+  const zip = new JSZip();
 
   // Generate Gerber files
   const gerberLayerCmds = convertSoupToGerberCommands(circuitJson, {
     flip_y_axis: false,
-  })
-  const gerberFileContents = stringifyGerberCommandLayers(gerberLayerCmds)
+  });
+  const gerberFileContents = stringifyGerberCommandLayers(gerberLayerCmds);
 
   for (const [fileName, fileContents] of Object.entries(gerberFileContents)) {
-    zip.file(`gerber/${fileName}.gbr`, fileContents)
+    zip.file(`gerber/${fileName}.gbr`, fileContents);
   }
 
   // Generate Drill files
@@ -214,20 +214,20 @@ export const downloadFabricationFiles = async ({
     circuitJson,
     is_plated: true,
     flip_y_axis: false,
-  })
-  const drillFileContents = stringifyExcellonDrill(drillCmds)
-  zip.file("gerber/drill.drl", drillFileContents)
+  });
+  const drillFileContents = stringifyExcellonDrill(drillCmds);
+  zip.file("gerber/drill.drl", drillFileContents);
 
   // Generate BOM CSV
-  const bomRows = await convertCircuitJsonToBomRows({ circuitJson })
-  const bomCsv = await convertBomRowsToCsv(bomRows)
-  zip.file("bom.csv", bomCsv)
+  const bomRows = await convertCircuitJsonToBomRows({ circuitJson });
+  const bomCsv = await convertBomRowsToCsv(bomRows);
+  zip.file("bom.csv", bomCsv);
 
   // Generate Pick and Place CSV
-  const pnpCsv = await convertCircuitJsonToPickAndPlaceCsv(circuitJson)
-  zip.file("pick_and_place.csv", pnpCsv)
+  const pnpCsv = await convertCircuitJsonToPickAndPlaceCsv(circuitJson);
+  zip.file("pick_and_place.csv", pnpCsv);
 
   // Generate and download the zip file
-  const zipBlob = await zip.generateAsync({ type: "blob" })
-  saveAs(zipBlob, `${snippetUnscopedName}_fabrication_files.zip`)
-}
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+  saveAs(zipBlob, `${snippetUnscopedName}_fabrication_files.zip`);
+};

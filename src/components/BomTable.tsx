@@ -1,9 +1,9 @@
-import { SupplierName } from "@tscircuit/props"
-import { AnyCircuitElement } from "circuit-json"
-import { Link } from "wouter"
+import { SupplierName } from "@tscircuit/props";
+import { AnyCircuitElement } from "circuit-json";
+import { Link } from "wouter";
 
 interface BomTableProps {
-  circuitJson: AnyCircuitElement[]
+  circuitJson: AnyCircuitElement[];
 }
 
 export const linkify = (supplier: string, partNumber: string) => {
@@ -16,24 +16,24 @@ export const linkify = (supplier: string, partNumber: string) => {
       >
         {partNumber}
       </a>
-    )
+    );
   }
-  return partNumber
-}
+  return partNumber;
+};
 
 export const BomTable: React.FC<BomTableProps> = ({ circuitJson }) => {
   const sourceComponents = circuitJson.filter(
     (el) => el.type === "source_component",
-  )
+  );
 
-  const supplierColumns = new Set<SupplierName>()
+  const supplierColumns = new Set<SupplierName>();
   sourceComponents.forEach((comp) => {
     if (comp.supplier_part_numbers) {
       Object.keys(comp.supplier_part_numbers).forEach((supplier) =>
         supplierColumns.add(supplier as SupplierName),
-      )
+      );
     }
-  })
+  });
 
   return (
     <div className="overflow-x-auto">
@@ -65,5 +65,5 @@ export const BomTable: React.FC<BomTableProps> = ({ circuitJson }) => {
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};

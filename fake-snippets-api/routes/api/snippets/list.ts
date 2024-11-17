@@ -1,6 +1,6 @@
-import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec"
-import { z } from "zod"
-import { snippetSchema } from "fake-snippets-api/lib/db/schema"
+import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec";
+import { z } from "zod";
+import { snippetSchema } from "fake-snippets-api/lib/db/schema";
 
 export default withRouteSpec({
   methods: ["GET", "POST"],
@@ -15,14 +15,14 @@ export default withRouteSpec({
     snippets: z.array(snippetSchema),
   }),
 })(async (req, ctx) => {
-  const { owner_name, unscoped_name } = req.commonParams
+  const { owner_name, unscoped_name } = req.commonParams;
 
   const snippets = ctx.db
     .getSnippetsByAuthor(owner_name)
-    .filter((s) => !unscoped_name || s.unscoped_name === unscoped_name)
+    .filter((s) => !unscoped_name || s.unscoped_name === unscoped_name);
 
   return ctx.json({
     ok: true,
     snippets,
-  })
-})
+  });
+});

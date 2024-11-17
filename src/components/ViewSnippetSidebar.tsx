@@ -1,20 +1,20 @@
-import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
-import { useCurrentSnippet } from "@/hooks/use-current-snippet"
-import { useToast } from "@/hooks/use-toast"
-import { cn } from "@/lib/utils"
-import { AtSign, Bot, Clock, Code, File, GitFork, Package } from "lucide-react"
-import { Link } from "wouter"
-import { useFilesDialog } from "./dialogs/files-dialog"
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { useCurrentSnippet } from "@/hooks/use-current-snippet";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { AtSign, Bot, Clock, Code, File, GitFork, Package } from "lucide-react";
+import { Link } from "wouter";
+import { useFilesDialog } from "./dialogs/files-dialog";
 
 export default function ViewSnippetSidebar({
   className,
 }: {
-  className?: string
+  className?: string;
 }) {
-  const { snippet } = useCurrentSnippet()
-  const { toast } = useToast()
-  const { Dialog: FilesDialog, openDialog: openFilesDialog } = useFilesDialog()
-  const { copyToClipboard } = useCopyToClipboard()
+  const { snippet } = useCurrentSnippet();
+  const { toast } = useToast();
+  const { Dialog: FilesDialog, openDialog: openFilesDialog } = useFilesDialog();
+  const { copyToClipboard } = useCopyToClipboard();
 
   return (
     <div
@@ -67,7 +67,7 @@ export default function ViewSnippetSidebar({
               label: "Files",
               onClick: () => {
                 if (snippet) {
-                  openFilesDialog()
+                  openFilesDialog();
                 }
               },
             },
@@ -93,7 +93,7 @@ export default function ViewSnippetSidebar({
                               </a>
                             </div>
                           ),
-                        })
+                        });
                       }
                     : item.onClick
                 }
@@ -155,5 +155,5 @@ export default function ViewSnippetSidebar({
       </div>
       {snippet && <FilesDialog snippetId={snippet.snippet_id} />}
     </div>
-  )
+  );
 }

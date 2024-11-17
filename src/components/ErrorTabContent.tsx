@@ -1,27 +1,27 @@
-import { GitHubLogoIcon, MagicWandIcon } from "@radix-ui/react-icons"
-import { ClipboardIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useAiApi } from "@/hooks/use-ai-api"
-import { useAsyncMemo } from "use-async-memo"
-import { TextBlock } from "@anthropic-ai/sdk/resources/messages.mjs"
-import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash"
+import { GitHubLogoIcon, MagicWandIcon } from "@radix-ui/react-icons";
+import { ClipboardIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAiApi } from "@/hooks/use-ai-api";
+import { useAsyncMemo } from "use-async-memo";
+import { TextBlock } from "@anthropic-ai/sdk/resources/messages.mjs";
+import { encodeTextToUrlHash } from "@/lib/encodeTextToUrlHash";
 
 export const ErrorTabContent = ({
   code,
   isStreaming,
   errorMessage,
 }: {
-  code?: string
-  isStreaming?: boolean
-  errorMessage?: string | null
+  code?: string;
+  isStreaming?: boolean;
+  errorMessage?: string | null;
 }) => {
-  const anthropic = useAiApi()
+  const anthropic = useAiApi();
   const simplifiedErrorMessage = useAsyncMemo(async () => {
-    if (isStreaming) return ""
-    if (!code) return ""
-    if (!errorMessage) return ""
+    if (isStreaming) return "";
+    if (!code) return "";
+    if (!errorMessage) return "";
     // Only simplify for ZodErrors for now
-    if (!errorMessage.includes("ZodError")) return ""
+    if (!errorMessage.includes("ZodError")) return "";
     const response = await anthropic.messages.create({
       model: "claude-3-haiku-20240307",
       max_tokens: 1000,
@@ -39,9 +39,9 @@ ${errorMessage}
           `.trim(),
         },
       ],
-    })
-    return (response.content[0] as TextBlock).text
-  }, [code, errorMessage, isStreaming])
+    });
+    return (response.content[0] as TextBlock).text;
+  }, [code, errorMessage, isStreaming]);
 
   if (!errorMessage) {
     return (
@@ -55,7 +55,7 @@ ${errorMessage}
           </p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -75,9 +75,9 @@ ${errorMessage}
         <Button
           variant="outline"
           onClick={() => {
-            if (!errorMessage) return
-            navigator.clipboard.writeText(errorMessage)
-            alert("Error copied to clipboard!")
+            if (!errorMessage) return;
+            navigator.clipboard.writeText(errorMessage);
+            alert("Error copied to clipboard!");
           }}
         >
           <ClipboardIcon className="w-4 h-4 mr-2" />
@@ -94,19 +94,19 @@ ${errorMessage}
               .replace(/[^a-zA-Z0-9 ]/g, " ")
               .replace(/\s+/g, " ")
               .replace(/ \d+ /g, " ")
-              .slice(0, 100)}`
+              .slice(0, 100)}`;
             const url = encodeTextToUrlHash(code ?? "").replace(
               "http://localhost:5173",
               "https://snippets.tscircuit.com",
-            )
-            let body = `[Snippet code to reproduce](${url})\n\n### Error\n\`\`\`\n${errorMessage.slice(0, 600)}\n\`\`\``
+            );
+            let body = `[Snippet code to reproduce](${url})\n\n### Error\n\`\`\`\n${errorMessage.slice(0, 600)}\n\`\`\``;
             if (body.length > 4000) {
-              body = `\`\`\`tsx\n// Please paste the code here\`\`\`\n\n### Error\n\`\`\`\n${errorMessage.slice(0, 2000)}\n\`\`\``
+              body = `\`\`\`tsx\n// Please paste the code here\`\`\`\n\n### Error\n\`\`\`\n${errorMessage.slice(0, 2000)}\n\`\`\``;
             }
             window.open(
               `https://github.com/tscircuit/snippets/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`,
               "_blank",
-            )
+            );
           }}
         >
           <GitHubLogoIcon className="w-4 h-4 mr-2" />
@@ -118,5 +118,5 @@ ${errorMessage}
         </Button>
       </div>
     </>
-  )
-}
+  );
+};

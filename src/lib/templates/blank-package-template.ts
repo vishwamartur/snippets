@@ -8,4 +8,4 @@ export const MyChip = (props: { name: string }) => (
   />
 )
 `.trim(),
-}
+};

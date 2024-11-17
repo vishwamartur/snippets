@@ -1,8 +1,8 @@
-import { getTestServer } from "bun-tests/fake-snippets-api/fixtures/get-test-server"
-import { test, expect } from "bun:test"
+import { getTestServer } from "bun-tests/fake-snippets-api/fixtures/get-test-server";
+import { test, expect } from "bun:test";
 
 test("delete snippet", async () => {
-  const { axios, db } = await getTestServer()
+  const { axios, db } = await getTestServer();
 
   // Add a test snippet
   const snippet = {
@@ -14,8 +14,8 @@ test("delete snippet", async () => {
     name: "testuser/TestSnippet",
     snippet_type: "package",
     description: "Test Description",
-  }
-  const addedSnippet: any = db.addSnippet(snippet as any)
+  };
+  const addedSnippet: any = db.addSnippet(snippet as any);
 
   // Delete the snippet
   const response = await axios.post(
@@ -28,24 +28,24 @@ test("delete snippet", async () => {
         Authorization: "Bearer 1234",
       },
     },
-  )
+  );
 
-  expect(response.status).toBe(200)
-  expect(response.data.ok).toBe(true)
+  expect(response.status).toBe(200);
+  expect(response.data.ok).toBe(true);
 
   // Verify the snippet was deleted from the database
-  const deletedSnippet = db.getSnippetById(addedSnippet.snippet_id)
-  expect(deletedSnippet).toBeUndefined()
+  const deletedSnippet = db.getSnippetById(addedSnippet.snippet_id);
+  expect(deletedSnippet).toBeUndefined();
 
   // List all the snippets and verify the deleted snippet is not in the list
-  const listResponse = await axios.get("/api/snippets/list")
+  const listResponse = await axios.get("/api/snippets/list");
 
-  expect(listResponse.status).toBe(200)
-  expect(listResponse.data.snippets).toHaveLength(0)
-})
+  expect(listResponse.status).toBe(200);
+  expect(listResponse.data.snippets).toHaveLength(0);
+});
 
 test("delete non-existent snippet", async () => {
-  const { axios } = await getTestServer()
+  const { axios } = await getTestServer();
 
   try {
     await axios.post(
@@ -58,17 +58,17 @@ test("delete non-existent snippet", async () => {
           Authorization: "Bearer 1234",
         },
       },
-    )
+    );
     // If the request doesn't throw an error, fail the test
-    expect(true).toBe(false)
+    expect(true).toBe(false);
   } catch (error: any) {
-    expect(error.status).toBe(404)
-    expect(error.data.error.message).toBe("Snippet not found")
+    expect(error.status).toBe(404);
+    expect(error.data.error.message).toBe("Snippet not found");
   }
-})
+});
 
 test("delete snippet without permission", async () => {
-  const { axios, db } = await getTestServer()
+  const { axios, db } = await getTestServer();
 
   // Add a test snippet with a different owner
   const snippet = {
@@ -80,8 +80,8 @@ test("delete snippet without permission", async () => {
     name: "otheruser/TestSnippet",
     snippet_type: "package",
     description: "Test Description",
-  }
-  const addedSnippet: any = db.addSnippet(snippet as any)
+  };
+  const addedSnippet: any = db.addSnippet(snippet as any);
 
   try {
     await axios.post(
@@ -94,13 +94,13 @@ test("delete snippet without permission", async () => {
           Authorization: "Bearer 1234",
         },
       },
-    )
+    );
     // If the request doesn't throw an error, fail the test
-    expect(true).toBe(false)
+    expect(true).toBe(false);
   } catch (error: any) {
-    expect(error.status).toBe(403)
+    expect(error.status).toBe(403);
     expect(error.data.error.message).toBe(
       "You don't have permission to delete this snippet",
-    )
+    );
   }
-})
+});

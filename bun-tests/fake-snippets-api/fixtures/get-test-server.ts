@@ -1,42 +1,42 @@
-import { afterEach } from "bun:test"
-import { tmpdir } from "node:os"
-import defaultAxios from "redaxios"
-import { startServer } from "./start-server"
-import { DbClient } from "fake-snippets-api/lib/db/db-client"
+import { afterEach } from "bun:test";
+import { tmpdir } from "node:os";
+import defaultAxios from "redaxios";
+import { startServer } from "./start-server";
+import { DbClient } from "fake-snippets-api/lib/db/db-client";
 
 interface TestFixture {
-  url: string
-  server: any
-  axios: typeof defaultAxios
-  db: DbClient
-  seed: ReturnType<typeof seedDatabase>
+  url: string;
+  server: any;
+  axios: typeof defaultAxios;
+  db: DbClient;
+  seed: ReturnType<typeof seedDatabase>;
 }
 
 export const getTestServer = async (): Promise<TestFixture> => {
-  const port = 3001 + Math.floor(Math.random() * 999)
-  const testInstanceId = Math.random().toString(36).substring(2, 15)
-  const testDbName = `testdb${testInstanceId}`
+  const port = 3001 + Math.floor(Math.random() * 999);
+  const testInstanceId = Math.random().toString(36).substring(2, 15);
+  const testDbName = `testdb${testInstanceId}`;
 
   const { server, db } = await startServer({
     port,
     testDbName,
-  })
+  });
 
-  const url = `http://127.0.0.1:${port}`
-  const seed = seedDatabase(db)
+  const url = `http://127.0.0.1:${port}`;
+  const seed = seedDatabase(db);
   const axios = defaultAxios.create({
     baseURL: url,
     headers: {
       Authorization: `Bearer ${seed.account.account_id}`,
     },
-  })
+  });
 
   afterEach(async () => {
     if (server && typeof server.stop === "function") {
-      await server.stop()
+      await server.stop();
     }
     // Here you might want to add logic to drop the test database
-  })
+  });
 
   return {
     url,
@@ -44,8 +44,8 @@ export const getTestServer = async (): Promise<TestFixture> => {
     axios,
     db,
     seed,
-  }
-}
+  };
+};
 
 const seedDatabase = (db: DbClient) => {
   const account = db.addAccount({
@@ -62,7 +62,7 @@ const seedDatabase = (db: DbClient) => {
       country: "United States of America",
       phone: "555-123-4567",
     },
-  })
+  });
   const order = db.addOrder({
     account_id: account.account_id,
     is_draft: true,
@@ -88,7 +88,7 @@ const seedDatabase = (db: DbClient) => {
     ],
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
-  })
+  });
 
   const snippet = db.addSnippet({
     unscoped_name: "TestSnippet",
@@ -99,7 +99,7 @@ const seedDatabase = (db: DbClient) => {
     name: "testuser/TestSnippet",
     snippet_type: "package",
     description: "Test Description",
-  })
+  });
 
-  return { account, order, snippet }
-}
+  return { account, order, snippet };
+};

@@ -9,4 +9,4 @@ export const MyModel = (props: any) => (
   </>
 )
 `.trim(),
-}
+};

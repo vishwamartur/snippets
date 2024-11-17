@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Globe,
   Code,
@@ -10,24 +10,24 @@ import {
   Grid,
   LayoutGrid,
   Bot,
-} from "lucide-react"
-import { useState } from "react"
-import { useLocation } from "wouter"
+} from "lucide-react";
+import { useState } from "react";
+import { useLocation } from "wouter";
 
 export function CreateNewSnippetWithAiHero() {
-  const [inputValue, setInputValue] = useState("")
-  const [, navigate] = useLocation()
+  const [inputValue, setInputValue] = useState("");
+  const [, navigate] = useLocation();
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (inputValue.trim()) {
-      navigate(`/ai?initial_prompt=${encodeURIComponent(inputValue)}`)
+      navigate(`/ai?initial_prompt=${encodeURIComponent(inputValue)}`);
     }
-  }
+  };
 
   const handleQuickPrompt = (prompt: string) => {
-    navigate(`/ai?initial_prompt=${encodeURIComponent(prompt)}`)
-  }
+    navigate(`/ai?initial_prompt=${encodeURIComponent(prompt)}`);
+  };
 
   return (
     <Card className="mb-6 bg-blue-50 rounded-sm">
@@ -80,5 +80,5 @@ export function CreateNewSnippetWithAiHero() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

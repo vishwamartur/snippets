@@ -4,4 +4,4 @@ export default () => (
     {/* write your code here! */}
   </board>
 )
-`.trim()
+`.trim();

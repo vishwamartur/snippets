@@ -1,23 +1,23 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Paperclip, ArrowUp } from "lucide-react"
-import { useState, FormEvent } from "react"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Paperclip, ArrowUp } from "lucide-react";
+import { useState, FormEvent } from "react";
 
 interface ChatInputProps {
-  onSubmit: (message: string) => void
-  disabled: boolean
+  onSubmit: (message: string) => void;
+  disabled: boolean;
 }
 
 export default function ChatInput({ onSubmit, disabled }: ChatInputProps) {
-  const [inputValue, setInputValue] = useState("")
+  const [inputValue, setInputValue] = useState("");
 
   const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (inputValue.trim()) {
-      onSubmit(inputValue)
-      setInputValue("")
+      onSubmit(inputValue);
+      setInputValue("");
     }
-  }
+  };
 
   return (
     <form
@@ -49,5 +49,5 @@ export default function ChatInput({ onSubmit, disabled }: ChatInputProps) {
         <ArrowUp className="h-5 w-5" />
       </Button>
     </form>
-  )
+  );
 }

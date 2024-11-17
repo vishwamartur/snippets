@@ -1,33 +1,33 @@
-import { Snippet } from "fake-snippets-api/lib/db/schema"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
-import { Input } from "../ui/input"
-import { Button } from "../ui/button"
-import { useState } from "react"
-import { useQuery } from "react-query"
-import { useAxios } from "@/hooks/use-axios"
-import { createUseDialog } from "./create-use-dialog"
+import { Snippet } from "fake-snippets-api/lib/db/schema";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { useState } from "react";
+import { useQuery } from "react-query";
+import { useAxios } from "@/hooks/use-axios";
+import { createUseDialog } from "./create-use-dialog";
 
 export const ImportSnippetDialog = ({
   open,
   onOpenChange,
   onSnippetSelected,
 }: {
-  open: boolean
-  onOpenChange: (open: boolean) => any
-  onSnippetSelected: (snippet: Snippet) => any
+  open: boolean;
+  onOpenChange: (open: boolean) => any;
+  onSnippetSelected: (snippet: Snippet) => any;
 }) => {
-  const [searchText, setSearchText] = useState("")
-  const axios = useAxios()
+  const [searchText, setSearchText] = useState("");
+  const axios = useAxios();
   const { data: snippets, isLoading } = useQuery(
     ["snippetSearch", searchText],
     async () => {
-      const response = await axios.get(`/snippets/search?q=${searchText}`)
-      return response.data.snippets.slice(0, 12)
+      const response = await axios.get(`/snippets/search?q=${searchText}`);
+      return response.data.snippets.slice(0, 12);
     },
     {
       enabled: searchText.length > 0,
     },
-  )
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -65,8 +65,8 @@ export const ImportSnippetDialog = ({
                     className="ml-2 flex-shrink-0"
                     variant="outline"
                     onClick={() => {
-                      onSnippetSelected(snippet)
-                      onOpenChange(false)
+                      onSnippetSelected(snippet);
+                      onOpenChange(false);
                     }}
                   >
                     Import
@@ -78,7 +78,7 @@ export const ImportSnippetDialog = ({
         </div>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export const useImportSnippetDialog = createUseDialog(ImportSnippetDialog)
+export const useImportSnippetDialog = createUseDialog(ImportSnippetDialog);

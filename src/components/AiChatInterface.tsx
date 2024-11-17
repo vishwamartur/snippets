@@ -1,18 +1,18 @@
-import { useState, useRef, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import ChatInput from "./ChatInput"
-import { useAiApi } from "@/hooks/use-ai-api"
-import { createCircuitBoard1Template } from "@tscircuit/prompt-benchmarks"
-import { TextDelta } from "@anthropic-ai/sdk/resources/messages.mjs"
-import { MagicWandIcon } from "@radix-ui/react-icons"
-import { AiChatMessage } from "./AiChatMessage"
-import { Link, useLocation } from "wouter"
-import { useSnippet } from "@/hooks/use-snippet"
-import { Edit2 } from "lucide-react"
-import { SnippetLink } from "./SnippetLink"
-import { useGlobalStore } from "@/hooks/use-global-store"
-import { useSignIn } from "@/hooks/use-sign-in"
-import { extractCodefence } from "extract-codefence"
+import { useState, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import ChatInput from "./ChatInput";
+import { useAiApi } from "@/hooks/use-ai-api";
+import { createCircuitBoard1Template } from "@tscircuit/prompt-benchmarks";
+import { TextDelta } from "@anthropic-ai/sdk/resources/messages.mjs";
+import { MagicWandIcon } from "@radix-ui/react-icons";
+import { AiChatMessage } from "./AiChatMessage";
+import { Link, useLocation } from "wouter";
+import { useSnippet } from "@/hooks/use-snippet";
+import { Edit2 } from "lucide-react";
+import { SnippetLink } from "./SnippetLink";
+import { useGlobalStore } from "@/hooks/use-global-store";
+import { useSignIn } from "@/hooks/use-sign-in";
+import { extractCodefence } from "extract-codefence";
 
 export default function AIChatInterface({
   code,
@@ -24,29 +24,29 @@ export default function AIChatInterface({
   errorMessage,
   disabled,
 }: {
-  code: string
-  disabled?: boolean
-  hasUnsavedChanges: boolean
-  snippetId?: string | null
-  onCodeChange: (code: string) => void
-  onStartStreaming: () => void
-  onStopStreaming: () => void
-  errorMessage: string | null
+  code: string;
+  disabled?: boolean;
+  hasUnsavedChanges: boolean;
+  snippetId?: string | null;
+  onCodeChange: (code: string) => void;
+  onStartStreaming: () => void;
+  onStopStreaming: () => void;
+  errorMessage: string | null;
 }) {
-  const [messages, setMessages] = useState<AiChatMessage[]>([])
-  const [isStreaming, setIsStreaming] = useState(false)
-  const anthropic = useAiApi()
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const { data: snippet } = useSnippet(snippetId!)
-  const [currentCodeBlock, setCurrentCodeBlock] = useState<string | null>(null)
-  const [location, navigate] = useLocation()
-  const isStreamingRef = useRef(false)
-  const isLoggedIn = useGlobalStore((s) => Boolean(s.session))
-  const signIn = useSignIn()
+  const [messages, setMessages] = useState<AiChatMessage[]>([]);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const anthropic = useAiApi();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { data: snippet } = useSnippet(snippetId!);
+  const [currentCodeBlock, setCurrentCodeBlock] = useState<string | null>(null);
+  const [location, navigate] = useLocation();
+  const isStreamingRef = useRef(false);
+  const isLoggedIn = useGlobalStore((s) => Boolean(s.session));
+  const signIn = useSignIn();
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const addMessage = async (message: string) => {
     const newMessages = messages.concat([
@@ -59,10 +59,10 @@ export default function AIChatInterface({
         content: "",
         codeVersion: messages.filter((m) => m.sender === "bot").length,
       },
-    ])
-    setMessages(newMessages)
-    setIsStreaming(true)
-    onStartStreaming()
+    ]);
+    setMessages(newMessages);
+    setIsStreaming(true);
+    onStartStreaming();
 
     try {
       const stream = await anthropic.messages.stream({
@@ -78,68 +78,68 @@ export default function AIChatInterface({
           },
         ],
         max_tokens: 1000,
-      })
+      });
 
-      let accumulatedContent = ""
-      let isInCodeBlock = false
+      let accumulatedContent = "";
+      let isInCodeBlock = false;
 
       for await (const chunk of stream) {
         if (chunk.type === "content_block_delta") {
-          const chunkText = (chunk.delta as TextDelta).text
-          accumulatedContent += chunkText
+          const chunkText = (chunk.delta as TextDelta).text;
+          accumulatedContent += chunkText;
 
           if (chunkText.includes("```")) {
-            isInCodeBlock = !isInCodeBlock
+            isInCodeBlock = !isInCodeBlock;
             if (isInCodeBlock) {
-              setCurrentCodeBlock("")
+              setCurrentCodeBlock("");
             } else {
-              const codeContent = extractCodefence(accumulatedContent)
+              const codeContent = extractCodefence(accumulatedContent);
               if (codeContent) {
-                onCodeChange(codeContent)
+                onCodeChange(codeContent);
               }
-              setCurrentCodeBlock(null)
+              setCurrentCodeBlock(null);
             }
           } else if (isInCodeBlock) {
             setCurrentCodeBlock((prev) => {
-              const updatedCode = (prev || "") + chunkText
-              onCodeChange(updatedCode)
-              return updatedCode
-            })
+              const updatedCode = (prev || "") + chunkText;
+              onCodeChange(updatedCode);
+              return updatedCode;
+            });
           }
 
           setMessages((prevMessages) => {
-            const updatedMessages = [...prevMessages]
+            const updatedMessages = [...prevMessages];
             updatedMessages[updatedMessages.length - 1].content =
-              accumulatedContent
-            return updatedMessages
-          })
+              accumulatedContent;
+            return updatedMessages;
+          });
         }
       }
     } catch (error) {
-      console.error("Error streaming response:", error)
+      console.error("Error streaming response:", error);
       setMessages((prevMessages) => {
-        const updatedMessages = [...prevMessages]
+        const updatedMessages = [...prevMessages];
         updatedMessages[updatedMessages.length - 1].content =
-          "An error occurred while generating the response."
-        return updatedMessages
-      })
+          "An error occurred while generating the response.";
+        return updatedMessages;
+      });
     } finally {
-      setIsStreaming(false)
-      onStopStreaming()
+      setIsStreaming(false);
+      onStopStreaming();
     }
-  }
+  };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(
       window.location.search.split("?")[1],
-    )
-    const initialPrompt = searchParams.get("initial_prompt")
+    );
+    const initialPrompt = searchParams.get("initial_prompt");
 
     if (initialPrompt && messages.length === 0 && !isStreamingRef.current) {
-      isStreamingRef.current = true
-      addMessage(initialPrompt)
+      isStreamingRef.current = true;
+      addMessage(initialPrompt);
     }
-  }, [])
+  }, []);
 
   return (
     <div className="flex flex-col h-[calc(100vh-60px)] max-w-2xl mx-auto p-4 bg-gray-100">
@@ -153,7 +153,7 @@ export default function AIChatInterface({
               className="text-xs"
               variant="ghost"
               onClick={async () => {
-                navigate(`/editor?snippet_id=${snippet.snippet_id}`)
+                navigate(`/editor?snippet_id=${snippet.snippet_id}`);
               }}
               disabled={hasUnsavedChanges}
             >
@@ -193,7 +193,7 @@ export default function AIChatInterface({
         <div className="flex justify-end mr-6">
           <Button
             onClick={() => {
-              addMessage(`Fix this error: ${errorMessage}`)
+              addMessage(`Fix this error: ${errorMessage}`);
             }}
             disabled={!isLoggedIn}
             className="mb-2 bg-green-50 hover:bg-green-100"
@@ -209,10 +209,10 @@ export default function AIChatInterface({
       )}
       <ChatInput
         onSubmit={async (message: string) => {
-          addMessage(message)
+          addMessage(message);
         }}
         disabled={isStreaming || !isLoggedIn}
       />
     </div>
-  )
+  );
 }

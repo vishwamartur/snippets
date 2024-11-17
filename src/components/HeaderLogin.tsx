@@ -1,31 +1,31 @@
-import React, { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Link, useLocation, useRouter } from "wouter"
-import { User } from "lucide-react"
-import { useSnippetsBaseApiUrl } from "@/hooks/use-snippets-base-api-url"
-import { useGlobalStore } from "@/hooks/use-global-store"
-import { useAccountBalance } from "@/hooks/use-account-balance"
-import { useIsUsingFakeApi } from "@/hooks/use-is-using-fake-api"
-import { useSignIn } from "@/hooks/use-sign-in"
+} from "@/components/ui/dropdown-menu";
+import { Link, useLocation, useRouter } from "wouter";
+import { User } from "lucide-react";
+import { useSnippetsBaseApiUrl } from "@/hooks/use-snippets-base-api-url";
+import { useGlobalStore } from "@/hooks/use-global-store";
+import { useAccountBalance } from "@/hooks/use-account-balance";
+import { useIsUsingFakeApi } from "@/hooks/use-is-using-fake-api";
+import { useSignIn } from "@/hooks/use-sign-in";
 
 interface HeaderLoginProps {}
 
 export const HeaderLogin: React.FC<HeaderLoginProps> = () => {
-  const [, setLocation] = useLocation()
-  const session = useGlobalStore((s) => s.session)
-  const isLoggedIn = Boolean(session)
-  const setSession = useGlobalStore((s) => s.setSession)
-  const snippetsBaseApiUrl = useSnippetsBaseApiUrl()
-  const isUsingFakeApi = useIsUsingFakeApi()
-  const signIn = useSignIn()
-  const { data: accountBalance } = useAccountBalance()
+  const [, setLocation] = useLocation();
+  const session = useGlobalStore((s) => s.session);
+  const isLoggedIn = Boolean(session);
+  const setSession = useGlobalStore((s) => s.setSession);
+  const snippetsBaseApiUrl = useSnippetsBaseApiUrl();
+  const isUsingFakeApi = useIsUsingFakeApi();
+  const signIn = useSignIn();
+  const { data: accountBalance } = useAccountBalance();
 
   if (!isLoggedIn) {
     return (
@@ -38,7 +38,7 @@ export const HeaderLogin: React.FC<HeaderLoginProps> = () => {
                 github_username: "testuser",
                 token: "1234",
                 session_id: "session-1234",
-              })
+              });
             }}
             variant="ghost"
             size="sm"
@@ -56,7 +56,7 @@ export const HeaderLogin: React.FC<HeaderLoginProps> = () => {
           </>
         )}
       </div>
-    )
+    );
   }
 
   return (
@@ -98,5 +98,5 @@ export const HeaderLogin: React.FC<HeaderLoginProps> = () => {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
-}
+  );
+};

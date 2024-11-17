@@ -1,31 +1,31 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Link, useLocation } from "wouter"
-import { useGlobalStore } from "../hooks/use-global-store"
-import { CreateNewSnippetWithAiHero } from "./CreateNewSnippetWithAiHero"
-import { TypeBadge } from "./TypeBadge"
-import { useQuery } from "react-query"
-import { useAxios } from "@/hooks/use-axios"
-import { Star } from "lucide-react"
-import { Snippet } from "fake-snippets-api/lib/db/schema"
-import { StarFilledIcon } from "@radix-ui/react-icons"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link, useLocation } from "wouter";
+import { useGlobalStore } from "../hooks/use-global-store";
+import { CreateNewSnippetWithAiHero } from "./CreateNewSnippetWithAiHero";
+import { TypeBadge } from "./TypeBadge";
+import { useQuery } from "react-query";
+import { useAxios } from "@/hooks/use-axios";
+import { Star } from "lucide-react";
+import { Snippet } from "fake-snippets-api/lib/db/schema";
+import { StarFilledIcon } from "@radix-ui/react-icons";
 
 export const LandingHero = () => {
   const { should_onboarding_tips_be_closed, setOnboardingTipsClosed } =
     useGlobalStore((state) => ({
       should_onboarding_tips_be_closed: state.should_onboarding_tips_be_closed,
       setOnboardingTipsClosed: state.setOnboardingTipsClosed,
-    }))
-  const [, setLocation] = useLocation()
-  const axios = useAxios()
+    }));
+  const [, setLocation] = useLocation();
+  const axios = useAxios();
 
   const { data: trendingSnippets } = useQuery<Snippet[]>(
     "trendingSnippets",
     async () => {
-      const response = await axios.get("/snippets/list_trending")
-      return response.data.snippets
+      const response = await axios.get("/snippets/list_trending");
+      return response.data.snippets;
     },
-  )
+  );
 
   return (
     <div className="p-6">
@@ -163,5 +163,5 @@ export const LandingHero = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const snippetSchema = z.object({
   snippet_id: z.string(),
@@ -15,16 +15,16 @@ export const snippetSchema = z.object({
   description: z.string().optional(),
   version: z.string().default("0.0.1"),
   star_count: z.number().default(0),
-})
-export type Snippet = z.infer<typeof snippetSchema>
+});
+export type Snippet = z.infer<typeof snippetSchema>;
 
 export const sessionSchema = z.object({
   session_id: z.string(),
   account_id: z.string(),
   expires_at: z.string(),
   is_cli_session: z.boolean(),
-})
-export type Session = z.infer<typeof sessionSchema>
+});
+export type Session = z.infer<typeof sessionSchema>;
 
 export const loginPageSchema = z.object({
   login_page_id: z.string(),
@@ -33,8 +33,8 @@ export const loginPageSchema = z.object({
   has_been_used_to_create_session: z.boolean(),
   created_at: z.string(),
   expires_at: z.string(),
-})
-export type LoginPage = z.infer<typeof loginPageSchema>
+});
+export type LoginPage = z.infer<typeof loginPageSchema>;
 
 export const shippingInfoSchema = z.object({
   firstName: z.string(),
@@ -47,14 +47,14 @@ export const shippingInfoSchema = z.object({
   zipCode: z.string(),
   country: z.string(),
   phone: z.string(),
-})
+});
 
 export const accountSchema = z.object({
   account_id: z.string(),
   github_username: z.string(),
   shippingInfo: shippingInfoSchema.optional(),
-})
-export type Account = z.infer<typeof accountSchema>
+});
+export type Account = z.infer<typeof accountSchema>;
 
 export const orderSchema = z.object({
   order_id: z.string(),
@@ -74,8 +74,8 @@ export const orderSchema = z.object({
   circuit_json: z.array(z.record(z.any())),
   created_at: z.string(),
   updated_at: z.string(),
-})
-export type Order = z.infer<typeof orderSchema>
+});
+export type Order = z.infer<typeof orderSchema>;
 
 export const orderFileSchema = z.object({
   order_file_id: z.string(),
@@ -85,8 +85,8 @@ export const orderFileSchema = z.object({
   content_type: z.string(),
   for_provider: z.string().nullable(),
   uploaded_at: z.string(),
-})
-export type OrderFile = z.infer<typeof orderFileSchema>
+});
+export type OrderFile = z.infer<typeof orderFileSchema>;
 
 export const accountSnippetSchema = z.object({
   account_id: z.string(),
@@ -94,8 +94,8 @@ export const accountSnippetSchema = z.object({
   has_starred: z.boolean(),
   created_at: z.string(),
   updated_at: z.string(),
-})
-export type AccountSnippet = z.infer<typeof accountSnippetSchema>
+});
+export type AccountSnippet = z.infer<typeof accountSnippetSchema>;
 
 export const databaseSchema = z.object({
   idCounter: z.number().default(0),
@@ -106,5 +106,5 @@ export const databaseSchema = z.object({
   orders: z.array(orderSchema).default([]),
   orderFiles: z.array(orderFileSchema).default([]),
   accountSnippets: z.array(accountSnippetSchema).default([]),
-})
-export type DatabaseSchema = z.infer<typeof databaseSchema>
+});
+export type DatabaseSchema = z.infer<typeof databaseSchema>;

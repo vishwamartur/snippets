@@ -1,18 +1,18 @@
-import { FunctionComponent, useMemo, useState } from "react"
+import { FunctionComponent, useMemo, useState } from "react";
 
 export const createUseDialog = <DialogType extends React.ComponentType<any>>(
   DialogComponent: DialogType,
 ) => {
   return () => {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
 
     return useMemo(
       () => ({
         openDialog: () => {
-          setOpen(true)
+          setOpen(true);
         },
         closeDialog: () => {
-          setOpen(false)
+          setOpen(false);
         },
         Dialog: (
           props: Omit<
@@ -29,6 +29,6 @@ export const createUseDialog = <DialogType extends React.ComponentType<any>>(
         open,
       }),
       [open],
-    )
-  }
-}
+    );
+  };
+};

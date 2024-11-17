@@ -2,8 +2,8 @@
 declare global {
   interface Window {
     prettier: {
-      format: (code: string, options: any) => string
-    }
-    prettierPlugins: any
+      format: (code: string, options: any) => string;
+    };
+    prettierPlugins: any;
   }
 }

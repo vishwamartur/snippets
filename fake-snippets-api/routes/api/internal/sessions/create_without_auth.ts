@@ -1,7 +1,7 @@
-import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec"
-import { z } from "zod"
-import ms from "ms"
-import { SignJWT } from "jose"
+import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec";
+import { z } from "zod";
+import ms from "ms";
+import { SignJWT } from "jose";
 
 export default withRouteSpec({
   methods: ["POST"],
@@ -25,25 +25,25 @@ export default withRouteSpec({
     }),
   }),
 })(async (req, ctx) => {
-  let account
+  let account;
   if ("account_id" in req.jsonBody) {
-    account = ctx.db.getAccount(req.jsonBody.account_id)
+    account = ctx.db.getAccount(req.jsonBody.account_id);
   } else {
-    account = ctx.db.getAccount(req.jsonBody.github_username)
+    account = ctx.db.getAccount(req.jsonBody.github_username);
   }
 
   if (!account) {
     return ctx.error(404, {
       error_code: "account_not_found",
       message: "Account not found",
-    })
+    });
   }
 
   const new_session = ctx.db.createSession({
     expires_at: new Date(Date.now() + ms("60 day")).toISOString(),
     account_id: account.account_id,
     is_cli_session: false,
-  })
+  });
 
   const token = await new SignJWT({
     account_id: account.account_id,
@@ -52,12 +52,12 @@ export default withRouteSpec({
   })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime(new Date(Date.now() + ms("60 day")).toISOString())
-    .sign(new TextEncoder().encode(process.env.JWT_SECRET || ""))
+    .sign(new TextEncoder().encode(process.env.JWT_SECRET || ""));
 
   return ctx.json({
     session: {
       ...new_session,
       token,
     },
-  })
-})
+  });
+});

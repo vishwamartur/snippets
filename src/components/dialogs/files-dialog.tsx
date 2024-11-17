@@ -1,14 +1,14 @@
-import React, { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
-import { ScrollArea } from "../ui/scroll-area"
-import { cn } from "@/lib/utils"
-import { createUseDialog } from "./create-use-dialog"
-import { useSnippet } from "@/hooks/use-snippet"
+import React, { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { ScrollArea } from "../ui/scroll-area";
+import { cn } from "@/lib/utils";
+import { createUseDialog } from "./create-use-dialog";
+import { useSnippet } from "@/hooks/use-snippet";
 
 interface FilesDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  snippetId: string
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  snippetId: string;
 }
 
 export const FilesDialog: React.FC<FilesDialogProps> = ({
@@ -16,7 +16,7 @@ export const FilesDialog: React.FC<FilesDialogProps> = ({
   onOpenChange,
   snippetId,
 }) => {
-  const { data: snippet } = useSnippet(snippetId)
+  const { data: snippet } = useSnippet(snippetId);
 
   const files = Object.entries({
     "dist/index.d.ts": snippet?.dts || "",
@@ -24,9 +24,9 @@ export const FilesDialog: React.FC<FilesDialogProps> = ({
     "dist/index.js": snippet?.compiled_js || "",
   })
     .sort(([a], [b]) => a.localeCompare(b))
-    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
 
-  const [selectedFile, setSelectedFile] = useState<string | null>("index.ts")
+  const [selectedFile, setSelectedFile] = useState<string | null>("index.ts");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -63,7 +63,7 @@ export const FilesDialog: React.FC<FilesDialogProps> = ({
         </div>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export const useFilesDialog = createUseDialog(FilesDialog)
+export const useFilesDialog = createUseDialog(FilesDialog);

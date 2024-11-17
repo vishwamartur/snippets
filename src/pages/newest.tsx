@@ -1,6 +1,6 @@
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
-import { LatestSnippets } from "@/components/LatestSnippets"
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { LatestSnippets } from "@/components/LatestSnippets";
 
 export const NewestPage = () => {
   return (
@@ -12,5 +12,5 @@ export const NewestPage = () => {
       </div>
       <Footer />
     </div>
-  )
-}
+  );
+};

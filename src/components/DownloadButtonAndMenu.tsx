@@ -1,23 +1,23 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { toast, useNotImplementedToast } from "@/hooks/use-toast"
-import { downloadCircuitJson } from "@/lib/download-fns/download-circuit-json-fn"
-import { downloadDsnFile } from "@/lib/download-fns/download-dsn-file-fn"
-import { downloadFabricationFiles } from "@/lib/download-fns/download-fabrication-files"
-import { downloadSchematicSvg } from "@/lib/download-fns/download-schematic-svg"
-import { AnyCircuitElement } from "circuit-json"
-import { ChevronDown, Download } from "lucide-react"
-import React from "react"
+} from "@/components/ui/dropdown-menu";
+import { toast, useNotImplementedToast } from "@/hooks/use-toast";
+import { downloadCircuitJson } from "@/lib/download-fns/download-circuit-json-fn";
+import { downloadDsnFile } from "@/lib/download-fns/download-dsn-file-fn";
+import { downloadFabricationFiles } from "@/lib/download-fns/download-fabrication-files";
+import { downloadSchematicSvg } from "@/lib/download-fns/download-schematic-svg";
+import { AnyCircuitElement } from "circuit-json";
+import { ChevronDown, Download } from "lucide-react";
+import React from "react";
 
 interface DownloadButtonAndMenuProps {
-  className?: string
-  snippetUnscopedName: string | undefined
-  circuitJson?: AnyCircuitElement[] | null
+  className?: string;
+  snippetUnscopedName: string | undefined;
+  circuitJson?: AnyCircuitElement[] | null;
 }
 
 export function DownloadButtonAndMenu({
@@ -25,7 +25,7 @@ export function DownloadButtonAndMenu({
   snippetUnscopedName,
   circuitJson,
 }: DownloadButtonAndMenuProps) {
-  const notImplemented = useNotImplementedToast()
+  const notImplemented = useNotImplementedToast();
 
   if (!circuitJson) {
     return (
@@ -33,7 +33,7 @@ export function DownloadButtonAndMenu({
         <Download className="mr-1 h-3 w-3" />
         Download
       </Button>
-    )
+    );
   }
 
   return (
@@ -53,7 +53,7 @@ export function DownloadButtonAndMenu({
               downloadCircuitJson(
                 circuitJson,
                 snippetUnscopedName || "circuit" + ".json",
-              )
+              );
             }}
           >
             <Download className="mr-1 h-3 w-3" />
@@ -79,12 +79,12 @@ export function DownloadButtonAndMenu({
                 circuitJson,
                 snippetUnscopedName: snippetUnscopedName || "snippet",
               }).catch((error) => {
-                console.error(error)
+                console.error(error);
                 toast({
                   title: "Error Downloading Fabrication Files",
                   description: error.toString(),
-                })
-              })
+                });
+              });
             }}
           >
             <Download className="mr-1 h-3 w-3" />
@@ -119,7 +119,7 @@ export function DownloadButtonAndMenu({
               downloadSchematicSvg(
                 circuitJson,
                 snippetUnscopedName || "circuit",
-              )
+              );
             }}
           >
             <Download className="mr-1 h-3 w-3" />
@@ -131,7 +131,7 @@ export function DownloadButtonAndMenu({
           <DropdownMenuItem
             className="text-xs"
             onSelect={() => {
-              downloadDsnFile(circuitJson, snippetUnscopedName || "circuit")
+              downloadDsnFile(circuitJson, snippetUnscopedName || "circuit");
             }}
           >
             <Download className="mr-1 h-3 w-3" />
@@ -143,5 +143,5 @@ export function DownloadButtonAndMenu({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
+  );
 }

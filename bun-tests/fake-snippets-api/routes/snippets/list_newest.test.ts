@@ -1,8 +1,8 @@
-import { getTestServer } from "bun-tests/fake-snippets-api/fixtures/get-test-server"
-import { test, expect } from "bun:test"
+import { getTestServer } from "bun-tests/fake-snippets-api/fixtures/get-test-server";
+import { test, expect } from "bun:test";
 
 test("list newest snippets", async () => {
-  const { axios, db } = await getTestServer()
+  const { axios, db } = await getTestServer();
 
   // Add some test snippets
   const snippets = [
@@ -33,16 +33,16 @@ test("list newest snippets", async () => {
       name: "User3/Snippet3",
       snippet_type: "model",
     },
-  ]
+  ];
 
   for (const snippet of snippets) {
-    db.addSnippet(snippet as any)
+    db.addSnippet(snippet as any);
   }
 
-  const { data } = await axios.get("/api/snippets/list_newest")
+  const { data } = await axios.get("/api/snippets/list_newest");
 
-  expect(data.snippets).toHaveLength(3)
-  expect(data.snippets[0].unscoped_name).toBe("Snippet3")
-  expect(data.snippets[1].unscoped_name).toBe("Snippet2")
-  expect(data.snippets[2].unscoped_name).toBe("Snippet1")
-})
+  expect(data.snippets).toHaveLength(3);
+  expect(data.snippets[0].unscoped_name).toBe("Snippet3");
+  expect(data.snippets[1].unscoped_name).toBe("Snippet2");
+  expect(data.snippets[2].unscoped_name).toBe("Snippet1");
+});

@@ -1,23 +1,23 @@
-import { useQuery } from "react-query"
-import { useAxios } from "@/hooks/use-axios"
-import type { Snippet } from "fake-snippets-api/lib/db/schema"
+import { useQuery } from "react-query";
+import { useAxios } from "@/hooks/use-axios";
+import type { Snippet } from "fake-snippets-api/lib/db/schema";
 
 export const useSnippet = (snippetId: string | null) => {
-  const axios = useAxios()
+  const axios = useAxios();
   return useQuery<Snippet, Error & { status: number }>(
     ["snippets", snippetId],
     async () => {
       if (!snippetId) {
-        throw new Error("Snippet ID is required")
+        throw new Error("Snippet ID is required");
       }
       const { data } = await axios.get("/snippets/get", {
         params: { snippet_id: snippetId },
-      })
-      return data.snippet
+      });
+      return data.snippet;
     },
     {
       enabled: Boolean(snippetId),
       retry: false,
     },
-  )
-}
+  );
+};

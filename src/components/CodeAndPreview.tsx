@@ -1,35 +1,35 @@
-import { CodeEditor } from "@/components/CodeEditor"
-import { useAxios } from "@/hooks/use-axios"
-import { useCreateSnippetMutation } from "@/hooks/use-create-snippet-mutation"
-import { useGlobalStore } from "@/hooks/use-global-store"
-import { useRunTsx } from "@/hooks/use-run-tsx"
-import { useToast } from "@/hooks/use-toast"
-import { useUrlParams } from "@/hooks/use-url-params"
-import useWarnUser from "@/hooks/use-warn-user"
-import { decodeUrlHashToText } from "@/lib/decodeUrlHashToText"
-import { getSnippetTemplate } from "@/lib/get-snippet-template"
-import manualEditsTemplate from "@/lib/templates/manual-edits-template"
-import { cn } from "@/lib/utils"
-import "@/prettier"
-import type { Snippet } from "fake-snippets-api/lib/db/schema"
-import { Loader2 } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
-import { useMutation, useQueryClient } from "react-query"
-import EditorNav from "./EditorNav"
-import { PreviewContent } from "./PreviewContent"
+import { CodeEditor } from "@/components/CodeEditor";
+import { useAxios } from "@/hooks/use-axios";
+import { useCreateSnippetMutation } from "@/hooks/use-create-snippet-mutation";
+import { useGlobalStore } from "@/hooks/use-global-store";
+import { useRunTsx } from "@/hooks/use-run-tsx";
+import { useToast } from "@/hooks/use-toast";
+import { useUrlParams } from "@/hooks/use-url-params";
+import useWarnUser from "@/hooks/use-warn-user";
+import { decodeUrlHashToText } from "@/lib/decodeUrlHashToText";
+import { getSnippetTemplate } from "@/lib/get-snippet-template";
+import manualEditsTemplate from "@/lib/templates/manual-edits-template";
+import { cn } from "@/lib/utils";
+import "@/prettier";
+import type { Snippet } from "fake-snippets-api/lib/db/schema";
+import { Loader2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import EditorNav from "./EditorNav";
+import { PreviewContent } from "./PreviewContent";
 
 interface Props {
-  snippet?: Snippet | null
+  snippet?: Snippet | null;
 }
 
 export function CodeAndPreview({ snippet }: Props) {
-  const axios = useAxios()
-  const isLoggedIn = useGlobalStore((s) => Boolean(s.session))
-  const urlParams = useUrlParams()
+  const axios = useAxios();
+  const isLoggedIn = useGlobalStore((s) => Boolean(s.session));
+  const urlParams = useUrlParams();
   const templateFromUrl = useMemo(
     () => getSnippetTemplate(urlParams.template),
     [],
-  )
+  );
   const defaultCode = useMemo(() => {
     return (
       decodeUrlHashToText(window.location.toString()) ??
@@ -38,34 +38,34 @@ export function CodeAndPreview({ snippet }: Props) {
       // code until the snippet code is loaded
       (urlParams.snippet_id && "") ??
       templateFromUrl.code
-    )
-  }, [])
+    );
+  }, []);
   const [manualEditsFileContent, setManualEditsFileContent] = useState(
     JSON.stringify(manualEditsTemplate, null, 2) ?? "",
-  )
-  const [code, setCode] = useState(defaultCode ?? "")
-  const [dts, setDts] = useState("")
-  const [showPreview, setShowPreview] = useState(true)
-  const [lastRunCode, setLastRunCode] = useState(defaultCode ?? "")
+  );
+  const [code, setCode] = useState(defaultCode ?? "");
+  const [dts, setDts] = useState("");
+  const [showPreview, setShowPreview] = useState(true);
+  const [lastRunCode, setLastRunCode] = useState(defaultCode ?? "");
 
   const snippetType: "board" | "package" | "model" | "footprint" =
-    snippet?.snippet_type ?? (templateFromUrl.type as any)
+    snippet?.snippet_type ?? (templateFromUrl.type as any);
 
   useEffect(() => {
     if (snippet?.code) {
-      setCode(snippet.code)
-      setLastRunCode(snippet.code)
+      setCode(snippet.code);
+      setLastRunCode(snippet.code);
     }
-  }, [Boolean(snippet)])
+  }, [Boolean(snippet)]);
 
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   const userImports = useMemo(
     () => ({
       "./manual-edits.json": JSON.parse(manualEditsFileContent),
     }),
     [manualEditsFileContent],
-  )
+  );
 
   const {
     message,
@@ -78,60 +78,60 @@ export function CodeAndPreview({ snippet }: Props) {
     code,
     userImports,
     type: snippetType,
-  })
+  });
 
   // Update lastRunCode whenever the code is run
   useEffect(() => {
-    setLastRunCode(code)
-  }, [tsxRunTriggerCount])
+    setLastRunCode(code);
+  }, [tsxRunTriggerCount]);
 
-  const qc = useQueryClient()
+  const qc = useQueryClient();
 
   const updateSnippetMutation = useMutation({
     mutationFn: async () => {
-      if (!snippet) throw new Error("No snippet to update")
+      if (!snippet) throw new Error("No snippet to update");
       const response = await axios.post("/snippets/update", {
         snippet_id: snippet.snippet_id,
         code: code,
         dts: dts,
         compiled_js: compiledJs,
         circuit_json: circuitJson,
-      })
+      });
       if (response.status !== 200) {
-        throw new Error("Failed to save snippet")
+        throw new Error("Failed to save snippet");
       }
-      return response.data
+      return response.data;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["snippets", snippet?.snippet_id] })
+      qc.invalidateQueries({ queryKey: ["snippets", snippet?.snippet_id] });
       toast({
         title: "Snippet saved",
         description: "Your changes have been saved successfully.",
-      })
+      });
     },
     onError: (error) => {
-      console.error("Error saving snippet:", error)
+      console.error("Error saving snippet:", error);
       toast({
         title: "Error",
         description: "Failed to save the snippet. Please try again.",
         variant: "destructive",
-      })
+      });
     },
-  })
+  });
 
-  const createSnippetMutation = useCreateSnippetMutation()
+  const createSnippetMutation = useCreateSnippetMutation();
 
   const handleSave = async () => {
     if (snippet) {
-      updateSnippetMutation.mutate()
+      updateSnippetMutation.mutate();
     } else {
-      createSnippetMutation.mutate({ code, circuit_json: circuitJson as any })
+      createSnippetMutation.mutate({ code, circuit_json: circuitJson as any });
     }
-  }
+  };
 
-  const hasUnsavedChanges = snippet?.code !== code
-  const hasUnrunChanges = code !== lastRunCode
-  useWarnUser({ hasUnsavedChanges })
+  const hasUnsavedChanges = snippet?.code !== code;
+  const hasUnrunChanges = code !== lastRunCode;
+  useWarnUser({ hasUnsavedChanges });
 
   if (!snippet && (urlParams.snippet_id || urlParams.should_create_snippet)) {
     return (
@@ -141,7 +141,7 @@ export function CodeAndPreview({ snippet }: Props) {
           <Loader2 className="w-16 h-16 animate-spin text-gray-400" />
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -169,10 +169,10 @@ export function CodeAndPreview({ snippet }: Props) {
             initialCode={code}
             manualEditsFileContent={manualEditsFileContent}
             onManualEditsFileContentChanged={(newContent) => {
-              setManualEditsFileContent(newContent)
+              setManualEditsFileContent(newContent);
             }}
             onCodeChange={(newCode) => {
-              setCode(newCode)
+              setCode(newCode);
             }}
             onDtsChange={(newDts) => setDts(newDts)}
           />
@@ -188,11 +188,11 @@ export function CodeAndPreview({ snippet }: Props) {
             circuitJson={circuitJson}
             manualEditsFileContent={manualEditsFileContent}
             onManualEditsFileContentChange={(newManualEditsFileContent) => {
-              setManualEditsFileContent(newManualEditsFileContent)
+              setManualEditsFileContent(newManualEditsFileContent);
             }}
           />
         )}
       </div>
     </div>
-  )
+  );
 }

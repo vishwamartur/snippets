@@ -1,17 +1,17 @@
-import { Middleware } from "winterspec/middleware"
+import { Middleware } from "winterspec/middleware";
 
 export type CtxErrorFn = (
   status: number,
   error_payload: {
-    error_code: string
-    message: string
+    error_code: string;
+    message: string;
   },
-) => Response
+) => Response;
 
 export const withCtxError: Middleware<
   {},
   {
-    error: CtxErrorFn
+    error: CtxErrorFn;
   }
 > = async (req, ctx, next) => {
   ctx.error = (status, error_payload) => {
@@ -20,7 +20,7 @@ export const withCtxError: Middleware<
       headers: {
         "Content-Type": "application/json",
       },
-    })
-  }
-  return next(req, ctx)
-}
+    });
+  };
+  return next(req, ctx);
+};

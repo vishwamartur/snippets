@@ -1,12 +1,12 @@
-import { CodeAndPreview } from "@/components/CodeAndPreview"
-import Footer from "@/components/Footer"
-import Header from "@/components/Header"
-import { useCurrentSnippetId } from "@/hooks/use-current-snippet-id"
-import { useSnippet } from "@/hooks/use-snippet"
+import { CodeAndPreview } from "@/components/CodeAndPreview";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import { useCurrentSnippetId } from "@/hooks/use-current-snippet-id";
+import { useSnippet } from "@/hooks/use-snippet";
 
 export const EditorPage = () => {
-  const { snippetId } = useCurrentSnippetId()
-  const { data: snippet, isLoading, error } = useSnippet(snippetId)
+  const { snippetId } = useCurrentSnippetId();
+  const { data: snippet, isLoading, error } = useSnippet(snippetId);
 
   return (
     <div>
@@ -24,5 +24,5 @@ export const EditorPage = () => {
       )}
       <Footer />
     </div>
-  )
-}
+  );
+};

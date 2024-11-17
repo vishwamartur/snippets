@@ -1,15 +1,15 @@
-import { Link } from "wouter"
-import { Star } from "lucide-react"
+import { Link } from "wouter";
+import { Star } from "lucide-react";
 
 export const SnippetLink = ({
   snippet,
 }: {
   snippet: {
-    owner_name: string
-    name: string
-    unscoped_name: string
-    star_count?: number
-  }
+    owner_name: string;
+    name: string;
+    unscoped_name: string;
+    star_count?: number;
+  };
 }) => {
   return (
     <>
@@ -33,5 +33,5 @@ export const SnippetLink = ({
         </span>
       )}
     </>
-  )
-}
+  );
+};

@@ -1,11 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
-import { Button } from "../ui/button"
-import { useState } from "react"
-import { createUseDialog } from "./create-use-dialog"
-import { useAxios } from "@/hooks/use-axios"
-import { useToast } from "@/hooks/use-toast"
-import { useQueryClient } from "react-query"
-import { useLocation } from "wouter"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Button } from "../ui/button";
+import { useState } from "react";
+import { createUseDialog } from "./create-use-dialog";
+import { useAxios } from "@/hooks/use-axios";
+import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "react-query";
+import { useLocation } from "wouter";
 
 export const ConfirmDeleteSnippetDialog = ({
   open,
@@ -13,42 +13,42 @@ export const ConfirmDeleteSnippetDialog = ({
   snippetId,
   snippetName,
 }: {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  snippetId: string
-  snippetName: string
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  snippetId: string;
+  snippetName: string;
 }) => {
-  const axios = useAxios()
-  const { toast } = useToast()
-  const qc = useQueryClient()
-  const [pending, setPending] = useState(false)
-  const [, navigate] = useLocation()
+  const axios = useAxios();
+  const { toast } = useToast();
+  const qc = useQueryClient();
+  const [pending, setPending] = useState(false);
+  const [, navigate] = useLocation();
 
   const handleDelete = async () => {
     try {
-      setPending(true)
+      setPending(true);
       await axios.post("/snippets/delete", {
         snippet_id: snippetId,
-      })
-      onOpenChange(false)
-      setPending(false)
+      });
+      onOpenChange(false);
+      setPending(false);
       toast({
         title: "Snippet deleted",
         description: `Successfully deleted "${snippetName}"`,
-      })
-      qc.invalidateQueries({ queryKey: ["snippets"] })
-      navigate("/dashboard")
+      });
+      qc.invalidateQueries({ queryKey: ["snippets"] });
+      navigate("/dashboard");
     } catch (error) {
-      console.error("Error deleting snippet:", error)
+      console.error("Error deleting snippet:", error);
       toast({
         title: "Error",
         description: "Failed to delete the snippet. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setPending(false)
+      setPending(false);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -72,9 +72,9 @@ export const ConfirmDeleteSnippetDialog = ({
         </div>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
 export const useConfirmDeleteSnippetDialog = createUseDialog(
   ConfirmDeleteSnippetDialog,
-)
+);

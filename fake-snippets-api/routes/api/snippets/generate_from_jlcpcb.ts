@@ -1,7 +1,7 @@
-import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec"
-import { z } from "zod"
-import { snippetSchema } from "fake-snippets-api/lib/db/schema"
-import { fetchEasyEDAComponent, convertRawEasyEdaToTs } from "easyeda"
+import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec";
+import { z } from "zod";
+import { snippetSchema } from "fake-snippets-api/lib/db/schema";
+import { fetchEasyEDAComponent, convertRawEasyEdaToTs } from "easyeda";
 
 export default withRouteSpec({
   methods: ["POST"],
@@ -13,20 +13,20 @@ export default withRouteSpec({
     snippet: snippetSchema,
   }),
 })(async (req, ctx) => {
-  const { jlcpcb_part_number } = req.jsonBody
+  const { jlcpcb_part_number } = req.jsonBody;
 
   try {
     // Fetch the EasyEDA component data
     const rawEasyJson = await fetchEasyEDAComponent(jlcpcb_part_number).catch(
       (e) => {
-        throw new Error(`Error in fetchEasyEDAComponent: ${e.toString()}`)
+        throw new Error(`Error in fetchEasyEDAComponent: ${e.toString()}`);
       },
-    )
+    );
 
     // Convert to TypeScript React component
     const tsxComponent = await convertRawEasyEdaToTs(rawEasyJson).catch((e) => {
-      throw new Error(`Error in convertRawEasyEdaToTs ${e.toString()}`)
-    })
+      throw new Error(`Error in convertRawEasyEdaToTs ${e.toString()}`);
+    });
 
     // Create a new snippet
     const newSnippet = {
@@ -39,17 +39,17 @@ export default withRouteSpec({
       updated_at: new Date().toISOString(),
       snippet_type: "package",
       description: `Generated from JLCPCB part number ${jlcpcb_part_number}`,
-    }
+    };
 
-    ctx.db.addSnippet(newSnippet as any)
+    ctx.db.addSnippet(newSnippet as any);
 
     return ctx.json({
       snippet: newSnippet as any,
-    })
+    });
   } catch (error: any) {
     return ctx.error(500, {
       error_code: "jlcpcb_generation_failed",
       message: `Failed to generate snippet from JLCPCB part: ${error.message}\n\n${error.stack}`,
-    })
+    });
   }
-})
+});

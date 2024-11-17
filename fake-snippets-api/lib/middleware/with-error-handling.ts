@@ -1,14 +1,14 @@
-import { Middleware } from "winterspec/middleware"
-import kleur from "kleur"
+import { Middleware } from "winterspec/middleware";
+import kleur from "kleur";
 
 export const withErrorHandling: Middleware<{}, {}> = async (req, ctx, next) => {
   try {
-    return await next(req, ctx)
+    return await next(req, ctx);
   } catch (error: any) {
-    console.error(kleur.red("Intercepted error:"), error)
+    console.error(kleur.red("Intercepted error:"), error);
     // If error is a Response, return it
     if (error instanceof Response) {
-      return error
+      return error;
     }
     return (ctx as any).json(
       {
@@ -19,6 +19,6 @@ export const withErrorHandling: Middleware<{}, {}> = async (req, ctx, next) => {
         },
       },
       { status: error?.status || 500 },
-    )
+    );
   }
-}
+};

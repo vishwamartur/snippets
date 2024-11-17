@@ -1,5 +1,5 @@
-import { getTestServer } from "bun-tests/fake-snippets-api/fixtures/get-test-server"
-import { test, expect } from "bun:test"
+import { getTestServer } from "bun-tests/fake-snippets-api/fixtures/get-test-server";
+import { test, expect } from "bun:test";
 
 test("update order", async () => {
   const {
@@ -7,7 +7,7 @@ test("update order", async () => {
     seed: {
       order: { order_id },
     },
-  } = await getTestServer()
+  } = await getTestServer();
 
   const response = await axios.patch("/api/orders/update", {
     order_id,
@@ -16,18 +16,18 @@ test("update order", async () => {
       is_pending_validation_by_fab: true,
       jlcpcb_order_params: { param1: "value1" },
     },
-  })
+  });
 
-  expect(response.status).toBe(200)
-  expect(response.data.order).toBeDefined()
-  expect(response.data.order.order_id).toBe(order_id)
-  expect(response.data.order.is_draft).toBe(false)
-  expect(response.data.order.is_pending_validation_by_fab).toBe(true)
-  expect(response.data.order.jlcpcb_order_params).toEqual({ param1: "value1" })
-})
+  expect(response.status).toBe(200);
+  expect(response.data.order).toBeDefined();
+  expect(response.data.order.order_id).toBe(order_id);
+  expect(response.data.order.is_draft).toBe(false);
+  expect(response.data.order.is_pending_validation_by_fab).toBe(true);
+  expect(response.data.order.jlcpcb_order_params).toEqual({ param1: "value1" });
+});
 
 test("update non-existent order", async () => {
-  const { axios } = await getTestServer()
+  const { axios } = await getTestServer();
 
   try {
     await axios.patch("/api/orders/update", {
@@ -35,12 +35,12 @@ test("update non-existent order", async () => {
       updates: {
         is_draft: false,
       },
-    })
+    });
 
     // If the request doesn't throw an error, fail the test
-    expect(true).toBe(false)
+    expect(true).toBe(false);
   } catch (error: any) {
-    expect(error.status).toBe(404)
-    expect(error.data.error.message).toBe("Order not found")
+    expect(error.status).toBe(404);
+    expect(error.data.error.message).toBe("Order not found");
   }
-})
+});

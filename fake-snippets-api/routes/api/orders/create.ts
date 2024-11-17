@@ -1,6 +1,6 @@
-import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec"
-import { z } from "zod"
-import { orderSchema } from "fake-snippets-api/lib/db/schema"
+import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec";
+import { z } from "zod";
+import { orderSchema } from "fake-snippets-api/lib/db/schema";
 
 export default withRouteSpec({
   methods: ["POST"],
@@ -12,7 +12,7 @@ export default withRouteSpec({
     order: orderSchema,
   }),
 })(async (req, ctx) => {
-  const { circuit_json } = req.jsonBody
+  const { circuit_json } = req.jsonBody;
 
   const newOrder = {
     account_id: ctx.auth.account_id,
@@ -31,11 +31,11 @@ export default withRouteSpec({
     circuit_json,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
-  }
+  };
 
-  const order = ctx.db.addOrder(newOrder)
+  const order = ctx.db.addOrder(newOrder);
 
   return ctx.json({
     order,
-  })
-})
+  });
+});
