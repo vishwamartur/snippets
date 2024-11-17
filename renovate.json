@@ -4,12 +4,19 @@
   "packageRules": [
     {
       "packagePatterns": ["*"],
-      "excludePackagePatterns": ["@tscircuit/*", "circuit-to-svg", "jscad-electronics"],
+      "excludePackagePatterns": [
+        "@tscircuit/*",
+        "circuit-to-svg",
+        "jscad-electronics",
+        "circuit-json"
+      ],
       "enabled": false
     },
     {
       "matchUpdateTypes": ["major", "minor", "patch"],
-      "automerge": true
+      "automerge": true,
+      "groupName": "dependency updates",
+      "groupSlug": "all-updates"
     }
   ]
 }

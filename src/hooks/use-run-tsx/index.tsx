@@ -8,6 +8,7 @@ import { safeCompileTsx } from "../use-compiled-tsx"
 import { useSnippetsBaseApiUrl } from "../use-snippets-base-api-url"
 import { constructCircuit } from "./construct-circuit"
 import { evalCompiledJs } from "./eval-compiled-js"
+import { getSyntaxError } from "@/lib/utils/getSyntaxError"
 
 type RunTsxResult = {
   compiledModule: any
@@ -57,6 +58,16 @@ export const useRunTsx = ({
       })
     }
     if (!code) return
+    const syntaxError = getSyntaxError(code)
+    if (syntaxError) {
+      setTsxResult({
+        compiledModule: null,
+        message: syntaxError,
+        circuitJson: null,
+        isLoading: false,
+      })
+      return
+    }
     async function run() {
       setTsxResult({
         compiledModule: null,
