@@ -26,3 +26,6 @@ jobs:
 
       - name: Run tests
         run: bun test
+
+      - name: Run Playwright tests
+        run: npx playwright test
