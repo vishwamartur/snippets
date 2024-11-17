@@ -90,5 +90,16 @@ const seedDatabase = (db: DbClient) => {
     updated_at: new Date().toISOString(),
   })
 
-  return { account, order }
+  const snippet = db.addSnippet({
+    unscoped_name: "TestSnippet",
+    owner_name: "testuser",
+    code: "Test Content",
+    created_at: "2023-01-01T00:00:00Z",
+    updated_at: "2023-01-01T00:00:00Z",
+    name: "testuser/TestSnippet",
+    snippet_type: "package",
+    description: "Test Description",
+  })
+
+  return { account, order, snippet }
 }

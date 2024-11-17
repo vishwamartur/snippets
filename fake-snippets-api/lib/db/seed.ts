@@ -21,6 +21,7 @@ export const seed = (db: DbClient) => {
     github_username: "seveibar",
   })
   db.addSnippet({
+    snippet_id: "snippet-1234",
     name: "testuser/my-test-board",
     unscoped_name: "my-test-board",
     owner_name: "testuser",
@@ -40,6 +41,7 @@ export default () => (
 
   // Define the @tsci/seveibar.a555timer package
   db.addSnippet({
+    snippet_id: "snippet-5678",
     name: "seveibar/a555timer",
     unscoped_name: "a555timer",
     owner_name: "seveibar",
@@ -79,6 +81,7 @@ exports.A555Timer = A555Timer;
   // Add a snippet that outputs a square waveform using the a555timer
 
   db.addSnippet({
+    snippet_id: "snippet-91011",
     name: "testuser/a555timer-square-wave",
     unscoped_name: "a555timer-square-wave",
     owner_name: "testuser",
