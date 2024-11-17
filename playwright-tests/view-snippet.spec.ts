@@ -34,7 +34,7 @@ test("SVG image generation and retrieval", async ({ page }) => {
   await page.click(".run-button")
   await page.waitForTimeout(5000)
 
-  const response = await page.request.get("/snippets/get_image", {
+  const responsePcb = await page.request.get("/snippets/get_image", {
     params: {
       snippet_id: "test_snippet_id",
       image_of: "pcb",
@@ -42,7 +42,19 @@ test("SVG image generation and retrieval", async ({ page }) => {
     },
   })
 
-  expect(response.status()).toBe(200)
-  const responseBody = await response.body()
-  expect(responseBody.toString()).toContain("<svg")
+  expect(responsePcb.status()).toBe(200)
+  const responseBodyPcb = await responsePcb.body()
+  expect(responseBodyPcb.toString()).toContain("<svg")
+
+  const responseSchematic = await page.request.get("/snippets/get_image", {
+    params: {
+      snippet_id: "test_snippet_id",
+      image_of: "schematic",
+      format: "svg",
+    },
+  })
+
+  expect(responseSchematic.status()).toBe(200)
+  const responseBodySchematic = await responseSchematic.body()
+  expect(responseBodySchematic.toString()).toContain("<svg")
 })

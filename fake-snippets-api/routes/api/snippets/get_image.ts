@@ -1,13 +1,13 @@
 import { withRouteSpec } from "fake-snippets-api/lib/middleware/with-winter-spec"
 import { z } from "zod"
-import { convertCircuitJsonToSchematicSvg } from "circuit-to-svg"
+import { convertCircuitJsonToSchematicSvg, convertCircuitJsonToPcbSvg } from "circuit-to-svg"
 
 export default withRouteSpec({
   methods: ["GET"],
   auth: "none",
   queryParams: z.object({
     snippet_id: z.string(),
-    image_of: z.enum(["pcb"]),
+    image_of: z.enum(["pcb", "schematic"]),
     format: z.enum(["svg"]),
   }),
   jsonResponse: z.object({
@@ -24,14 +24,24 @@ export default withRouteSpec({
     })
   }
 
-  if (image_of !== "pcb" || format !== "svg") {
+  if (format !== "svg") {
     return ctx.error(400, {
       error_code: "invalid_parameters",
-      message: "Invalid image_of or format parameter",
+      message: "Invalid format parameter",
     })
   }
 
-  const svg = convertCircuitJsonToSchematicSvg(snippet.circuit_json)
+  let svg
+  if (image_of === "pcb") {
+    svg = convertCircuitJsonToPcbSvg(snippet.circuit_json)
+  } else if (image_of === "schematic") {
+    svg = convertCircuitJsonToSchematicSvg(snippet.circuit_json)
+  } else {
+    return ctx.error(400, {
+      error_code: "invalid_parameters",
+      message: "Invalid image_of parameter",
+    })
+  }
 
   return ctx.json({
     svg,
